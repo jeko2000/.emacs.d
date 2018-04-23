@@ -1,0 +1,1106 @@
+#+TITLE: Emacs Configuration
+#+AUTHOR: Johnny Ruiz
+* Look and Feel
+** Themes
+*** Daniel Mai's convenient theme function
+[[https://github.com/danielmai/.emacs.d/blob/master/config.org][Daniel Mai's configuration]] file has been a great resource of good ideas.
+Here, I borrow the switch-theme function:
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun switch-theme (theme)
+    "Disables any currently active themes and loads THEME."
+    ;; This interactive call is taken from 'load-theme'
+    (interactive
+     (list
+      (intern (completing-read "Load custom theme: "
+                               (mapcar 'symbol-name
+                                     (custom-available-themes))))))
+    (let ((enabled-themes custom-enabled-themes))
+      (mapc #'disable-theme custom-enabled-themes)
+      (load-theme theme t)))
+
+  ;;bind keys
+  (bind-key "s-<f12>" 'switch-theme)
+#+END_SRC
+*** Solarized theme
+The [[https://github.com/bbatsov/solarized-emacs][Solarized colour theme]] is a port by [[https://github.com/bbatsov][Bozhidar Batsov (bbatsov)]] from
+the original [[http://ethanschoonover.com/solarized][Solarized theme by Ethan Schoonover]].
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package solarized-theme
+  :if (window-system)
+  :ensure t
+  :defer t
+  :config (progn
+            (setq solarized-distinct-fringe-background t)
+            (setq x-underline-at-descent-line t)))
+#+END_SRC
+*** Monokai theme
+The [[https://github.com/oneKelvinSmith/monokai-emacs][Monokai theme]] is a port by [[https://github.com/oneKelvinSmith][Kelvin Smith (oneKelvinSmith)]] from the
+original [[https://www.monokai.pro/][TextMate theme Monokai by Wimer Hazenberg]].
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package monokai-theme
+  :if (window-system)
+  :ensure t
+  :defer t
+  :config
+  (setq monokai-use-variable-pitch nil))
+#+END_SRC
+*** E-Ink
+[[https://github.com/maio/eink-emacs][Low distraction, minimalistic color theme]] for Emacs emulating reading
+on E Ink devices by [[https://github.com/maio][Marian Schubert maio]].
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package eink-theme
+  :if (window-system)
+  :defer t
+  :ensure t)
+#+END_SRC
+*** Material theme
+The [[https://github.com/cpaulik/emacs-material-theme][Material theme]] is based on the colors proposed by the [[http://www.google.com/design/spec/style/color.html#color-color-palette][Google
+Maerial Design]] put together by [[https://github.com/cpaulik/][Christoph Paulik cpaulik]]
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package material-theme
+  :if (window-system)
+  :defer t
+  :ensure t)
+#+END_SRC
+*** Tango theme
+Implementation of the [[http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines][Tango Desktop project palette]] by [[https://github.com/juba][Julien Barnier juba]]
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package tangotango-theme
+  :if (window-system)
+  :ensure t)
+#+END_SRC
+** Fonts
+Current fonts of choice:
+#+BEGIN_SRC emacs-lisp :tangle yes
+(cond
+ ((string-equal system-type "windows-nt")
+  (cond
+   ((member "Consolas" (font-family-list))
+    (set-face-attribute 'default nil :font "Consolas" :height 110))))
+ ((string-equal system-type "gnu/linux")
+  (cond
+   ((member "Inconsolata" (font-family-list))
+    (set-face-attribute 'default nil :font "Inconsolata" :height 160))
+   ((member "DejaVu Sans Mono" (font-family-list))
+    (set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 140)))))
+
+(global-prettify-symbols-mode 1)
+#+END_SRC
+* Sane Defaults
+ These come largely from configurations by [[https://github.com/magnars/.emacs.d][Magnars Sveen]] and [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha
+ Chua]]. 
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+(if (>= emacs-major-version 24)              ; Allow pasting selection outside of Emacs
+    (setq select-enable-clipboard t)
+  (setq x-select-enable-clipboard t))
+
+(global-auto-revert-mode 1)                  ; Auto refresh buffers
+
+(setq global-auto-revert-non-file-buffers t  ; Auto refresh dired ...
+      auto-revert-verbose nil                ; ...quietly
+      echo-keystrokes 0.1                    ; Show keywords in progress
+      shift-select-mode nil)                 ; Remove shift select
+
+(global-auto-revert-mode 1)                  ; Auto refresh buffers
+(auto-compression-mode t)                    ; Transparently open compressed files
+(global-font-lock-mode t)                    ; Enable syntax highlighting for older Emacsen that have it off
+(defalias 'yes-or-no-p 'y-or-n-p)            ; Answering just 'y' or 'n' will do
+
+(setq locale-coding-system 'utf-8)           ; UTF-8 please
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
+(transient-mark-mode 1)                      ; Show active region
+(make-variable-buffer-local 'transient-mark-mode)
+(setq-default transient-mark-mode t)
+
+(put 'downcase-region 'disabled nil)          ; Enable functions disabled by default
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternative-file 'disabled nil)
+
+(delete-selection-mode 1)                    ; Remove text in active region if inserting text
+(setq jump-char-lazy-highlight-face nil      ; Don't highlight matches with jump-char - it's distracting
+      line-number-mode t                     ; Always display line number
+      column-number-mode t                   ; and column numbers
+      fill-column 80)                        ; Set lines to be 80 characters wide
+(recentf-mode 1)                             ; Save a list of recent files visited. (open recent file with C-x f)
+(setq recentf-max-saved-items 100)           ; just 20 is too recent
+
+(savehist-mode 1)                            ; Save minibuffer history
+(setq history-length 1000)
+
+(set-default 'indent-tabs-mode nil)          ; Never insert tabs
+(set-default 'indicate-empty-lines t)        ; Show me empty lines after buffer end
+(global-subword-mode 1)                      ; Easily navigate sillycased words
+(setq-default truncate-lines t)              ; Don't break lines for me, please
+;;(require 'smooth-scrolling)                  ; Keep cursor away from edges when scrolling up/down
+
+(setq enable-recursive-minibuffers t         ; Allow recursive minibuffers
+      gc-cons-threshold 20000000)            ; Increase memory threshold
+
+(set-default 'sentence-end-double-space nil) ; Sentences do not need double spaces to end. Period.
+
+(require 'uniquify)                          ; Add parts of each file's directory
+(setq uniquify-buffer-name-style 'forward    ; To the buffer name if not unique
+      ;electric-indent-mode nil               ; No electric indent
+      eval-expression-print-level nil)       ; Nic's recommendation (?!)
+
+;; When popping the mark, continue popping until the cursor actually moves
+;; Also, if the last command was a copy - skip past all the expand-region cruft.
+(defadvice pop-to-mark-command (around ensure-new-position activate)
+  (let ((p (point)))
+    (when (eq last-command 'save-region-or-current-line)
+      ad-do-it
+      ad-do-it
+      ad-do-it)
+    (dotimes (i 10)
+      (when (= p (point)) ad-do-it))))
+(setq set-mark-command-repeat-pop t)
+
+;; Offer to create parent directories if they do not exist
+;; http://iqbalansari.github.io/blog/2014/12/07/automatically-create-parent-directories-on-visiting-a-new-file-in-emacs/
+(defun my-create-non-existent-directory ()
+  (let ((parent-directory (file-name-directory buffer-file-name)))
+    (when (and (not (file-exists-p parent-directory))
+               (y-or-n-p (format "Directory `%s' does not exist! Create it?" parent-directory)))
+      (make-directory parent-directory t))))
+
+(add-to-list 'find-file-not-found-functions 'my-create-non-existent-directory)
+
+;;Keep all backup and auto-save files in one single directory
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
+      auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t))
+      make-backup-files t               ; backup of a file the first time it is saved.
+      backup-by-copying t               ; don't clobber symlinks
+      version-control t                 ; version numbers for backup files
+      delete-old-versions t             ; delete excess backup files silently
+      delete-by-moving-to-trash t
+      kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+      kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+      auto-save-default t               ; auto-save every buffer that visits a file
+      auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
+      auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
+      visible-bell t)                   ; enable visible bell
+
+(message "Sane defaults...Loaded!")
+ #+END_SRC
+
+ From [[info:eintr#Loops%20&%20Recursion][info:eintr#Loops & Recursion]]
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+(setq max-specpdl-size 20000
+      max-lisp-eval-depth 30000)
+ #+END_SRC
+* Key Rebinding
+Convenient keybindings to resize windows.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(bind-key "s-C-<left>"  'shrink-window-horizontally)
+(bind-key "s-C-<right>" 'enlarge-window-horizontally)
+(bind-key "s-C-<down>"  'shrink-window)
+(bind-key "s-C-<up>"    'enlarge-window)
+#+END_SRC
+
+Extra bindings for other-window and other-frame
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "C-<return>") 'other-window)
+(global-set-key (kbd "C-c C-<return>") 'other-frame)
+#+END_SRC
+
+* Non-programming packages
+** Winner mode
+[[https://www.emacswiki.org/emacs/WinnerMode][Winner mode]] allows to 'undo' and 'redo' on window configurations.
+Say you have 5 windows open carefully positioned and then you focus on
+just one via 'C-x 1' or equivalent. How do you get back to the
+original configuration? Well... with winner-undo.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package winner
+  :if (not noninteractive)
+  :ensure t
+  :defer 10
+  :bind (("C-c <left>" . winner-undo)
+         ("C-c <right>" . winner-redo))
+  :config
+  (winner-mode 1))
+#+END_SRC
+
+The following allows for a quick transposition if you have multiple frames.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package transpose-frame
+  :ensure t
+  :bind ("C-s-t" . transpose-frame))
+#+END_SRC
+[[https://github.com/winterTTr/ace-jump-mode][ace-jump-mode]] allows you to navigate around a window or frame by
+prompting you for a character and then showing keys to navigate
+directly to it.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package ace-jump-mode
+    :ensure t
+    :commands ace-jump-mode
+    :bind ("C-S-s" . ace-jump-mode))
+#+END_SRC
+** Password store
+Password store allows to you to interface with the [[https://www.passwordstore.org/][pass]] password
+manager.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package password-store
+  :defer t
+  :ensure t
+  :bind ("C-c s c" . password-store-copy))
+#+END_SRC
+
+** Recentf
+I visit the sames files often. [[https://www.emacswiki.org/emacs/RecentFiles][Recent Files]] allows one to build a list
+of such files for easy access
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package recentf
+  :ensure t
+  :config
+  (progn
+    (recentf-mode 1)
+    (setq recentf-max-saved-items 100)))
+#+END_SRC
+
+** Tramp
+Of course! We need [[https://www.gnu.org/software/tramp/][remote file editing!]]
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package tramp
+:ensure t)
+#+END_SRC
+
+** PDF-Tools
+[[https://github.com/politza/pdf-tools][Alternative to DocView for PDF files]]. Requires initial setup though
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package pdf-tools
+  :ensure t)
+#+END_SRC
+** Undo Tree
+[[https://www.emacswiki.org/emacs/UndoTree][Undo Tree]] tries to improve on emacs undo system by helping you
+visualize actions.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package undo-tree
+  :ensure t
+  :bind
+  ("C-x u" . undo-tree-visualize)
+  :config
+  (progn
+    (setq undo-tree-mode-lighter "")
+    (global-undo-tree-mode)))
+#+END_SRC
+
+** Display Battery Mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (functionp 'display-battery-mode)
+  (setq battery-mode-line-format "[%b%p%% %t]")
+  (display-battery-mode 1))
+#+END_SRC
+** Zoom-frm
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (package-installed-p 'zoom-frm)
+  (use-package zoom-frm
+    :ensure t
+    :bind (("C-M-=" . zoom-in/out)
+           ("H-z"   . toggle-zoom-frame)
+           ("s-<f1>" . toggle-zoom-frame))
+    :config
+    (setq frame-zoom-font-difference 10))
+  (add-hook 'after-make-frame-functions (lambda (frm)
+                                          (with-selected-frame frm
+                                            (zoom-in/out 6))))
+  (zoom-in/out 6))
+#+END_SRC
+
+** BBDB
+[[https://www.emacswiki.org/emacs/CategoryBbdb][The Insidious Big Brother Database]] provides an address book that hooks
+to [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]].
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;TODO: Groom BBDB
+(use-package bbdb
+  :ensure t
+  :config
+  (progn
+    (setq bbdb-complete-name-full-completion t
+          bbdb-completion-type 'primary-or-name
+          bbdb-complete-name-allow-cycling t)
+    (setq
+     bbdb-offer-save 1                        ;; 1 means save-without-asking
+
+     bbdb-use-pop-up t                        ;; allow popups for addresses
+     bbdb-electric-p t                        ;; be disposable with SPC
+     bbdb-popup-target-lines  1               ;; very small
+     bbdb-dwim-net-address-allow-redundancy t ;; always use full name
+     bbdb-quiet-about-name-mismatches 2       ;; show name-mismatches 2 secs
+     bbdb-always-add-address t                ;; add new addresses to existing...
+     ;; ...contacts automatically
+     bbdb-canonicalize-redundant-nets-p t     ;; x@foo.bar.cx => x@bar.cx
+     bbdb-completion-type nil                 ;; complete on anything
+     bbdb-complete-name-allow-cycling t       ;; cycle through matches
+     bbbd-message-caching-enabled t           ;; be fast
+     bbdb-use-alternate-names t               ;; use AKA
+     bbdb-elided-display t                    ;; single-line addresses
+)))
+
+(add-hook 'message-mode-hook
+          '(lambda ()
+             (bbdb-initialize 'gnus 'message)
+             (local-set-key "<TAB>" 'bbdb-complete-name)))
+
+(add-hook 'bbdb-initialize-hook
+          '(lambda ()
+             (setq compose-mail-user-agent-warnings nil)))
+#+END_SRC
+** Epub - Nov
+[[https://github.com/wasamasa/nov.el][Nov]] mode provides a major mode for reading [[https://en.wikipedia.org/wiki/EPUB][EPUB]] documents.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package nov
+  :ensure t
+  :mode ("\\.epub\\'" . nov-mode))
+#+END_SRC
+** w3m
+[[http://w3m.sourceforge.net/][W3m]] is a text-based browser whose engine is used by emacs to serve
+HTML pages. [[http://emacs-w3m.namazu.org][Ensure you have w3m installed]].
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (executable-find "w3m")
+  (use-package w3m
+    :ensure t
+    :config
+    (progn
+      ;;    (setq w3m-user-agent "Mozilla/5.0 (Linux; U; Android 2.3.3; zh-tw; HTC_Pyramid Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.")
+      (setq browse-url-browser-function 'w3m-goto-url-new-session)
+      (setq w3m-home-page "https://duckduckgo.com/lite/"))))
+#+END_SRC
+
+* Programming packages
+** Generic 
+*** Dired
+**** Dired-details
+[[https://www.emacswiki.org/emacs/DiredDetails][Dired-details]] lets you hide or show the file and directory details in
+a Dired listing, to save space and clutter
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'dired-details)
+(dired-details-install)
+(setq dired-details-hidden-string "[...] ")
+#+END_SRC
+See [[http://emacsrocks.com/e16.html][Emacs Rocks! Episode 16]] to see the great use of dired-dwim-target
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq dired-dwim-target t)
+#+END_SRC
+*** Flyspell
+First, we bootstrap [[http://aspell.net/][GNU Aspell]]
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq ispell-program-name "aspell"
+      ispell-local-dictionary "en_US"
+      flyspell-issue-message-flag nil
+      ispell-list-command "--list") ; See https://www.emacswiki.org/emacs/FlySpell#tic5
+#+END_SRC
+Then, we borrow some code from [[https://www.emacswiki.org/emacs/FlySpell#toc5][the wiki]] to make it easier to cycle
+between languages
+#+BEGIN_SRC emacs-lisp :tangle yes
+(let ((langs '("en_US" "castellano8")))
+  (setq lang-ring (make-ring (length langs)))
+  (dolist (lang langs)
+    (ring-insert lang-ring lang)))
+
+(defun cycle-ispell-languages ()
+  (interactive)
+  (let ((lang (ring-ref lang-ring -1)))
+    (ring-insert lang-ring lang)
+    (ispell-change-dictionary lang)))
+
+(global-set-key [f6] 'cycle-ispell-languages)
+#+END_SRC
+*** Disable-mouse-mode
+[[https://github.com/purcell][Steve Purcell]] comes to the rescue to create a minor mode that disables
+mouse events
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package disable-mouse
+  :ensure t
+  :config (global-disable-mouse-mode))
+#+END_SRC
+*** Ediff
+[[https://www.gnu.org/software/emacs/manual/html_node/ediff/][Ediff]] allows simultaneous browsing through the differences between
+files or buffers. Very handy for comparing commits.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ediff
+  :ensure t
+  :init
+  (defvar ctl-period-equals-map)
+  (define-prefix-command 'ctl-period-equals-map)
+  (bind-key "C-. =" #'ctl-period-equals-map)
+
+  :bind (("C-. = b" . ediff-buffers)
+         ("C-. = B" . ediff-buffers3)
+         ("C-. = c" . compare-windows)
+         ("C-. = =" . ediff-files)
+         ("C-. = f" . ediff-files)
+         ("C-. = F" . ediff-files3)
+         ("C-. = r" . ediff-revision)
+         ("C-. = p" . ediff-patch-file)
+         ("C-. = P" . ediff-patch-buffer)
+         ("C-. = l" . ediff-regions-linewise)
+         ("C-. = w" . ediff-regions-wordwise))
+
+  :config
+  (setq ediff-diff-options "-w"
+        ediff-split-window-function 'split-window-horizontally
+        ediff-window-setup-function 'ediff-setup-windows-plain))
+#+END_SRC
+*** Sexp highlighting
+[[https://www.emacswiki.org/emacs/ShowParenMode][show-paren-mode]] allows to see matching pairs of parentheses and other characters.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(show-paren-mode 1)
+(setq show-paren-style 'parenthesis)
+#+END_SRC
+*** Evaluation
+The following code will evaluate a sexp and replace it with its value.
+We will bind it to "C-c e" as recommended.
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Source: http://emacsredux.com/blog/2013/06/21/eval-and-replace/
+
+(defun eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
+
+(global-set-key (kbd "C-c e") 'eval-and-replace)
+#+END_SRC
+*** Utilities
+[[https://github.com/magnars/s.el][Magnar Sveen (magnars)'s String manipulation]] routines for emacs lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package s
+    :ensure t)
+#+END_SRC
+*** Indentation
+I like to automatically indent when press RET
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "RET") 'newline-and-indent) 
+#+END_SRC
+*** Company
+[[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package company
+  :ensure t
+  :bind (("C-c C-/" . company-complete)
+         ("TAB" . company-complete))
+  :config
+  (global-company-mode 1))
+#+END_SRC
+*** Code Folding
+The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one to hide and show blocks of text.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package hideshow
+  :ensure t
+  :config
+  (progn
+    ;; Hide the comments too when you do a 'hs-hide-all'
+    (setq hs-hide-comments t)
+    ;; Set whether isearch opens folded comments, code, or both
+    ;; where x is code, comments, t (both), or nil (neither)
+    (setq hs-isearch-open 't)
+    (add-hook 'prog-mode-hook (lambda () (hs-minor-mode 1)))))
+#+END_SRC
+*** Snippets
+The all great [[https://github.com/joaotavora/yasnippet][yasnippet]] package provides an extensible template system
+for Emacs. To get the actual snippets, we can use the great collection
+maintained by [[https://github.com/AndreaCrotti][AndreaCrotti]] named yasnippet-snippets.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package yasnippet
+  :ensure t
+  :bind (("C-c y TAB" . yas-expand)
+         ("C-c y s"   . yas-insert-snippet)
+         ("C-c y n"   . yas-new-snippet)
+         ("C-c y v"   . yas-visit-snippet-file))
+  :config
+  (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :ensure t)
+#+END_SRC
+*** Completion
+**** Ivy
+[[https://github.com/abo-abo/swiper][Ivy]] provides a completion mechanism for Emacs.
+It is my preferred completion method at the moment for its simplicity.
+Bundled, we find swiper and counsel which extend ivy.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ivy
+  :ensure t
+  :bind
+  ("C-x b" . ivy-switch-buffer)
+  :config
+  (progn
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t
+          ivy-height 10 ; number of result lines to display
+          ivy-count-format "" ; does not count candidates
+          ivy-initial-inputs-alist nil ; no regexp by default
+          ivy-re-builders-alist ; configure regexp engine.
+          '((t   . ivy--regex-ignore-order))) ; allow input not in order
+    (use-package swiper
+      :ensure t
+      :bind ("C-s" . swiper))
+    (use-package counsel
+      :ensure t
+      :bind
+      (("C-h f" . counsel-describe-function)
+       ("C-h l" . counsel-find-library)
+       ("C-h v" . counsel-describe-variable)
+       ("<f2> i" . counsel-info-lookup-symbol)
+       ("<f2> u" . counsel-unicode-char)
+       ("C-c g" . counsel-git)
+       ("C-c j" . counsel-git-grep)
+       ("C-c k" . counsel-ag)
+       ("C-x C-f" . counsel-find-file)
+       ("C-x C-r" . counsel-recentf)
+;;       ("M-i" . counsel-imenu)
+       ("M-x" . counsel-M-x)
+       ("M-y" . counsel-yank-pop)))))
+#+END_SRC
+**** Ido mode
+[[https://www.emacswiki.org/emacs/InteractivelyDoThings][Interactively do things]] used to my completion framework at the
+beginning. I've now switched to [[https://github.com/abo-abo/swiper][Ivy]].
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package ido
+  :disabled t                           ; I am using other completion instead
+  :demand t
+  :defines (ido-cur-item
+            ido-require-match
+            ido-selected
+            ido-final-text
+            ido-show-confirm-message)
+  :bind (("C-x b" . ido-switch-buffer)
+         ("C-x B" . ido-switch-buffer-other-window))
+  :preface
+  (eval-when-compile
+    (defvar ido-require-match)
+    (defvar ido-cur-item)
+    (defvar ido-show-confirm-message)
+    (defvar ido-selected)
+    (defvar ido-final-text))
+  :config
+  (progn
+    (ido-mode 'buffer)
+    (ido-vertical-define-keys 'C-n-and-C-p-only)
+    (add-hook 'ido-minibuffer-setup-hook
+              #'(lambda ()
+                  (bind-key "<return>" #'ido-smart-select-text
+                            ido-file-completion-map)))))
+#+END_SRC
+
+*** Version Control
+Version control is of incredibly importance for most projects and
+[[https://magit.vc][magit]] provides a great interface for [[https://git-scm.com/][git]]. [[https://github.com/magit/orgit][Orgit]] provides new [[https://orgmode.org/manual/External-links.html][org-link]]
+types for Magit buffers.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status)
+  :init
+  (add-hook 'magit-mode-hook 'hl-line-mode)
+  :config
+  (use-package orgit
+    :ensure t))
+#+END_SRC
+*** REST support
+See [[http://emacsrocks.com/e15.html][Emacs Rocks! Episode 15]] to learn how [[https://github.com/pashky/restclient.el][restclient]] can help out with
+testing APIs from within Emacs. The HTTP calls you make in the buffer
+aren't constrainted within Emacs; there’s the
+restclient-copy-curl-command to get the equivalent curl call string to
+keep things portable.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package restclient
+  :ensure t
+  :mode ("\\.rest\\'" . restclient-mode))
+#+END_SRC
+*** Multiple cursors
+See [[http://emacsrocks.com/e13.html][Emacs Rocks! Episode 13]] to learn about [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]], written
+by [[https://github.com/magnars/.emacs.d][Magnars Sveen]].
+ #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C-+"         . mc/mark-next-like-this)
+         ("C-_"         . mc/mark-previous-like-this)
+         ("C-c C-+"     . mc/mark-all-like-this)
+         ("C-!"         . mc/mark-next-symbol-like-this)
+         ("s-d"         . mc/mark-all-dwim)))
+ #+END_SRC
+*** Expand Region
+See [[http://emacsrocks.com/e09.html][Emacs Rocks! Episode 9]] to learn about [[https://github.com/magnars/.emacs.d][Magnars Sveen]]'s excellent
+expand-region.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package expand-region
+  :bind ("C-@" . er/expand-region)
+  :ensure t)
+#+END_SRC
+*** iy-go-to-char
+See [[http://emacsrocks.com/e04.html][Emacs Rocks! Episode 4]] to learn about [[https://github.com/doitian/iy-go-to-char][iy-go-to-char]].
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package iy-go-to-char
+  :bind (("M-m" . iy-go-to-char)
+         ("M-i" . back-to-indentation))
+  :ensure t)
+#+END_SRC
+*** Autofill mode
+I find myself using M-q often to [[https://www.emacswiki.org/emacs/FillParagraph][refill paragraphs]]. [[https://www.emacswiki.org/emacs/AutoFillMode][AutoFillMode]] mostly
+automates this for me.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(global-set-key (kbd "C-c q") 'auto-fill-mode)
+(setq comment-auto-fill-only-comments t)
+#+END_SRC
+*** Paredit
+[[https://www.emacswiki.org/emacs/ParEdit][Paredit]] is very useful when programming in Lisp-like languages as it
+keeps your parentheses balanced and tries to get you to think in terms
+of semantic units.
+ #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package paredit
+  :ensure t)
+ #+END_SRC
+*** Nlinum
+ Showing Line numbers in a buffer can be fairly useful when working
+ with code. [[http://elpa.gnu.org/packages/nlinum.html][NLinum]] mode replaces the in-built linum-mode.
+ #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package nlinum
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'nlinum-mode))
+
+;; Preset `nlinum-format' for minimum width. (from https://www.emacswiki.org/emacs/LineNumbers)
+(defun my-nlinum-mode-hook ()
+  (when nlinum-mode
+    (setq-local nlinum-format
+                (concat "%" (number-to-string
+                             ;; Guesstimate number of buffer lines.
+                             (ceiling (log (max 1 (/ (buffer-size) 80)) 10)))
+                        "d"))))
+(add-hook 'nlinum-mode-hook #'my-nlinum-mode-hook)
+
+ #+END_SRC
+
+** Language Specific
+*** Eshell
+[[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] is a shell-like command interpreter implemented in Emacs Lisp and written
+by the great [[https://www.google.com/search?q=eshell+jwiegleyt&ie=utf-8&oe=utf-8][John Wiegley]].
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package eshell
+  :ensure t
+  :bind ("C-x t" . eshell))
+
+(defalias 'open 'find-file)
+(defalias 'openo 'find-file-other-window)
+#+END_SRC
+*** Clojure
+[[https://www.google.com/search?q=clojure&ie=utf-8&oe=utf-8][Clojure]] is a dynamic programming language that compiles to Java
+Unicode. It's one of my main languages right now.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package clojure-mode
+  :defer t
+  :ensure t
+  :config
+  (progn
+    (use-package cider
+      :ensure t)
+    (setq cider-cljs-lein-repl
+          "(do (require 'figwheel-sidecar.repl-api)
+           (figwheel-sidecar.repl-api/start-figwheel!)
+           (figwheel-sidecar.repl-api/cljs-repl))"
+
+          org-babel-clojure-backend 'cider
+          cider-inject-dependencies-at-jack-in nil)
+    (require 'ob-clojure)
+    (add-hook 'cider-repl-mode-hook 'enable-paredit-mode)
+    (add-hook 'clojure-mode-hook 'enable-paredit-mode)
+    (define-key cider-repl-mode-map (kbd "C-<return>") 'other-window)
+    (add-hook 'before-save-hook (lambda ()
+                                  (when (or (eq major-mode 'clojure-mode)
+                                            (eq major-mode 'lisp-mode))
+                                    (whitespace-cleanup)
+                                    (indent-region (point-min) (point-max)))))))
+#+END_SRC
+*** Common Lisp
+[[https://common-lisp.net/][Common Lisp]], the programmable programming language.
+The following sets up [[https://www.emacswiki.org/emacs/SlimeMode][slime]] to use [[http://www.sbcl.org/][SBCL]] so ensure you have SBCL
+installed first.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package slime
+  :ensure t
+  :init
+  (progn
+    (setq inferior-lisp-program "/usr/bin/sbcl")
+    (require 'slime-autoloads)
+    (when (file-exists-p "~/quicklisp/slime-helper.el")
+      (load (expand-file-name "~/quicklisp/slime-helper.el")))
+    (add-to-list 'slime-contribs 'slime-repl))
+  :config
+  (progn
+    (define-key slime-mode-map (kbd "C-<return>") 'other-window)
+    (setq slime-net-coding-system 'utf-8-unix)
+    (add-hook 'slime-repl-mode-hook 'enable-paredit-mode)    
+    (add-hook 'slime-repl-mode-hook
+              (lambda ()
+                (define-key slime-repl-mode-map (kbd "C-<return>") 'other-window)))
+    (add-hook 'slime-mode-hook 
+              (lambda ()
+                (cond ((boundp 'slime-mode-map)
+                       (define-key slime-mode-map (kbd "C-c x") nil)
+                       (message "slime keybinding on C-c x has been sanitized"))
+                      ('t (message "slime keybindings not sanitized"))))) ))
+
+(use-package slime-company
+  :ensure t
+  :config
+  (add-to-list 'slime-contribs 'slime-company))
+
+(add-to-list 'company-backends '(company-slime :with company-dabbrev))
+
+(use-package common-lisp-snippets
+  :defer t
+  :ensure t
+  :config
+  (add-hook 'lisp-mode-hook 'enable-paredit-mode))
+#+END_SRC
+*** Scheme
+[[https://en.wikipedia.org/wiki/Scheme_%2528programming_language%2529][Scheme]] is a dialect of Lisp developed by Gerald Sussman and Guy
+Steele.
+[[https://github.com/jaor/geiser][Geiser]] provides an improved development environment in emacs.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package geiser
+  :ensure t
+  :config
+  (progn
+    (setq geiser-active-implementations '(mit)
+          geiser-mit-binary "/usr/bin/mit-scheme")
+    (setq scheme-program-name "/usr/bin/mit-scheme")
+    (add-hook 'scheme-mode-hook 'enable-paredit-mode)
+    (add-hook 'geiser-repl-mode-hook 'enable-paredit-mode)))
+#+END_SRC
+*** Emacs Lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+#+END_SRC
+*** Markdown
+I like to edit README and other files written in Markdown so having
+[[https://jblevins.org/projects/markdown-mode/][markdown-mode]] is very convenient.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package markdown-mode
+  :ensure t)
+#+END_SRC
+*** Web editing
+The [[http://web-mode.org/][web-mode]] is particularily good for editing HTML templates. It
+natively understands embedded CSS and JavaScript code blocks.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package web-mode
+  :ensure t
+  :config
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . web-mode))
+    (defun jr/web-mode-hook ()
+      "Hooks for Web mode."
+      (setq web-mode-enable-auto-closing t
+            web-mode-enable-auto-quoting t
+            web-mode-markup-indent-offset 2))
+    (add-hook 'web-mode-hook  'jr/web-mode-hook)
+    (use-package less-css-mode
+      :ensure t)
+    (use-package emmet-mode
+      :ensure t)))
+
+(defun jr/insert-django-text (text)
+  "Inserts selmer text"
+  (interactive "sEnter text to insert: ")
+  (insert "{% " text " %}"))
+
+(define-key web-mode-map (kbd "C-c C-e j") 'jr/insert-django-text)
+#+END_SRC
+*** Java/JDEE
+I don't program much in Java these days but keep [[https://github.com/jdee-emacs/jdee][JDEE]] around just in case.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package jdee
+  :defer 10
+  :ensure t
+  :config
+  (progn
+    (setq jdee-server-dir (concat user-emacs-directory "jars")
+          jdee-enable-abbrev-mode t)
+    (defun jr/compile-and-run ()
+      (interactive)
+      (jdee-compile)
+      (jdee-run 1))
+    (define-key jdee-mode-map [f5] 'jr/compile-and-run)
+
+    (defun jr/company-jdee-backend (command &optional arg &rest ignored)
+      (interactive (list 'interactive))
+      (pcase command
+        (`interactive
+         (company-begin-backend 'jr/company-jdee-backend))
+
+        (`prefix
+         (when (and (eq major-mode 'jdee-mode)
+                    (not (company-in-string-or-comment)))
+           (let ((pair (jdee-parse-java-variable-at-point)))
+             (if (not (s-blank-str? (car pair)))
+                 (s-join "|" pair)
+               nil))))
+        (`candidates
+         (if arg
+             (let ((pair (s-split "|" arg)))
+               (seq-map (lambda (p) (concat (car pair) "." (cdr p))) (jdee-complete-find-completion-for-pair pair)))))))
+    (add-to-list 'company-backends 'jr/company-jdee-backend)))
+#+END_SRC
+* Gnus
+[[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
+It takes a while to get it used to it all (similar to emacs
+actually) but it more than pays off at the end. Here's [[http://www.gnus.org/manual.html][the manual]].
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq gnus-config-file (expand-file-name "settings/gnus-init.el" user-emacs-directory))
+(when (file-exists-p gnus-config-file)
+  (setq gnus-init-file gnus-config-file))
+#+END_SRC
+* Org Mode
+When all else fails, [[https://orgmode.org/][org mode]] will work. I use it for almost
+everything, including, of course, writing this document. 
+Here's [[https://orgmode.org/manual/][the manual]].
+** Org activation bindings
+
+This sets up the main global keybindings
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(define-key org-mode-map (kbd "C-<return>") 'other-window)
+(define-key org-mode-map (kbd "C-c C-<return>") 'other-frame)
+
+(bind-key "C-c l" 'org-store-link)
+(bind-key "C-c c" 'org-capture)
+(bind-key "C-c a" 'org-agenda)
+(bind-key "<f12>" 'org-agenda)
+(bind-key "C-c b" 'org-iswitchb)
+
+(eval-after-load "org-indent" '(diminish 'org-indent-mode))
+(add-hook 'org-mode-hook 'flyspell-mode)
+;; org-mode: Don't ruin S-arrow to switch windows please (use M-+ and M-- instead to toggle)
+(setq org-replace-disputed-keys t)
+
+;; Fontify org-mode code blocks
+(setq org-src-fontify-natively t)
+
+;;Log when an item is completed
+(setq org-log-done 'time)
+
+;;Comes from the org mode documentation
+
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)   ; turn off logging
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
+(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+
+;; org-goto-auto-isearch
+(setq org-goto-auto-isearch t)
+#+END_SRC
+
+** Org agenda
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (string-equal system-type "gnu/linux")
+  (setq org-agenda-files '("~/rep/personal/org/notes.org"
+                           "~/rep/personal/org/todo.org"
+                           "~/rep/maximo-nivel/tefl-cuzco.org"
+                           "~/rep/personal/org/home.org"
+                           "~/rep/work/ticketnetwork.org")))
+(bind-key "C-c a" 'org-agenda)
+
+(add-hook 'after-init-hook
+          (lambda ()
+            (org-agenda nil "a")
+            (delete-other-windows)))
+
+#+END_SRC
+** Org capture
+#+BEGIN_SRC emacs-lisp :tangle yes
+(cond
+ ((string-equal system-type "gnu/linux")
+  (setq org-directory "/home/jeko/rep/personal/org"
+        org-default-notes-file (concat org-directory "/todo.org")))
+ ((string-equal system-type "windows-nt")
+  (setq org-directory "h:/repos/tn_repo/org"
+        org-default-notes-file (concat org-directory "/todo.org"))))
+
+;;From Sasha's config
+(defconst my/org-basic-scheduled-task "* TODO %^{Task}
+   SCHEDULED: %t
+   :PROPERTIES:
+   :Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}
+   :END:
+Captured %<%Y-%m-%d %H:%M>
+%?
+%i
+%a
+" "Basic task data")
+(setq org-capture-templates
+      `(("t" "Tasks" entry
+         (file+headline "/home/jeko/rep/personal/org/todo.org" "Main")
+         ,my/org-basic-scheduled-task)
+
+        ("T" "Quick task" entry
+         (file+headline "/home/jeko/rep/personal/org/todo.org" "Main")
+         "* TODO %^{Task}\n   SCHEDULED: %t\n%a"
+         :immediate-finish t)
+
+        ("c" "Cuzco TEFL" entry
+         (file+headline "/home/jeko/rep/maximo-nivel/tefl-cuzco.org"  "Tasks")
+         ,my/org-basic-scheduled-task)
+
+        ("h" "Home Tasks" entry
+         (file+headline "/home/jeko/rep/personal/org/home.org" "Main")
+         ,my/org-basic-scheduled-task)
+
+        ("i" "Interrupting task" entry
+         (file+headline "/home/jeko/rep/personal/org/todo.org"  "Main")
+         "* STARTED %^{Task}\n   SCHEDULED: %t\n%a"
+         :clock-in t :clock-keep t)
+
+        ("d" "Done - Task" entry
+         (file+headline "/home/jeko/rep/personal/org/todo.org"  "Inbox")
+         "* DONE %^{Task}\n   SCHEDULED: %^t\n%?")
+
+        ("b" "Blog" entry
+         (file+olp "/home/jeko/rep/personal/org/todo.org"  "Blog" "Ungroomed")
+         ,my/org-basic-scheduled-task)
+
+        ("k" "Quick note" item
+         (file+headline "/home/jeko/rep/personal/org/notes.org"  "Quick notes"))
+
+        ("r" "Reference" item
+         (file+headline "/home/jeko/rep/personal/org/notes.org"  "References"))
+
+        ("j" "Journal" entry
+         (file+datetree "/home/jeko/rep/personal/org/journal.org" )
+         "* %?\n\n%i\n%U\n")))
+
+;;Refile
+(setq org-refile-use-outline-path t
+      org-outline-path-complete-in-steps nil)
+
+(setq org-refile-targets '((org-agenda-files . (:maxlevel . 4))))
+#+END_SRC
+** Org clocking
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;Clocking time
+;;To save the clock history across Emacs sessions, use
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+#+END_SRC
+
+Often times I need to restart emacs and leave my clocking in a bad
+state.
+The following hook clocks me out before closing emacs, if needed.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'kill-emacs-hook (lambda () (when (org-clocking-p)
+                                   (with-current-buffer (org-clocking-buffer)
+                                     (org-clock-out)
+                                     (save-buffer)))))
+
+#+END_SRC
+
+** Org keywords
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "HOLD(h)" "|" "DONE(d)" "CANCELED(c)")))
+
+(setq org-todo-keyword-faces
+      '(("TODO" . (:foreground "indian red" :box nil))
+        ("STARTED" . (:foreground "goldenrod" :box nil))
+        ("WAITING" . (:foreground "steel blue" :box nil))
+        ("HOLD" . (:foreground "orchid" :box nil))
+        ("DONE" . (:foreground "dim gray" :strike-through t))
+        ("CANCELED" . (:foreground "bisque4" :strike-through t))))
+#+END_SRC
+
+** Org Babel languages
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (C . t)
+     (calc . t)
+     (clojure . t)
+     (latex . t)
+     (java . t)
+     (ruby . t)
+     (lisp . t)
+     (scheme . t)
+     (sh . t)
+     (sqlite . t)
+     (js . t)))
+#+END_SRC
+
+** Org babel/source blocks
+I like to have source blocks properly syntax highlighted and with the editing popup window staying within the same window so all the
+windows don’t jump around. Also, having the top and bottom trailing lines in the block is a waste of space, so we can remove them.
+
+I noticed that fontification doesn’t work with markdown mode when the block is indented after editing it in the org src buffer—the
+leading #s for headers don’t get fontified properly because they appear as Org comments. Setting org-src-preserve-indentation makes
+things consistent as it doesn’t pad source blocks with leading spaces.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defvar org-src-strip-leading-and-trailing-blank-lines)
+(setq org-src-fontify-natively t
+      org-src-window-setup 'current-window
+      org-src-strip-leading-and-trailing-blank-lines t
+      org-src-preserve-indentation t
+      org-src-tab-acts-natively t)
+#+END_SRC
+* Solutions
+** Find file as sudo
+Recently, I've had to edit a great deal of root-level files. This
+function will reopen a given file with superuser priviledges.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun jr/reopen-as-sudo ()
+  "Kill current buffer and open its file with augmented priviledges."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (unless filename
+      (error "No file associated with current buffer."))
+    (find-alternate-file (concat "/sudo::" filename))))
+
+(bind-key "C-. s" 'jr/reopen-as-sudo)
+#+END_SRC
+** Window splitting
+The following functions allow you to split and switch to a window at once.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun vsplit-other-window ()
+    "Splits the window vertically and switches to that window."
+    (interactive)
+    (split-window-vertically)
+    (other-window 1 nil))
+  (defun hsplit-other-window ()
+    "Splits the window horizontally and switches to that window."
+    (interactive)
+    (split-window-horizontally)
+    (other-window 1 nil))
+
+  (bind-key "C-x 2" 'vsplit-other-window)
+  (bind-key "C-x 3" 'hsplit-other-window)
+#+END_SRC
+* Personal
+Personal items
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq user-full-name "Johnny Ruiz"
+      user-mail-address "kubb18@gmail.com")
+#+END_SRC

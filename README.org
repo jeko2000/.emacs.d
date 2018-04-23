@@ -1,0 +1,5 @@
+* Emacs Configuration
+
+My ever-changing configuration for [[https://www.gnu.org/software/emacs/][GNU Emacs]].
+
+
