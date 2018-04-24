@@ -461,24 +461,6 @@ files or buffers. Very handy for comparing commits.
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
 #+END_SRC
-*** Evaluation
-The following code will evaluate a sexp and replace it with its value.
-We will bind it to "C-c e" as recommended.
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; Source: http://emacsredux.com/blog/2013/06/21/eval-and-replace/
-
-(defun eval-and-replace ()
-  "Replace the preceding sexp with its value."
-  (interactive)
-  (backward-kill-sexp)
-  (condition-case nil
-      (prin1 (eval (read (current-kill 0)))
-             (current-buffer))
-    (error (message "Invalid expression")
-           (insert (current-kill 0)))))
-
-(global-set-key (kbd "C-c e") 'eval-and-replace)
-#+END_SRC
 *** Utilities
 [[https://github.com/magnars/s.el][Magnar Sveen (magnars)'s String manipulation]] routines for emacs lisp
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -792,6 +774,23 @@ Steele.
 #+END_SRC
 *** Emacs Lisp
 #+BEGIN_SRC emacs-lisp :tangle yes
+(defun eval-and-replace ()
+  "Replace the preceding sexp with its value.
+  Source: http://emacsredux.com/blog/2013/06/21/eval-and-replace/"
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
+
+(define-key emacs-lisp-mode-map (kbd "C-c e b") 'eval-buffer)
+(define-key emacs-lisp-mode-map (kbd "C-c e d") 'toggle-debug-on-error)
+(define-key emacs-lisp-mode-map (kbd "C-c e c") 'emacs-lisp-byte-compile-and-load)
+(define-key emacs-lisp-mode-map (kbd "C-c e r") 'eval-region)
+(define-key emacs-lisp-mode-map (kbd "C-c e e") 'eval-and-replace)
+
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
 #+END_SRC
 *** Markdown

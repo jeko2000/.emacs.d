@@ -21,7 +21,9 @@
         org-shiftleft
         org-yank
         paredit-forward-delete
+        paredit-forward-slurp-sexp
         paredit-kill
+        paredit-open-round
         paredit-semicolon
         query-replace
         ))
