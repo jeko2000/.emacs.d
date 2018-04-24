@@ -1021,6 +1021,22 @@ Captured %<%Y-%m-%d %H:%M>
 
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 4))))
 #+END_SRC
+
+I've been using the agenda far more these days as a way to stay
+organized. I like that hitting 'k' while in an agenda buffer fires up
+org-capture. What I don't like is that I have to manually refresh (by
+hitting 'g') the agenda to see the newly added task.
+
+Here's a bit of code to sort this out:
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun jr/org-capture-after-finalize-hook ()
+  (when (buffer-live-p org-agenda-buffer)
+    (with-current-buffer org-agenda-buffer
+      (org-agenda-redo-all))))
+
+(add-hook 'org-capture-after-finalize-hook #'jr/org-capture-after-finalize-hook)
+#+END_SRC
+
 ** Org clocking
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;Clocking time
