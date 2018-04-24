@@ -309,6 +309,13 @@ battery right on the mode line.
   (display-battery-mode 1))
 #+END_SRC
 ** Zoom-frm
+My main machine has a very high resolution which makes font size
+appear very small for my rather weak eyes. The [[https://www.emacswiki.org/emacs/zoom-frm.el][zoom-frm]] packages from
+the [[https://www.emacswiki.org/][EmacsWiki]] provides a way to increase font size evenly across the
+frame.
+
+I add an advice to the switch-theme function to zoom in to my desired
+zoom. Similarly, I add a hook to do the same when I create new frames.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (when (package-installed-p 'zoom-frm)
   (use-package zoom-frm
@@ -316,12 +323,18 @@ battery right on the mode line.
     :bind (("C-M-=" . zoom-in/out)
            ("H-z"   . toggle-zoom-frame)
            ("s-<f1>" . toggle-zoom-frame))
+    :init
+    (progn
+      (setq jr/zoom-frm-desired-zoom 6)
+      (zoom-in/out 6))
     :config
-    (setq frame-zoom-font-difference 10))
-  (add-hook 'after-make-frame-functions (lambda (frm)
-                                          (with-selected-frame frm
-                                            (zoom-in/out 6))))
-  (zoom-in/out 6))
+    (progn
+      (setq frame-zoom-font-difference 10)
+      (advice-add 'switch-theme :after (lambda (theme)
+                                         (zoom-in/out jr/zoom-frm-desired-zoom)))
+      (add-hook 'after-make-frame-functions (lambda (frm)
+                                              (with-selected-frame frm
+                                                (zoom-in/out jr/zoom-frm-desired-zoom)))))))
 #+END_SRC
 
 ** BBDB
