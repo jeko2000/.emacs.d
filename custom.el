@@ -47,7 +47,7 @@
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (counsel swiper clojure-mode iy-go-to-char magit ivy yasnippet-snippets yasnippet company emms org-plus-contrib org frame-cmds frame-fns 0blayout pdf-tools nov geiser slime-company common-lisp-snippets commonlisp-snippets column-marker deferred rainbow-delimiters impatient-mode markdown-mode zoom-frm zenburn-theme which-key web-mode waher-theme w3m visual-regexp-steroids use-package undo-tree transpose-frame tangotango-theme swiper-helm sr-speedbar solarized-theme smooth-scrolling smex smartscan smartparens slime skewer-mode shell-pop scratch restclient quickrun python-mode perspective pdb-mode password-store paredit org-pandoc olivetti nlinum neotree multiple-cursors multi-term monokai-theme material-theme magit-gitflow less-css-mode jdee ido-vertical-mode hydra hindent helm-swoop helm-projectile helm-gtags helm-ag hayoo haskell-mode gradle-mode gnus-desktop-notify ggtags flycheck expand-region emmet-mode elpy edit-server drag-stuff disable-mouse cyberpunk-theme crux counsel-projectile company-c-headers command-log-mode bongo bbdb arjen-grey-theme android-mode alert ace-window ace-jump-mode ac-html ac-cider 4clojure)))
+    (hide-mode-line org-present counsel swiper clojure-mode iy-go-to-char magit ivy yasnippet-snippets yasnippet company emms org-plus-contrib org frame-cmds frame-fns 0blayout pdf-tools nov geiser slime-company common-lisp-snippets commonlisp-snippets column-marker deferred rainbow-delimiters impatient-mode markdown-mode zoom-frm zenburn-theme which-key web-mode waher-theme w3m visual-regexp-steroids use-package undo-tree transpose-frame tangotango-theme swiper-helm sr-speedbar solarized-theme smooth-scrolling smex smartscan smartparens slime skewer-mode shell-pop scratch restclient quickrun python-mode perspective pdb-mode password-store paredit org-pandoc olivetti nlinum neotree multiple-cursors multi-term monokai-theme material-theme magit-gitflow less-css-mode jdee ido-vertical-mode hydra hindent helm-swoop helm-projectile helm-gtags helm-ag hayoo haskell-mode gradle-mode gnus-desktop-notify ggtags flycheck expand-region emmet-mode elpy edit-server drag-stuff disable-mouse cyberpunk-theme crux counsel-projectile company-c-headers command-log-mode bongo bbdb arjen-grey-theme android-mode alert ace-window ace-jump-mode ac-html ac-cider 4clojure)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(safe-local-variable-values
@@ -162,10 +162,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-block-end-line ((t (:foreground "#888a85" :slant italic :background nil))) t)
  '(org-document-info ((t (:foreground "#81d4fa" :weight bold :height 1.35))))
  '(org-document-info-keyword ((t (:foreground "#8bc34a" :height 1.35))))
- '(org-document-title ((t (:foreground "#ffffff" :weight bold :height 1.35))))
- '(org-level-1 ((t (:background nil :foreground "dodger blue" :box nil :weight bold :height 1.5))))
- '(org-level-2 ((t (:background nil :foreground "#edd400" :box nil :weight bold :height 1.2))))
- '(org-todo ((t (:foreground "Red" :box nil :weight bold)))))
+ '(org-document-title ((t (:foreground "#ffffff" :weight bold :height 1.35)))))
