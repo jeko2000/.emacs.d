@@ -8,9 +8,11 @@ bootstrapping the entire configuration.
 
 Please see [[settings/config.org][config.org]] for details on the packages I currently run.
 
+/Read this in [[README.es.org][Spanish]]./
+
 * Setup
 
-To download this configuration, proceed with the following 
+To download this configuration, proceed with the following:
 
 #+BEGIN_SRC sh
 git clone git://github.com/jeko2000/.emacs.d.git

@@ -1,0 +1,43 @@
+* Configuración de Emacs
+
+Mi configuración en perpetuo estado de cambio para [[https://www.gnu.org/software/emacs/][GNU Emacs]].
+
+Por favor toma en cuenta que la gran mayoría de la configuración está
+presente en el archivo [[settings/config.org][config.org]] bajo [[settings][settings]]. El archivo [[init.el][init.el]] es
+responsable por iniciar la configuración entera.
+
+Por favor ve el archivo [[settings/config.org][config.org]] para conocer más detalles acerca de
+los paquetes que actualmente uso.
+
+/Lee esto en [[README.org][inglés]]./
+
+* Preparación
+
+Para descargar esta configuración, por favor proceda con el siguiente comando:
+
+#+BEGIN_SRC sh
+git clone git://github.com/jeko2000/.emacs.d.git
+#+END_SRC
+
+* Consejos
+
+Mi recomendación actual es que no se descargue este repositorio en su
+totalidad. En vez de eso, intenta darle un vistazo a [[settings/config.org][config.org]] e
+intenta ejecutar el código en tu búfer de *scratch* antes de agregarlo
+a tu configuración.
+
+Ten en cuenta que necesitarás tener el paquete de [[https://github.com/jwiegley/use-package][use-package]]
+instalado en caso de que no estés usando el archivo [[init.el][init.el]]. Para
+descargarlo, agrega lo siguiente a tu archivo configuración.
+
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+(require 'bind-key)
+#+END_SRC
+
+También, asegúrate de darle un vistazo a [[http://emacsrocks.com][emacsrocks.com]].
