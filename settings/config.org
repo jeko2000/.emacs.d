@@ -210,6 +210,13 @@ Extra bindings for other-window and other-frame
 (global-set-key (kbd "C-c C-<return>") 'other-frame)
 #+END_SRC
 
+I sometimes need a scratch buffer of the same major-mode as the one I
+am in. Conveniently, the function ~scratch~ can take care of this. 
+
+Let's bind it to something useful
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "C-c e s") 'scratch)
+#+END_SRC
 * Non-programming packages
 ** Winner mode
 [[https://www.emacswiki.org/emacs/WinnerMode][Winner mode]] allows to 'undo' and 'redo' on window configurations.
