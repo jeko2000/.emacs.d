@@ -299,6 +299,10 @@ visualize actions.
 #+END_SRC
 
 ** Display Battery Mode
+I like to run all my emacs frames at full-screen. The problem comes
+when my laptop dies because I didn't bother to check the status of its
+battery. [[https://www.emacswiki.org/emacs/DisplayBatteryMode][Display Battery Mode]] can show the status of the system
+battery right on the mode line.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (when (functionp 'display-battery-mode)
   (setq battery-mode-line-format "[%b%p%% %t]")
