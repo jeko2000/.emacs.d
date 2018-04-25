@@ -1031,12 +1031,12 @@ Here's a bit of code to sort this out:
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defun jr/org-capture-after-finalize-hook ()
   (when (buffer-live-p org-agenda-buffer)
-    (with-current-buffer org-agenda-buffer
-      (org-agenda-redo-all))))
+    (ignore-errors
+      (with-current-buffer org-agenda-buffer
+        (org-agenda-redo t)))))
 
 (add-hook 'org-capture-after-finalize-hook #'jr/org-capture-after-finalize-hook)
 #+END_SRC
-
 ** Org clocking
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;Clocking time
