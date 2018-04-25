@@ -809,11 +809,83 @@ Steele.
 (define-key emacs-lisp-mode-map (kbd "C-c e e") 'eval-and-replace)
 
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+#+END_SRC
+*** Markdown
+I like to edit README and other files written in Markdown so having
+[[https://jblevins.org/projects/markdown-mode/][markdown-mode]] is very convenient.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package markdown-mode
+  :ensure t)
+#+END_SRC
+*** Web editing
+The [[http://web-mode.org/][web-mode]] is particularily good for editing HTML templates. It
+natively understands embedded CSS and JavaScript code blocks.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package web-mode
+  :ensure t
+  :config
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . web-mode))
+    (defun jr/web-mode-hook ()
+      "Hooks for Web mode."
+      (setq web-mode-enable-auto-closing t
+            web-mode-enable-auto-quoting t
+            web-mode-markup-indent-offset 2))
+    (add-hook 'web-mode-hook  'jr/web-mode-hook)
+    (use-package less-css-mode
+      :ensure t)
+    (use-package emmet-mode
+      :ensure t)))
 
-;; In addition, let's enable paredit-mode in the eval-expression
-;; buffer shown after 'M-:'.
+(defun jr/insert-django-text (text)
+  "Inserts selmer text"
+  (interactive "sEnter text to insert: ")
+  (insert "{% " text " %}"))
 
-(add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
+(define-key web-mode-map (kbd "C-c C-e j") 'jr/insert-django-text)
+#+END_SRC
+*** Java/JDEE
+I don't program much in Java these days but keep [[https://github.com/jdee-emacs/jdee][JDEE]] around just in case.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package jdee
+  :defer 10
+  :ensure t
+  :config
+  (progn
+    (setq jdee-server-dir (concat user-emacs-directory "jars")
+          jdee-enable-abbrev-mode t)
+    (defun jr/compile-and-run ()
+      (interactive)
+      (jdee-compile)
+      (jdee-run 1))
+    (define-key jdee-mode-map [f5] 'jr/compile-and-run)
+
+    (defun jr/company-jdee-backend (command &optional arg &rest ignored)
+      (interactive (list 'interactive))
+      (pcase command
+        (`interactive
+         (company-begin-backend 'jr/company-jdee-backend))
+
+        (`prefix
+         (when (and (eq major-mode 'jdee-mode)
+                    (not (company-in-string-or-comment)))
+           (let ((pair (jdee-parse-java-variable-at-point)))
+             (if (not (s-blank-str? (car pair)))
+                 (s-join "|" pair)
+               nil))))
+        (`candidates
+         (if arg
+             (let ((pair (s-split "|" arg)))
+               (seq-map (lambda (p) (concat (car pair) "." (cdr p))) (jdee-complete-find-completion-for-pair pair)))))))
+    (add-to-list 'company-backends 'jr/company-jdee-backend)))
 #+END_SRC
 * Gnus
 [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
