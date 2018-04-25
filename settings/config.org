@@ -809,6 +809,11 @@ Steele.
 (define-key emacs-lisp-mode-map (kbd "C-c e e") 'eval-and-replace)
 
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+
+;; In addition, let's enable paredit-mode in the eval-expression
+;; buffer shown after 'M-:'.
+
+(add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
 #+END_SRC
 *** Markdown
 I like to edit README and other files written in Markdown so having
