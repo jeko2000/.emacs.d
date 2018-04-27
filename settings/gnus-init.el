@@ -36,22 +36,6 @@
       gnus-group-sort-function 'gnus-group-sort-by-unread
       gnus-permanently-visible-groups "INBOX")
 
-;; cron hooks
-(defun start-mail-cron ()
-  "Call the start-mail-cron-job shell script if it exists"
-  (let ((start (expand-file-name "scripts/start-mail-cron-job.sh" user-emacs-directory)))
-    (if (file-exists-p start)
-        (shell-command start "*cron*" nil))))
-
-(defun stop-mail-cron ()
-  "Call the stop-mail-cron-job shell script if it exists"  
-  (let ((stop (expand-file-name "scripts/stop-mail-cron-job.sh" user-emacs-directory)))
-    (if (file-exists-p stop)
-        (shell-command stop "*cron*" nil))))
-
-(add-hook 'gnus-started-hook 'start-mail-cron)
-(add-hook 'gnus-exit-gnus-hook 'stop-mail-cron)
-
 ;; group buffer
 (setq gnus-summary-next-group-on-exit t
       gnus-group-line-format "%M%S%p%P%5y|%-5t %(%-20,20g%)\n"
