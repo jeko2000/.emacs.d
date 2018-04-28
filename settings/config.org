@@ -1117,7 +1117,7 @@ syntax highlighted but without their BEGIN_SRC/END_SRC delimiters.
      (ruby . t)
      (lisp . t)
      (scheme . t)
-     (sh . t)
+     (shell . t)
      (sqlite . t)
      (js . t)))
 #+END_SRC
