@@ -317,7 +317,8 @@ frame.
 I add an advice to the switch-theme function to zoom in to my desired
 zoom. Similarly, I add a hook to do the same when I create new frames.
 #+BEGIN_SRC emacs-lisp :tangle yes
-(when (package-installed-p 'zoom-frm)
+(when (and window-system
+           (package-installed-p 'zoom-frm))
   (use-package zoom-frm
     :ensure t
     :bind (("C-M-=" . zoom-in/out)
