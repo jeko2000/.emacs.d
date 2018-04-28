@@ -1173,5 +1173,5 @@ The following functions allow you to split and switch to a window at once.
 Personal items
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq user-full-name "Johnny Ruiz"
-      user-mail-address "kubb18@gmail.com")
+      user-mail-address "jeko2000@yandex.com")
 #+END_SRC
