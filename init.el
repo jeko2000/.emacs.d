@@ -24,7 +24,7 @@
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
 (add-to-list 'package-archives org-current t)
-(package-initialize)
+;;(package-initialize)
 
 ;; Bootstrap use-package
 ;; The excellent use-package by John Wiegley is described here: https://github.com/jwiegley/use-package
