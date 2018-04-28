@@ -27,7 +27,8 @@
 ;;(package-initialize)
 
 ;; Bootstrap use-package
-;; The excellent use-package by John Wiegley is described here: https://github.com/jwiegley/use-package
+;; The excellent use-package by John Wiegley is described here:
+;; https://github.com/jwiegley/use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -41,7 +42,8 @@
 
 ;; Set up user-settings-directory if it exists
 (let ((settings (expand-file-name "settings" user-emacs-directory)))
-  (setq user-settings-directory (if (file-exists-p settings) settings user-emacs-directory)))
+  (setq user-settings-directory
+        (if (file-exists-p settings) settings user-emacs-directory)))
 
 ;; Set up load-path
 (setq site-lisp-directory (expand-file-name "site-lisp" user-emacs-directory))
