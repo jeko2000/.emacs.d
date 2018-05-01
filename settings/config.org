@@ -424,6 +424,10 @@ the prefix to "C-c s" instead.
       (add-hook 'text-mode-hook 'synosaurus-mode))))
 #+END_SRC
 
+** Diminish
+#+BEGIN_SRC emacs-lisp :tangle yes
+(eval-after-load "subword" '(diminish 'subword-mode))
+#+END_SRC
 * Programming packages
 ** Generic 
 *** Dired
@@ -468,6 +472,7 @@ between languages
 mouse events
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package disable-mouse
+  :diminish disable-mouse-global-mode
   :ensure t
   :config (global-disable-mouse-mode))
 #+END_SRC
@@ -520,6 +525,7 @@ I like to automatically indent when press RET
 [[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package company
+  :diminish company-mode
   :ensure t
   :bind (("C-c C-/" . company-complete)
          ("TAB" . company-complete))
@@ -530,6 +536,7 @@ I like to automatically indent when press RET
 The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one to hide and show blocks of text.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package hideshow
+  :diminish hs-minor-mode
   :ensure t
   :config
   (progn
@@ -547,6 +554,7 @@ maintained by [[https://github.com/AndreaCrotti][AndreaCrotti]] named yasnippet-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package yasnippet
   :ensure t
+  :diminish yas-minor-mode
   :bind (("C-c y TAB" . yas-expand)
          ("C-c y s"   . yas-insert-snippet)
          ("C-c y n"   . yas-new-snippet)
@@ -564,6 +572,7 @@ It is my preferred completion method at the moment for its simplicity.
 Bundled, we find swiper and counsel which extend ivy.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy
+  :diminish ivy-mode
   :ensure t
   :bind
   ("C-x b" . ivy-switch-buffer)
@@ -696,6 +705,7 @@ keeps your parentheses balanced and tries to get you to think in terms
 of semantic units.
  #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package paredit
+  :diminish paredit-mode
   :ensure t)
  #+END_SRC
 *** Nlinum
@@ -841,6 +851,7 @@ Steele.
 ;; buffer shown after 'M-:'.
 
 (add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
 #+END_SRC
 *** Markdown
 I like to edit README and other files written in Markdown so having
