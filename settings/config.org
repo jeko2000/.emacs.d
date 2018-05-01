@@ -877,6 +877,8 @@ I like to edit README and other files written in Markdown so having
 *** Web editing
 The [[http://web-mode.org/][web-mode]] is particularily good for editing HTML templates. It
 natively understands embedded CSS and JavaScript code blocks.
+
+We also install [[https://github.com/emacsmirror/rainbow-mode][rainbow-mode]] to colorize color names in web and CSS buffers.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package web-mode
   :ensure t
@@ -891,12 +893,19 @@ natively understands embedded CSS and JavaScript code blocks.
     (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . web-mode))
+    (setq web-mode-enable-current-element-highlight t)
     (defun jr/web-mode-hook ()
       "Hooks for Web mode."
       (setq web-mode-enable-auto-closing t
             web-mode-enable-auto-quoting t
             web-mode-markup-indent-offset 2))
     (add-hook 'web-mode-hook  'jr/web-mode-hook)
+    (use-package rainbow-mode
+      :ensure t
+      :config
+      (progn
+        (add-hook 'web-mode-hook #'rainbow-mode)
+        (add-hook 'css-mode-hook #'rainbow-mode)))
     (use-package less-css-mode
       :ensure t)
     (use-package emmet-mode
