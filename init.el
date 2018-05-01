@@ -26,6 +26,10 @@
 (add-to-list 'package-archives org-current t)
 ;;(package-initialize)
 
+;; Set up load-path
+(setq site-lisp-directory (expand-file-name "site-lisp" user-emacs-directory))
+(add-to-list 'load-path site-lisp-directory)
+
 ;; Bootstrap use-package
 ;; The excellent use-package by John Wiegley is described here:
 ;; https://github.com/jwiegley/use-package
@@ -36,7 +40,7 @@
 ;; The following comes from the use-package README
 (eval-when-compile
   (require 'use-package))
-;; (require 'diminish) ;; Commenting out since I don't use :diminish
+  (require 'diminish)
 (require 'bind-key)
 (setq use-package-verbose t)
 
@@ -44,10 +48,6 @@
 (let ((settings (expand-file-name "settings" user-emacs-directory)))
   (setq user-settings-directory
         (if (file-exists-p settings) settings user-emacs-directory)))
-
-;; Set up load-path
-(setq site-lisp-directory (expand-file-name "site-lisp" user-emacs-directory))
-(add-to-list 'load-path site-lisp-directory)
 
 ;; Load custom-file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
