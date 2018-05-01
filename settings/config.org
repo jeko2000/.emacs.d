@@ -467,6 +467,12 @@ between languages
 
 (global-set-key [f6] 'cycle-ispell-languages)
 #+END_SRC
+
+First starters, let's enable spell check for plain text files:
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'text-mode-hook 'flyspell-mode)
+#+END_SRC
+
 *** Disable-mouse-mode
 [[https://github.com/purcell][Steve Purcell]] comes to the rescue to create a minor mode that disables
 mouse events
