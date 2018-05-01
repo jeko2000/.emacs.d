@@ -398,6 +398,14 @@ HTML pages. [[http://emacs-w3m.namazu.org][Ensure you have w3m installed]].
       (setq w3m-home-page "https://duckduckgo.com/lite/"))))
 #+END_SRC
 
+** Olivetti
+[[https://github.com/rnkn/olivetti][Olivetti]] mode provides a nice environment to write distraction-free.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package olivetti
+  :ensure t
+  :config
+  (setq olivetti-body-width 120))
+#+END_SRC
 ** Synosaurus
 When writing papers or long emails, it's convenient to have a
 thesaurus right in emacs. The package [[https://github.com/hpdeifel/synosaurus][synosaurus]] wraps around the
