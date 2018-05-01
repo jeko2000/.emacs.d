@@ -958,9 +958,28 @@ I don't program much in Java these days but keep [[https://github.com/jdee-emacs
 It takes a while to get it used to it all (similar to emacs
 actually) but it more than pays off at the end. Here's [[http://www.gnus.org/manual.html][the manual]].
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq gnus-config-file (expand-file-name "settings/gnus-init.el" user-emacs-directory))
-(when (file-exists-p gnus-config-file)
-  (setq gnus-init-file gnus-config-file))
+(let ((gnus-config-file (expand-file-name "settings/gnus-init.el" user-emacs-directory)))
+  (when (file-exists-p gnus-config-file)
+    (setq gnus-init-file gnus-config-file)))
+#+END_SRC
+
+Let's set gnus as our mail handler
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mail-user-agent 'gnus-user-agent)
+#+END_SRC
+
+In the rare occasion that I create a new mail via C-x m and gnus
+isn't open, I want to start gnus up first:
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun jr/start-gnus-maybe (&rest args)
+  "Start gnus if it isn't currently running."
+  (unless (gnus-alive-p)
+    (message "Starting Gnus...")
+    (save-excursion
+      (let ((inhibit-redisplay t))
+        (gnus)))))
+
+(advice-add 'compose-mail :before #'jr/start-gnus-maybe)
 #+END_SRC
 * Org Mode
 When all else fails, [[https://orgmode.org/][org mode]] will work. I use it for almost
