@@ -217,6 +217,13 @@ Let's bind it to something useful
 #+BEGIN_SRC emacs-lisp :tangle yes
 (global-set-key (kbd "C-c e s") 'scratch)
 #+END_SRC
+
+Next, I find that every once in a while I hit "C-z", `suspend-frame'
+by accident and it takes me a couple of seconds to realize what
+happened. I think this is rather annoying so let's unbind it here:
+#+BEGIN_SRC emacs-lisp :tangle yes
+(define-key global-map (kbd "C-z") nil)
+#+END_SRC
 * Non-programming packages
 ** Winner mode
 [[https://www.emacswiki.org/emacs/WinnerMode][Winner mode]] allows to 'undo' and 'redo' on window configurations.
