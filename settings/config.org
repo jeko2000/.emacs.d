@@ -398,6 +398,32 @@ HTML pages. [[http://emacs-w3m.namazu.org][Ensure you have w3m installed]].
       (setq w3m-home-page "https://duckduckgo.com/lite/"))))
 #+END_SRC
 
+** Synosaurus
+When writing papers or long emails, it's convenient to have a
+thesaurus right in emacs. The package [[https://github.com/hpdeifel/synosaurus][synosaurus]] wraps around the
+wordnet executable to provide just that functionality.
+
+Here, we first check if the wordnet executable, wn, is found in the
+PATH and then proceed to download and configure synosaurus.
+
+One item to note is that sunosaurus defaults to using "C-c C-s" for its
+commands, which is inconvenient in Org mode since "C-c C-s" is Org's
+default binding for org-schedule. Before we load the package, we set
+the prefix to "C-c s" instead.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (executable-find "wn")
+  (use-package synosaurus
+    :ensure t
+    :init
+    (setq synosaurus-prefix (kbd "C-c s"))
+    :config
+    (progn
+      (setq synosaurus-backend 'synosaurus-backend-wordnet
+            synosaurus-choose-method 'default)
+      (add-hook 'text-mode-hook 'synosaurus-mode))))
+#+END_SRC
+
 * Programming packages
 ** Generic 
 *** Dired
