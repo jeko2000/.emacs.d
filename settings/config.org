@@ -991,6 +991,11 @@ isn't open, I want to start gnus up first:
 
 (advice-add 'compose-mail :before #'jr/start-gnus-maybe)
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "C-c g") 'gnus)
+#+END_SRC
+
 * Org Mode
 When all else fails, [[https://orgmode.org/][org mode]] will work. I use it for almost
 everything, including, of course, writing this document. 
