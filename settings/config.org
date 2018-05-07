@@ -468,6 +468,12 @@ and its fonts before the icons theme works properly.
     (global-set-key [f8] 'neotree-toggle)
     (setq neo-theme (if (display-graphic-p) 'icons 'arrow))))
 #+END_SRC
+** ace-window
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . 'ace-window))
+#+END_SRC
 * Programming packages
 ** Generic 
 *** Dired
