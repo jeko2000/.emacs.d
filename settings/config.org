@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration
 #+AUTHOR: Johnny Ruiz
 * Look and Feel
+** Blink cursor
+#+BEGIN_SRC emacs-lisp :tangle yes
+(progn
+  (blink-cursor-mode 1)
+  (setq blink-cursor-blinks 0))
+#+END_SRC
 ** Themes
 *** Daniel Mai's convenient theme function
 [[https://github.com/danielmai/.emacs.d/blob/master/config.org][Daniel Mai's configuration]] file has been a great resource of good ideas.
