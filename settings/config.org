@@ -452,6 +452,22 @@ the prefix to "C-c s" instead.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (eval-after-load "subword" '(diminish 'subword-mode))
 #+END_SRC
+** Neotree
+The [[https://github.com/jaypei/emacs-neotree][neotree]] package provides a file system tree similar to NerdTree
+for Vim.
+
+Per the neotree [[https://github.com/jaypei/emacs-neotree/blob/dev/README.md][README]] file, we must install the [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] package
+and its fonts before the icons theme works properly.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package neotree
+  :ensure t
+  :config
+  (progn
+    (use-package all-the-icons
+      :ensure t)
+    (global-set-key [f8] 'neotree-toggle)
+    (setq neo-theme (if (display-graphic-p) 'icons 'arrow))))
+#+END_SRC
 * Programming packages
 ** Generic 
 *** Dired
