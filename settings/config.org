@@ -625,6 +625,7 @@ Bundled, we find swiper and counsel which extend ivy.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy
   :diminish ivy-mode
+  :demand t
   :ensure t
   :bind
   ("C-x b" . ivy-switch-buffer)
