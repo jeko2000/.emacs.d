@@ -672,8 +672,10 @@ types for Magit buffers.
   :init
   (add-hook 'magit-mode-hook 'hl-line-mode)
   :config
-  (use-package orgit
-    :ensure t))
+  (progn
+    (use-package orgit
+      :ensure t)
+    (define-key magit-mode-map (kbd "C-<return>") nil)))
 #+END_SRC
 *** REST support
 See [[http://emacsrocks.com/e15.html][Emacs Rocks! Episode 15]] to learn how [[https://github.com/pashky/restclient.el][restclient]] can help out with
