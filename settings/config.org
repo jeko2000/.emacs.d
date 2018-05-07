@@ -94,7 +94,7 @@ Current fonts of choice:
 #+END_SRC
 * Sane Defaults
  These come largely from configurations by [[https://github.com/magnars/.emacs.d][Magnars Sveen]] and [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha
- Chua]]. 
+ Chua]].
 
  #+BEGIN_SRC emacs-lisp :tangle yes
 (if (>= emacs-major-version 24)              ; Allow pasting selection outside of Emacs
@@ -217,7 +217,7 @@ Extra bindings for other-window and other-frame
 #+END_SRC
 
 I sometimes need a scratch buffer of the same major-mode as the one I
-am in. Conveniently, the function ~scratch~ can take care of this. 
+am in. Conveniently, the function ~scratch~ can take care of this.
 
 Let's bind it to something useful
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -475,7 +475,7 @@ and its fonts before the icons theme works properly.
   :bind ("M-o" . 'ace-window))
 #+END_SRC
 * Programming packages
-** Generic 
+** Generic
 *** Dired
 **** Dired-details
 [[https://www.emacswiki.org/emacs/DiredDetails][Dired-details]] lets you hide or show the file and directory details in
@@ -571,7 +571,7 @@ files or buffers. Very handy for comparing commits.
 *** Indentation
 I like to automatically indent when press RET
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "RET") 'newline-and-indent) 
+(global-set-key (kbd "RET") 'newline-and-indent)
 #+END_SRC
 *** Company
 [[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
@@ -852,11 +852,11 @@ installed first.
   (progn
     (define-key slime-mode-map (kbd "C-<return>") 'other-window)
     (setq slime-net-coding-system 'utf-8-unix)
-    (add-hook 'slime-repl-mode-hook 'enable-paredit-mode)    
+    (add-hook 'slime-repl-mode-hook 'enable-paredit-mode)
     (add-hook 'slime-repl-mode-hook
               (lambda ()
                 (define-key slime-repl-mode-map (kbd "C-<return>") 'other-window)))
-    (add-hook 'slime-mode-hook 
+    (add-hook 'slime-mode-hook
               (lambda ()
                 (cond ((boundp 'slime-mode-map)
                        (define-key slime-mode-map (kbd "C-c x") nil)
@@ -1039,7 +1039,7 @@ isn't open, I want to start gnus up first:
 
 * Org Mode
 When all else fails, [[https://orgmode.org/][org mode]] will work. I use it for almost
-everything, including, of course, writing this document. 
+everything, including, of course, writing this document.
 Here's [[https://orgmode.org/manual/][the manual]].
 ** Org activation bindings
 
