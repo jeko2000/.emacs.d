@@ -649,7 +649,6 @@ Bundled, we find swiper and counsel which extend ivy.
        ("C-h v" . counsel-describe-variable)
        ("<f2> i" . counsel-info-lookup-symbol)
        ("<f2> u" . counsel-unicode-char)
-       ("C-c g" . counsel-git)
        ("C-c j" . counsel-git-grep)
        ("C-c k" . counsel-ag)
        ("C-x C-f" . counsel-find-file)
@@ -697,7 +696,7 @@ types for Magit buffers.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
   :ensure t
-  :bind ("C-x g" . magit-status)
+  :bind ("C-c g" . magit-status)
   :init
   (add-hook 'magit-mode-hook 'hl-line-mode)
   :config
