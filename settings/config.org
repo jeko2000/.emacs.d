@@ -974,6 +974,17 @@ We also install [[https://github.com/emacsmirror/rainbow-mode][rainbow-mode]] to
 
 (define-key web-mode-map (kbd "C-c C-e j") 'jr/insert-django-text)
 #+END_SRC
+
+[[https://github.com/skeeto/impatient-mode][Impatient mode]] allows one to see changes to HTML buffers _instantly_
+as you type which is very cool. There's even this [[http://youtu.be/QV6XVyXjBO8][YouTube video]] that
+shows what it does.
+
+Oh, and remember that [[https://github.com/rg3/youtube-dl][youtube-dl]] is a great way to download/watch
+YouTube videos!
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package impatient-mode
+  :ensure t)
+#+END_SRC
 *** Java/JDEE
 I don't program much in Java these days but keep [[https://github.com/jdee-emacs/jdee][JDEE]] around just in case.
 #+BEGIN_SRC emacs-lisp :tangle yes
