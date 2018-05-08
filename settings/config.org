@@ -406,7 +406,7 @@ HTML pages. [[http://emacs-w3m.namazu.org][Ensure you have w3m installed]].
 (when (executable-find "w3m")
   (use-package w3m
     :ensure t
-    :bind (("C-c w" . 'w3m))
+    :bind (("C-x w" . 'w3m))
     :config
     (progn
       ;;    (setq w3m-user-agent "Mozilla/5.0 (Linux; U; Android 2.3.3; zh-tw; HTC_Pyramid Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.")
