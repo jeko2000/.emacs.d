@@ -1033,7 +1033,7 @@ isn't open, I want to start gnus up first:
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "C-c g") 'gnus)
+(global-set-key (kbd "C-x g") 'gnus)
 #+END_SRC
 
 * Org Mode
