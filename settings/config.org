@@ -293,9 +293,15 @@ Of course! We need [[https://www.gnu.org/software/tramp/][remote file editing!]]
 
 ** PDF-Tools
 [[https://github.com/politza/pdf-tools][Alternative to DocView for PDF files]]. Requires initial setup though
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package pdf-tools
-  :ensure t)
+  :ensure t
+  :config
+  (let ((executable pdf-info-epdfinfo-program))
+    (when (and (stringp executable)
+               (file-executable-p executable))
+      (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-view-mode)))))
+
 #+END_SRC
 ** Undo Tree
 [[https://www.emacswiki.org/emacs/UndoTree][Undo Tree]] tries to improve on emacs undo system by helping you
