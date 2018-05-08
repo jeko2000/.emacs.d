@@ -1151,6 +1151,10 @@ Captured %<%Y-%m-%d %H:%M>
         ("r" "Reference" item
          (file+headline "/home/jeko/rep/personal/org/notes.org"  "References"))
 
+        ("I" "Idea" entry
+         (file+headline "/home/jeko/rep/personal/org/notes.org"  "Ideas")
+         "* TODO %^{Task}")
+
         ("j" "Journal" entry
          (file+datetree "/home/jeko/rep/personal/org/journal.org" )
          "* %?\n\n%i\n%U\n")))
