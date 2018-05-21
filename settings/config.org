@@ -687,7 +687,10 @@ maintained by [[https://github.com/AndreaCrotti][AndreaCrotti]] named yasnippet-
 
 (use-package yasnippet-snippets
   :ensure t)
+#+END_SRC
 
+We also download [[https://github.com/mkcms/ivy-yasnippet][ivy-yasnippet]] by [[https://github.com/mkcms][mkcms]] to allow snippet previews through [[https://github.com/abo-abo/swiper][ivy]].
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy-yasnippet
   :ensure t
   :bind ("C-c y y" . ivy-yasnippet))
