@@ -506,6 +506,14 @@ and its fonts before the icons theme works properly.
 (setq erc-rename-buffers t)
 (setq erc-kill-buffer-on-part t)
 #+END_SRC
+** emacs-server
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package server
+  :no-require
+  :config (progn
+            (server-start)
+            (require 'org-protocol)))
+#+END_SRC
 * Programming packages
 ** Generic
 *** Dired
