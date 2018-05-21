@@ -506,6 +506,19 @@ and its fonts before the icons theme works properly.
 (setq erc-rename-buffers t)
 (setq erc-kill-buffer-on-part t)
 #+END_SRC
+** elfeed
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package elfeed
+  :ensure t
+  :config
+  (progn
+    (setq elfeed-feeds
+          '(("https://estamosaquitravel.com/feed.atom" travel estamosaqui)
+            ("http://nullprogram.com/feed/" blog emacs)
+            "http://planet.emacsen.org/atom.xml"))
+    (setf url-queue-timeout 10)
+    (setq-default elfeed-search-filter "@1-week-ago +unread ")))
+#+END_SRC
 ** emacs-server
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package server
