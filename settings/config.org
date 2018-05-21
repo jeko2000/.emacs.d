@@ -674,6 +674,10 @@ maintained by [[https://github.com/AndreaCrotti][AndreaCrotti]] named yasnippet-
 
 (use-package yasnippet-snippets
   :ensure t)
+
+(use-package ivy-yasnippet
+  :ensure t
+  :bind ("C-c y y" . ivy-yasnippet))
 #+END_SRC
 *** Completion
 **** Ivy
