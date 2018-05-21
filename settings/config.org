@@ -317,7 +317,7 @@ visualize actions.
     (global-undo-tree-mode)))
 #+END_SRC
 
-** Display Battery Mode
+** Display Battery & Clock modes
 I like to run all my emacs frames at full-screen. The problem comes
 when my laptop dies because I didn't bother to check the status of its
 battery. [[https://www.emacswiki.org/emacs/DisplayBatteryMode][Display Battery Mode]] can show the status of the system
@@ -326,6 +326,17 @@ battery right on the mode line.
 (when (functionp 'display-battery-mode)
   (setq battery-mode-line-format "[%b%p%% %t]")
   (display-battery-mode 1))
+#+END_SRC
+Along the same lines, I like to be able to check the time from within a
+full-screen frame.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (functionp 'display-time-mode)
+  (setq display-time-24hr-format t
+        display-time-day-and-date nil
+        display-time-default-load-average nil
+        display-time-interval 60
+        display-time-mail-string "")
+  (display-time-mode 1))
 #+END_SRC
 ** Zoom-frm
 My main machine has a very high resolution which makes font size
