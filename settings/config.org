@@ -514,6 +514,19 @@ and its fonts before the icons theme works properly.
             (server-start)
             (require 'org-protocol)))
 #+END_SRC
+** appt
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package appt
+  :no-require
+  :config
+  (progn
+    (appt-activate 1)
+    (setq appt-audible t
+          appt-display-duration 15
+          appt-display-format 'window
+          appt-display-mode-line t
+          appt-message-warning-time 12)))
+#+END_SRC
 ** po-edit
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package po-mode
