@@ -514,6 +514,11 @@ and its fonts before the icons theme works properly.
             (server-start)
             (require 'org-protocol)))
 #+END_SRC
+** po-edit
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package po-mode
+  :mode ("\\.pot?\\'" . po-mode))
+#+END_SRC
 * Programming packages
 ** Generic
 *** Dired
