@@ -419,6 +419,8 @@ to [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]].
 ** w3m
 [[http://w3m.sourceforge.net/][W3m]] is a text-based browser whose engine is used by emacs to serve
 HTML pages. [[http://emacs-w3m.namazu.org][Ensure you have w3m installed]].
+We also add a couple of bindings to open urls externally through
+Firefox.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (when (executable-find "w3m")
   (use-package w3m
@@ -428,9 +430,18 @@ HTML pages. [[http://emacs-w3m.namazu.org][Ensure you have w3m installed]].
     (progn
       ;;    (setq w3m-user-agent "Mozilla/5.0 (Linux; U; Android 2.3.3; zh-tw; HTC_Pyramid Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.")
       (setq browse-url-browser-function 'w3m-goto-url-new-session)
-      (setq w3m-home-page "https://duckduckgo.com/lite/"))))
+      (setq w3m-home-page "https://duckduckgo.com/lite/")
+      (defun jr/w3m-open-link-at-point-in-firefox ()
+        "Open the w3m anchor at point in Firefox."
+        (interactive)
+        (browse-url-firefox (w3m-anchor)))
+      (defun jr/w3m-open-current-url-in-firefox ()
+        "Open the `w3m-current-url' in Firefox"
+        (interactive)
+        (browse-url-firefox w3m-current-url))
+      (define-key w3m-mode-map "X" 'jr/w3m-open-link-at-point-in-firefox)
+      (define-key w3m-mode-map "x" 'jr/w3m-open-current-url-in-firefox))))
 #+END_SRC
-
 ** Olivetti
 [[https://github.com/rnkn/olivetti][Olivetti]] mode provides a nice environment to write distraction-free.
 #+BEGIN_SRC emacs-lisp :tangle yes
