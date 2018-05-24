@@ -50,6 +50,14 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
+;; Load org-mode source early on
+(let ((org-source (expand-file-name "org-mode/lisp" site-lisp-directory))
+      (org-contrib-source (expand-file-name "org-mode/contrib/lisp" site-lisp-directory)))
+  (when (file-exists-p org-source)
+    (add-to-list 'load-path org-source))
+  (when (file-exists-p org-contrib-source)
+    (add-to-list 'load-path org-contrib-source)))
+
 ;; Load the rest of the configuration
 (setq org-config-file (expand-file-name "config.org" user-settings-directory))
 (org-babel-load-file org-config-file nil)
