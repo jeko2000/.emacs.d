@@ -15,14 +15,12 @@
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
-(defvar org-current '("org" . "https://orgmode.org/elpa/"))
 
 (setq package-archives '())
 
 (add-to-list 'package-archives melpa-stable)
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
-(add-to-list 'package-archives org-current t)
 ;;(package-initialize)
 
 ;; Set up load-path
