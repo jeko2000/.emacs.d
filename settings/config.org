@@ -486,10 +486,15 @@ and its fonts before the icons theme works properly.
     (setq neo-theme (if (display-graphic-p) 'icons 'arrow))))
 #+END_SRC
 ** ace-window
+The [[https://github.com/abo-abo/ace-window][ace-window]] by [[ace-window][abo-abo]] offers an improved way of navigating through
+multiple windows. As part of its configuration, let's have it use the
+keys from the home row instead of the numbers 1-9.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ace-window
   :ensure t
-  :bind ("M-o" . 'ace-window))
+  :bind ("M-o" . 'ace-window)
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 #+END_SRC
 ** erc
 #+BEGIN_SRC emacs-lisp :tangle yes
