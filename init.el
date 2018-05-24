@@ -27,6 +27,10 @@
 (setq site-lisp-directory (expand-file-name "site-lisp" user-emacs-directory))
 (add-to-list 'load-path site-lisp-directory)
 
+(dolist (project (directory-files site-lisp-directory t "\\w+"))
+  (when (file-directory-p project)
+    (add-to-list 'load-path project)))
+
 ;; Bootstrap use-package
 ;; The excellent use-package by John Wiegley is described here:
 ;; https://github.com/jwiegley/use-package
