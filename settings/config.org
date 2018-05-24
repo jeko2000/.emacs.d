@@ -1102,9 +1102,13 @@ I don't program much in Java these days but keep [[https://github.com/jdee-emacs
 It takes a while to get it used to it all (similar to emacs
 actually) but it more than pays off at the end. Here's [[http://www.gnus.org/manual.html][the manual]].
 #+BEGIN_SRC emacs-lisp :tangle yes
-(let ((gnus-config-file (expand-file-name "settings/gnus-init.el" user-emacs-directory)))
+;; (let ((gnus-config-file (expand-file-name "settings/gnus-init.el" user-emacs-directory)))
+;;   (when (file-exists-p gnus-config-file)
+;;     (setq gnus-init-file gnus-config-file)))
+
+(let ((gnus-config-file (expand-file-name "site-lisp/dot-gnus/dot-gnus.org" user-emacs-directory)))
   (when (file-exists-p gnus-config-file)
-    (setq gnus-init-file gnus-config-file)))
+    (setq gnus-init-file (car (org-babel-tangle-file gnus-config-file)))))
 #+END_SRC
 
 Let's set gnus as our mail handler
