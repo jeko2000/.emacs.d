@@ -561,6 +561,67 @@ keys from the home row instead of the numbers 1-9.
 (use-package po-mode
   :mode ("\\.pot?\\'" . po-mode))
 #+END_SRC
+** bongo
+The [[https://github.com/dbrock/bongo][bongo]] package provides a flexible media player for emacs.
+#+begin_src emacs-lisp :tangle yes
+(use-package bongo
+  :init
+  (progn
+    (defun jr/bongo-show-current-track ()
+      "Display current track in the minibuffer."
+      (interactive)
+      (with-current-buffer bongo-default-playlist-buffer-name
+        (when bongo-player
+          (bongo-player-show-infoset bongo-player))))
+    (defun jr/pactl-raise-volume ()
+      "Raise default sink's volume through pactl."
+      (interactive)
+      (shell-command "pactl set-sink-volume @DEFAULT_SINK@ +5%"))
+    (defun jr/pactl-lower-volume ()
+      "Lower default sink's volume through pactl."
+      (interactive)
+      (shell-command "pactl set-sink-volume @DEFAULT_SINK@ -5%")))
+  :ensure t
+
+  :bind (("C-c m SPC" . bongo-pause/resume)
+         ("C-c m n" . bongo-play-next)
+         ("C-c m p" . bongo-play-previous)
+         ("C-c m r" . bongo-play-random)
+         ("C-c m s" . jr/bongo-show-current-track)
+         ("C-c m b" . bongo)
+         ("C-c m u" . jr/pactl-raise-volume)
+         ("C-c m d" . jr/pactl-lower-volume))
+
+  :config
+  (progn
+    (setq
+     ;; Drag and drop support
+     bongo-dnd-support t
+     bongo-dnd-destination 'end-of-buffer
+     ;; Lastfm support
+     bongo-global-lastfm-mode nil
+     ;; File insertion
+     bongo-insert-whole-directory-trees 'ask
+     bongo-mark-played-tracks t
+     ;;Display
+     bongo-mode-line-indicator-mode nil
+     bongo-header-line-mode nil
+     ;; Misc
+     bongo-next-action 'bongo-play-next-or-stop
+     bongo-display-playlist-after-enqueue nil
+     bongo-seek-electric-mode t
+     bongo-sprinkle-amount 50)
+    (defun jr/bongo-mode-init ()
+      (when (equal system-type 'gnu/linux)
+        (let ((music-directory "/media/usb1/Share/Music")
+              (bongo-insert-whole-directory-trees t))
+          (bongo-insert-file music-directory)
+          (with-current-buffer (bongo-playlist-buffer)
+            (bongo-sprinkle-mode 1)
+            (bongo-play)))))
+    (jr/bongo-mode-init)))
+#+end_src
+
 ** ag
 The [[https://github.com/ggreer/the_silver_searcher][silver searcher]] is an incredibly useful code-searching tool.
 Though it is similar to ack or grep, it is much, much faster. In order
