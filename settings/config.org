@@ -661,22 +661,6 @@ First, we bootstrap [[http://aspell.net/][GNU Aspell]]
       flyspell-issue-message-flag nil
       ispell-list-command "--list") ; See https://www.emacswiki.org/emacs/FlySpell#tic5
 #+END_SRC
-Then, we borrow some code from [[https://www.emacswiki.org/emacs/FlySpell#toc5][the wiki]] to make it easier to cycle
-between languages
-#+BEGIN_SRC emacs-lisp :tangle yes
-(let ((langs '("en_US" "castellano8")))
-  (setq lang-ring (make-ring (length langs)))
-  (dolist (lang langs)
-    (ring-insert lang-ring lang)))
-
-(defun cycle-ispell-languages ()
-  (interactive)
-  (let ((lang (ring-ref lang-ring -1)))
-    (ring-insert lang-ring lang)
-    (ispell-change-dictionary lang)))
-
-(global-set-key [f6] 'cycle-ispell-languages)
-#+END_SRC
 
 First starters, let's enable spell check for plain text files:
 #+BEGIN_SRC emacs-lisp :tangle yes
