@@ -210,8 +210,11 @@ Convenient keybindings to resize windows.
 (bind-key "s-C-<up>"    'enlarge-window)
 #+END_SRC
 
-Extra bindings for other-window and other-frame
-#+BEGIN_SRC emacs-lisp :tangle yes
++Extra bindings for other-window and other-frame+
+
+Update: I no longer wish to use C-<return> for 'other-window as this
+fails to work in tty mode
+#+BEGIN_SRC emacs-lisp :tangle no
 (global-set-key (kbd "C-<return>") 'other-window)
 (global-set-key (kbd "C-c C-<return>") 'other-frame)
 #+END_SRC
