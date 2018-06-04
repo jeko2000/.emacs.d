@@ -564,6 +564,14 @@ keys from the home row instead of the numbers 1-9.
 (use-package po-mode
   :mode ("\\.pot?\\'" . po-mode))
 #+END_SRC
+** gnuplot
+[[http://www.gnuplot.info/][Gnuplot]] is a portable command-line driven graphing utility supported
+by org mode through Bruce Rave's [[https://github.com/bruceravel/gnuplot-mode][gnuplot-mode]]
+#+begin_src emacs-lisp :tangle yes
+(use-package gnuplot
+  :ensure t)
+#+end_src
+
 ** bongo
 The [[https://github.com/dbrock/bongo][bongo]] package provides a flexible media player for emacs.
 #+begin_src emacs-lisp :tangle yes
