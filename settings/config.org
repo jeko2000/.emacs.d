@@ -673,9 +673,12 @@ First, we bootstrap [[http://aspell.net/][GNU Aspell]]
       ispell-list-command "--list") ; See https://www.emacswiki.org/emacs/FlySpell#tic5
 #+END_SRC
 
-First starters, let's enable spell check for plain text files:
+Next, let's enable spell check for plain text and org-mode files when
+the aspell executable is present in the exec-path.
 #+BEGIN_SRC emacs-lisp :tangle yes
-(add-hook 'text-mode-hook 'flyspell-mode)
+(when (executable-find "aspell")
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (add-hook 'org-mode-hook  'flyspell-mode))
 #+END_SRC
 
 *** Disable-mouse-mode
@@ -1236,7 +1239,6 @@ This sets up the main global keybindings
 (bind-key "C-c b" 'org-iswitchb)
 
 (eval-after-load "org-indent" '(diminish 'org-indent-mode))
-(add-hook 'org-mode-hook 'flyspell-mode)
 ;; org-mode: Don't ruin S-arrow to switch windows please (use M-+ and M-- instead to toggle)
 (setq org-replace-disputed-keys t)
 
