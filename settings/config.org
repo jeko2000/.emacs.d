@@ -974,6 +974,35 @@ by the great [[https://www.google.com/search?q=eshell+jwiegleyt&ie=utf-8&oe=utf-
 (defalias 'open 'find-file)
 (defalias 'openo 'find-file-other-window)
 #+END_SRC
+
+*** projectile-mode
+The useful [[https://github.com/bbatsov/projectile][projectile-mode]] package by [[https://github.com/bbatsov/][bbastov]] provides lots of tools
+to interact with your project, which is defined as a simple folder
+with a special file such as .project, .projectile and many other
+supported types.
+ #+begin_src emacs-lisp :tangle yes
+(use-package projectile
+  :ensure t
+  :config
+  (progn
+    (setq projectile-cache-file "~/projectile.cache"
+          projectile-completion-system 'ivy
+          projectile-enable-caching t
+          projectile-file-exists-local-cache-expire 120
+          projectile-file-exists-remote-cache-expire 300
+          projectile-known-projects-file "~/projectile-bookmarks.eld"
+          projectile-sort-order 'recentf
+          projectile-track-known-projects-automatically t)
+    (add-to-list 'projectile-other-file-alist '("clj" "cljs"))
+    (add-to-list 'projectile-other-file-alist '("cljs" "clj"))
+    (use-package counsel-projectile
+      :ensure t
+      :config
+      (progn
+        (add-hook 'web-mode-hook #'rainbow-mode)
+        (add-hook 'css-mode-hook #'rainbow-mode)
+        (counsel-projectile-mode)))))
+ #+end_src
 *** Clojure
 [[https://www.google.com/search?q=clojure&ie=utf-8&oe=utf-8][Clojure]] is a dynamic programming language that compiles to Java
 Unicode. It's one of my main languages right now.
