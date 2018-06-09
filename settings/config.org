@@ -707,6 +707,20 @@ operating system.
       (use-package wgrep-ag
         :ensure t))))
 #+end_src
+** smartscan
+The [[https://github.com/mickeynp/smart-scan][smartscan]] package written by [[https://github.com/mickeynp/][Mickey Petersen]] allows you to jump
+between words or symbols under point. I found out about it from
+Mickey's [[http://sachachua.com/blog/2014/09/emacs-chat-mickey-petersen/][chat with Sasha Chua]].
+#+begin_src emacs-lisp :tangle yes
+(use-package smartscan
+  :ensure t
+  :config
+  (progn
+    (setq global-smartscan-mode t
+          smartscan-symbol-selector "word")
+    (smartscan-mode 1)))
+#+end_src
+
 * Programming packages
 ** Generic
 *** Dired
