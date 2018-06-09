@@ -1418,7 +1418,6 @@ This sets up the main global keybindings
 (bind-key "<f12>" 'org-agenda)
 (bind-key "C-c b" 'org-iswitchb)
 
-(eval-after-load "org-indent" '(diminish 'org-indent-mode))
 ;; org-mode: Don't ruin S-arrow to switch windows please (use M-+ and M-- instead to toggle)
 (setq org-replace-disputed-keys t)
 
