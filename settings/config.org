@@ -326,6 +326,7 @@ Of course! We need [[https://www.gnu.org/software/tramp/][remote file editing!]]
 [[https://github.com/politza/pdf-tools][Alternative to DocView for PDF files]]. Requires initial setup though
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package pdf-tools
+  :defer t
   :ensure t
   :config
   (let ((executable pdf-info-epdfinfo-program))
@@ -456,6 +457,7 @@ Firefox.
 (when (executable-find "w3m")
   (use-package w3m
     :ensure t
+    :defer 5
     :bind (("C-x w" . 'w3m))
     :config
     (progn
@@ -478,6 +480,7 @@ Firefox.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package olivetti
   :ensure t
+  :defer t
   :config
   (setq olivetti-body-width 120))
 #+END_SRC
@@ -497,6 +500,7 @@ the prefix to "C-c s" instead.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (when (executable-find "wn")
   (use-package synosaurus
+    :defer t
     :ensure t
     :init
     (setq synosaurus-prefix (kbd "C-c s"))
@@ -521,6 +525,7 @@ and its fonts before the icons theme works properly.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package neotree
   :ensure t
+  :defer t
   :config
   (progn
     (use-package all-the-icons
@@ -587,6 +592,7 @@ keys from the home row instead of the numbers 1-9.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package elfeed
   :ensure t
+  :defer 10
   :config
   (progn
     (setq elfeed-feeds
@@ -627,6 +633,7 @@ keys from the home row instead of the numbers 1-9.
 by org mode through Bruce Rave's [[https://github.com/bruceravel/gnuplot-mode][gnuplot-mode]]
 #+begin_src emacs-lisp :tangle yes
 (use-package gnuplot
+  :defer t
   :ensure t)
 #+end_src
 
@@ -700,6 +707,7 @@ operating system.
 (when (executable-find "ag")
   (use-package ag
     :ensure t
+    :defer t
     :config
     (progn
       (setq ag-highlight-search t
@@ -834,6 +842,7 @@ The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package hideshow
   :diminish hs-minor-mode
+  :defer t
   :ensure t
   :config
   (progn
@@ -1130,6 +1139,7 @@ The following sets up [[https://www.emacswiki.org/emacs/SlimeMode][slime]] to us
 installed first.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package slime
+  :defer t
   :ensure t
   :init
   (progn
@@ -1213,6 +1223,7 @@ I like to edit README and other files written in Markdown so having
 [[https://jblevins.org/projects/markdown-mode/][markdown-mode]] is very convenient.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package markdown-mode
+  :defer t
   :ensure t)
 #+END_SRC
 *** Web editing
@@ -1268,6 +1279,7 @@ Oh, and remember that [[https://github.com/rg3/youtube-dl][youtube-dl]] is a gre
 YouTube videos!
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package impatient-mode
+  :defer t
   :ensure t)
 #+END_SRC
 *** Java/JDEE
@@ -1275,6 +1287,7 @@ I don't program much in Java these days but keep [[https://github.com/jdee-emacs
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package jdee
   :defer 10
+  :defer t
   :ensure t
   :config
   (progn
