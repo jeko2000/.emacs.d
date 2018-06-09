@@ -833,6 +833,7 @@ I like to automatically indent when press RET
 (use-package company
   :delight
   :ensure t
+  :demand t
   :bind (("C-c C-/" . company-complete)
          ("TAB" . company-complete))
   :config
@@ -861,6 +862,7 @@ maintained by [[https://github.com/AndreaCrotti][AndreaCrotti]] named yasnippet-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package yasnippet
   :ensure t
+  :demand t
   :delight yas-minor-mode
   :bind (("C-c y TAB" . yas-expand)
          ("C-c y s"   . yas-insert-snippet)
@@ -983,6 +985,7 @@ See [[http://emacsrocks.com/e13.html][Emacs Rocks! Episode 13]] to learn about [
 by [[https://github.com/magnars/.emacs.d][Magnars Sveen]].
  #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package multiple-cursors
+  :demand  t
   :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C-+"         . mc/mark-next-like-this)
