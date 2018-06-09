@@ -233,6 +233,25 @@ happened. I think this is rather annoying so let's unbind it here:
 (define-key global-map (kbd "C-z") nil)
 #+END_SRC
 * Non-programming packages
+** delight
+Quoting directly from the [[https://www.emacswiki.org/emacs/DelightedModes][wiki]], Delight enables you to easily
+customize how major and minor modes appear in the ModeLine.
+#+begin_src emacs-lisp :tangle yes
+(use-package delight
+  :ensure t
+  :config
+  (delight '((abbrev-mode " Abv" abbrev)
+             (auto-fill-function nil t)
+             (auto-fill-mode nil t)
+             (eldoc-mode nil eldoc)
+             (emacs-lisp-mode "Elisp" :major)
+             (erc-mode "i" :major)
+             (org-mode "O" :major)
+             (org-agenda-mode "Agenda" :major)))
+  (if (window-system)
+      (delight '((erc-mode "ι" :major)
+                 (org-mode "Ω" :major)))))
+#+end_src
 ** subword
 [[http://wikemacs.org/wiki/Subword-mode][Subword]] mode allows navigation commands to be aware of words in
 [[https://en.wikipedia.org/wiki/Camel_case][camelCase]].
@@ -489,7 +508,8 @@ the prefix to "C-c s" instead.
 #+END_SRC
 
 ** Diminish
-#+BEGIN_SRC emacs-lisp :tangle yes
+Update: I no longer use [[https://github.com/myrjola/diminish.el][diminish]] and have switched to [[https://www.emacswiki.org/emacs/DelightedModes][delight]] instead.
+#+BEGIN_SRC emacs-lisp :tangle no
 (eval-after-load "subword" '(diminish 'subword-mode))
 #+END_SRC
 ** Neotree
