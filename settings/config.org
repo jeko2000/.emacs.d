@@ -363,7 +363,7 @@ Along the same lines, I like to be able to check the time from within a
 full-screen frame.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (when (functionp 'display-time-mode)
-  (setq display-time-24hr-format t
+  (setq display-time-format " h:%H:%M"
         display-time-day-and-date nil
         display-time-default-load-average nil
         display-time-interval 60
