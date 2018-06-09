@@ -721,6 +721,17 @@ Mickey's [[http://sachachua.com/blog/2014/09/emacs-chat-mickey-petersen/][chat w
     (smartscan-mode 1)))
 #+end_src
 
+** alert
+#+begin_src emacs-lisp :tangle yes
+(use-package alert
+  :defer t
+  :ensure t
+  :config
+  (setq alert-fade-time 4
+        alert-default-style (if (executable-find "notify-send") 'libnotify 'message)
+        alert-log-messages t))
+#+end_src
+
 * Programming packages
 ** Generic
 *** Dired
