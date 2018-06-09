@@ -543,16 +543,45 @@ keys from the home row instead of the numbers 1-9.
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; This causes ERC to connect to the Freenode network upon hitting
 ;; C-c e f.  Replace MYNICK with your IRC nick.
-(defun jr/connect-to-erc ()
-  (interactive)
-  (erc :server "irc.freenode.net"
-       :port "6667"
-       :nick "jeko2000"))
-
-(global-set-key "\C-cef" 'jr/connect-to-erc)
-(setq erc-autojoin-channels-alist '(("freenode.net" "#emacs" "#erc" "#gnus")))
-(setq erc-rename-buffers t)
-(setq erc-kill-buffer-on-part t)
+(use-package erc
+  :defer 5
+  :preface
+  (defun jr/connect-to-erc ()
+    (interactive)
+    (erc :server "irc.freenode.net"
+         :port "6667"
+         :nick "jeko2000"))
+  :bind ("C-c e f" . 'jr/connect-to-erc)
+  ;;  :delight erc-mode "ε"
+  :config
+  (progn
+    (add-to-list 'erc-modules 'notifications)
+    (add-to-list 'erc-modules 'spelling)
+    (erc-services-mode 1)
+    (erc-update-modules)
+    (setq erc-autojoin-channels-alist '(("freenode.net" "#emacs" "#erc"
+                                         "#gnus" "#org-mode #i3" "#archlinux"))
+          erc-autojoin-timing 'ident
+          erc-autojoin-delay 10
+          erc-fill-function 'erc-fill-static
+          erc-fill-static-center 22
+          erc-fill-function 'erc-fill-variable
+          erc-hide-list '("JOIN" "PART" "QUIT")
+          erc-lurker-hide-list '("JOIN" "PART" "QUIT")
+          erc-lurker-threshold-time 43200
+          erc-fill-column 78
+          erc-rename-buffers t
+          erc-insert-timestamp-function 'erc-insert-timestamp-left
+          erc-kill-buffer-on-part t
+          erc-prompt-for-nickserv-password nil
+          erc-server-reconnect-attempts 5
+          erc-server-reconnect-timeout 3
+          erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                                    "324" "329" "332" "333" "353" "477"))
+    (use-package erc-hl-nicks
+      :ensure t)
+    (use-package erc-image
+      :ensure t)))
 #+END_SRC
 ** elfeed
 #+BEGIN_SRC emacs-lisp :tangle yes
