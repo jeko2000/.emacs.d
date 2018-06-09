@@ -141,7 +141,6 @@ Current fonts of choice:
 
 (set-default 'indent-tabs-mode nil)          ; Never insert tabs
 (set-default 'indicate-empty-lines t)        ; Show me empty lines after buffer end
-(global-subword-mode 1)                      ; Easily navigate sillycased words
 (setq-default truncate-lines t)              ; Don't break lines for me, please
 ;;(require 'smooth-scrolling)                  ; Keep cursor away from edges when scrolling up/down
 
@@ -234,6 +233,16 @@ happened. I think this is rather annoying so let's unbind it here:
 (define-key global-map (kbd "C-z") nil)
 #+END_SRC
 * Non-programming packages
+** subword
+[[http://wikemacs.org/wiki/Subword-mode][Subword]] mode allows navigation commands to be aware of words in
+[[https://en.wikipedia.org/wiki/Camel_case][camelCase]].
+#+begin_src emacs-lisp :tangle yes
+(use-package subword
+  :delight
+  :config
+  (global-subword-mode 1))
+#+end_src
+
 ** Winner mode
 [[https://www.emacswiki.org/emacs/WinnerMode][Winner mode]] allows to 'undo' and 'redo' on window configurations.
 Say you have 5 windows open carefully positioned and then you focus on
