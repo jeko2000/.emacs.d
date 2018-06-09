@@ -1197,30 +1197,69 @@ Steele.
 #+END_SRC
 *** Emacs Lisp
 #+BEGIN_SRC emacs-lisp :tangle yes
-(defun eval-and-replace ()
-  "Replace the preceding sexp with its value.
-  Source: http://emacsredux.com/blog/2013/06/21/eval-and-replace/"
-  (interactive)
-  (backward-kill-sexp)
-  (condition-case nil
-      (prin1 (eval (read (current-kill 0)))
-             (current-buffer))
-    (error (message "Invalid expression")
-           (insert (current-kill 0)))))
+  (defun eval-and-replace ()
+    "Replace the preceding sexp with its value.
+    Source: http://emacsredux.com/blog/2013/06/21/eval-and-replace/"
+    (interactive)
+    (backward-kill-sexp)
+    (condition-case nil
+        (prin1 (eval (read (current-kill 0)))
+               (current-buffer))
+      (error (message "Invalid expression")
+             (insert (current-kill 0)))))
 
-(define-key emacs-lisp-mode-map (kbd "C-c e b") 'eval-buffer)
-(define-key emacs-lisp-mode-map (kbd "C-c e d") 'toggle-debug-on-error)
-(define-key emacs-lisp-mode-map (kbd "C-c e c") 'emacs-lisp-byte-compile-and-load)
-(define-key emacs-lisp-mode-map (kbd "C-c e r") 'eval-region)
-(define-key emacs-lisp-mode-map (kbd "C-c e e") 'eval-and-replace)
+  (define-key emacs-lisp-mode-map (kbd "C-c e b") 'eval-buffer)
+  (define-key emacs-lisp-mode-map (kbd "C-c e d") 'toggle-debug-on-error)
+  (define-key emacs-lisp-mode-map (kbd "C-c e c") 'emacs-lisp-byte-compile-and-load)
+  (define-key emacs-lisp-mode-map (kbd "C-c e r") 'eval-region)
+  (define-key emacs-lisp-mode-map (kbd "C-c e e") 'eval-and-replace)
 
-(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
 
-;; In addition, let's enable paredit-mode in the eval-expression
-;; buffer shown after 'M-:'.
+  ;; In addition, let's enable paredit-mode in the eval-expression
+  ;; buffer shown after 'M-:'.
 
-(add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
-(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+  (add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
+
+  ;; Let's add a couple of bindings to C-c C-z to be able to switch back
+  ;; and forth between an emacs-lisp buffer and ielm
+  (defcustom jr/ielm-repl-display-in-current-window nil
+    "When non-nil, show the ielm REPL buffer in the current window."
+    :type 'boolean
+    :group 'ielm)
+
+  (defun jr/ielm-switch-to-ielm-buffer ()
+    "Switch to the ielm buffer in an existing window, when
+  possible. If `jr/ielm-repl-display-in-current-window' is non-nil,
+  then attempt to use the same window."
+    (interactive)
+    (let ((ielm-buff-name "*ielm*"))
+      (unless (comint-check-proc ielm-buff-name)
+        (with-current-buffer (get-buffer-create ielm-buff-name)
+          (inferior-emacs-lisp-mode)))
+      (if jr/ielm-repl-display-in-current-window
+          (pop-to-buffer-same-window ielm-buff-name)
+        (pop-to-buffer ielm-buff-name))))
+
+  (define-key emacs-lisp-mode-map (kbd "C-c C-z") 'jr/ielm-switch-to-ielm-buffer)
+
+  (defun jr/ielm-switch-to-last-emacs-lisp-buffer ()
+    "Switch to the last emacs-lisp buffer in an existing window,
+  when possible. If `jr/ielm-repl-display-in-current-window' is
+  non-nil, then attempt to use the same window."
+    (interactive)
+    (when (eq major-mode 'inferior-emacs-lisp-mode)
+      (let ((last-buff (seq-find (lambda (b)
+                                   (with-current-buffer b
+                                     (eq major-mode 'emacs-lisp-mode)))
+                                 (buffer-list))))
+        (when last-buff
+          (if jr/ielm-repl-display-in-current-window
+              (pop-to-buffer-same-window last-buff)
+            (pop-to-buffer last-buff))))))
+
+  (require 'ielm)
+  (define-key ielm-map (kbd "C-c C-z") 'jr/ielm-switch-to-last-emacs-lisp-buffer)
 #+END_SRC
 *** Markdown
 I like to edit README and other files written in Markdown so having
