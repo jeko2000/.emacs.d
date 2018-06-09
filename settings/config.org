@@ -1088,6 +1088,8 @@ supported types.
           projectile-track-known-projects-automatically t)
     (add-to-list 'projectile-other-file-alist '("clj" "cljs"))
     (add-to-list 'projectile-other-file-alist '("cljs" "clj"))
+    (when (window-system)
+      (setq projectile-mode-line '(:eval (format " Π[%s]" (projectile-project-name)))))
     (use-package counsel-projectile
       :ensure t
       :config
