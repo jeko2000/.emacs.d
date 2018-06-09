@@ -1045,19 +1045,16 @@ the whitespace-cleanup function running as part of the before-save-hook.
   :config
   (global-whitespace-cleanup-mode 1))
 #+END_SRC
-** Language Specific
-*** Eshell
-[[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] is a shell-like command interpreter implemented in Emacs Lisp and written
-by the great [[https://www.google.com/search?q=eshell+jwiegleyt&ie=utf-8&oe=utf-8][John Wiegley]].
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package eshell
+*** Smartparens
+#+begin_src emacs-lisp :tangle yes
+(use-package smartparens
   :ensure t
-  :bind ("C-x t" . eshell))
-
-(defalias 'open 'find-file)
-(defalias 'openo 'find-file-other-window)
-#+END_SRC
-
+  :defer t
+  :config
+  (progn
+    (require 'smartparens-config)
+    (add-hook 'jdee-mode-hook #'smartparens-strict-mode)))
+#+end_src
 *** projectile-mode
 The useful [[https://github.com/bbatsov/projectile][projectile-mode]] package by [[https://github.com/bbatsov/][bbastov]] provides lots of tools
 to interact with your project, which is defined as a simple folder
@@ -1086,6 +1083,19 @@ supported types.
         (add-hook 'css-mode-hook #'rainbow-mode)
         (counsel-projectile-mode)))))
  #+end_src
+** Language Specific
+*** Eshell
+[[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] is a shell-like command interpreter implemented in Emacs Lisp and written
+by the great [[https://www.google.com/search?q=eshell+jwiegleyt&ie=utf-8&oe=utf-8][John Wiegley]].
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package eshell
+  :ensure t
+  :bind ("C-x t" . eshell))
+
+(defalias 'open 'find-file)
+(defalias 'openo 'find-file-other-window)
+#+END_SRC
+
 *** Clojure
 [[https://www.google.com/search?q=clojure&ie=utf-8&oe=utf-8][Clojure]] is a dynamic programming language that compiles to Java
 Unicode. It's one of my main languages right now.
