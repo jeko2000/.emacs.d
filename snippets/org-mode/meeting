@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: meeting
+# key: meeting
+# --
+* $0                            :Meeting:
+`(format-time-string "[%Y-%m-%d %a %H:%M]")`
+** Attendees
+ - [ ] 
+ - [X] `user-full-name`
+ 
+** Notes
+ - 
+
+** Tasks
+*** TODO
+
+** Open Questions
+ - 
