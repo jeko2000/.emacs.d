@@ -1,0 +1,117 @@
+# -*- mode: snippet -*-
+# name: freelance
+# key: freelance
+# --
+
+#+LATEX_COMPILER: xelatex
+#+LATEX_CLASS: article
+#+LATEX_CLASS_OPTIONS: [letterpaper,10pt]
+#+LATEX_HEADER: \usepackage[hmargin=.75in,vmargin=1in]{geometry}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \usepackage{fontawesome}
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage[T1]{fontenc}
+#+LATEX_HEADER: \usepackage{helvet}
+#+LATEX_HEADER: \definecolor{highlightColor}{rgb}{0.05,0.37,0.85}% light blue
+#+LATEX_HEADER: \definecolor{subduedColor}{rgb}{0.45,0.45,0.45}% dark grey
+#+LATEX_HEADER: \renewcommand{\rmdefault}{ptm}
+#+LATEX_HEADER: \newcommand*{\hS}[0]{\normalsize\color{highlightColor}}
+#+LATEX_HEADER: \newcommand*{\ps}[0]{\Huge\color{highlightColor}\textsuperscript{\normalsize\\$}}
+#+LATEX_HEADER: \newcommand*{\hs}[0]{\color{highlightColor}}
+#+LATEX_HEADER: \newcommand*{\dS}[0]{\small\color{subduedColor} due }
+#+LATEX_HEADER: \setlength{\parindent}{0pt}
+#+LATEX_HEADER: \pagenumbering{gobble}
+#+LATEX_HEADER: \newcommand{\myname}[0]{Johnny Ruiz}
+#+LATEX_HEADER: \newcommand{\myaddrone}[0]{49 Gillette Street}
+#+LATEX_HEADER: \newcommand{\myaddrtwo}[0]{West Hartford, CT, 06119}
+#+LATEX_HEADER: \newcommand{\myphone}[0]{+57 (312) 249 6183}
+#+LATEX_HEADER: \newcommand{\myemail}[0]{jeko2000@yandex}
+#+LATEX_HEADER: \newcommand{\mytagline}[0]{Freelance design and development}
+#+LATEX_HEADER: \newcommand{\client}[0]{${1:SomeClient}}
+#+LATEX_HEADER: \newcommand{\clientaddrone}[0]{${2:1234 Sycamore Ave}}
+#+LATEX_HEADER: \newcommand{\clientaddrtwo}[0]{${3:Blacksburg, VA, 24060}}
+#+LATEX_HEADER: \newcommand{\contact}[0]{${4:SomeContact}}
+#+LATEX_HEADER: \newcommand{\contactphone}[0]{${5:+1 (860) 123 4567}}
+#+LATEX_HEADER: \newcommand{\contactemail}[0]{${6:you@example.com}}
+#+FILETAGS: FREELANCE @office
+#+STARTUP: showall
+#+STARTUP: hidestars
+#+CONSTANTS: duein=30 rate=${7:100.00} invoicenumber=${8:INV001}
+#+OPTIONS: toc:nil author:nil date:nil
+
+#+begin_src latex
+\begin{minipage}[t]{.4\linewidth}
+{\huge \textbf{\myname}} \\\
+{\normalsize\color{subduedColor} \mytagline{}}}
+\end{minipage}
+\hfill
+\begin{tabular}[t]{@{} c @{}}
+  {\Huge INVOICE} \\\
+  {\color{subduedColor} \today}
+\end{tabular}
+
+\addvspace{8ex}
+#+end_src
+
+#+ATTR_LATEX: :mode table :environment tabular :width t :align rl@{}p{.25\linewidth}@{}rl
+| \hs Client          | \client{}                        |   | \hs Payable To    | \myname{}                   |
+|                     | \clientaddrone                   |   |                   | \myaddrone                  |
+|                     | \clientaddrtwo{}                 |   |                   | \myaddrtwo                  |
+|                     |                                  |   | \faMobilePhone{}  | \small\textnormal{\myphone} |
+| \hs Invoice #       | INV001                           |   | \tiny\faEnvelopeO | \myemail                    |
+|                     |                                  |   |                   |                             |
+| \hs Contact         | \contact{}                       |   |                   |                             |
+| \faMobilePhone{}    | \small\textnormal{\contactphone} |   |                   |                             |
+| \tiny\faEnvelopeO{} | \contactemail                    |   |                   |                             |
+#+TBLFM: @5\$2=$invoicenumber
+
+\addvspace{10ex}
+
+\def\arraystretch{1.10}
+
+#+NAME: summary
+#+ATTR_LATEX: :mode table :environment tabular :align p{.07\linewidth}c
+|   |   | \ps 625.00        |
+| ^ |   | totaltarget       |
+|   |   | \dS July 13, 2018 |
+#+TBLFM: @3\$3='(format-time-string "\\\dS %B %d, %Y" (time-add (current-time) (seconds-to-time (* $duein 86400))))::$totaltarget='(org-table-get-remote-range "clocktable" (string ?@ ?3 ?$ ?4));\ps %#.2f
+
+\addvspace{8ex}
+
+\def\arraystretch{1.5}
+
+#+TBLNAME: clocktable
+#+BEGIN: clocktable :maxlevel 3 :tstart "<-2w>" :tend "<now>" :lang invoice :scope file :properties ("Rate") :inherit-props t :narrow 60 :compact t :formula "\$4=\$3*$rate;t::@2\$4=string(\\"Amount (\$)\\")" :header "#+ATTR_LATEX: :environment longtable :align \\"p{14cm}@{}rrl\\"\n"
+#+ATTR_LATEX: :environment longtable :align "p{14cm}@{}rrl"
+|        | <60>                                                            |      |            |
+|   Rate | Description                                                     | Time | Amount ($) |
+|--------+-----------------------------------------------------------------+------+------------|
+|        | Total time                                                      | 1:00  |     0.00   |
+|--------+-----------------------------------------------------------------+------+------------|
+#+TBLFM: \$4=\$3*$rate;t::@2\$4=string("Amount (\$)")
+#+END:
+
+#+begin_export latex
+\vfill
+\fcolorbox{black}{gray!12}{%
+    \parbox{\textwidth}{%
+      \centering\color{subduedColor}
+      Thank you! Please make checks payable to \textbf{Johnny Ruiz}
+    }
+  }
+}
+#+end_export
+#+LATEX: \newpage
+* TODO $0
+  :PROPERTIES:
+  :RATE:     100.00
+  :END:
+
+* Local                                                            :noexport:
+Local Variables:
+eval: (progn
+        (setq org-clock-total-time-cell-format "%s"
+              org-clock-total-time-cell-format "%s")
+        (add-to-list 'org-clock-clocktable-language-setup
+                     '("invoice" "File" "L" "Timestamp" "Description" "Time" "ALL" "Total time" "File time" "Clock summary at")))
