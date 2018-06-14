@@ -1372,13 +1372,27 @@ YouTube videos!
 I don't program much in Java these days but keep [[https://github.com/jdee-emacs/jdee][JDEE]] around just in case.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package jdee
-  :defer 10
   :defer t
   :ensure t
   :config
   (progn
     (setq jdee-server-dir (concat user-emacs-directory "jars")
-          jdee-enable-abbrev-mode t)
+          jdee-jdk-registry '(("1.8" . "/usr/lib/jvm/java-8-openjdk")
+                              ("1.8" . "/usr/lib64/jvm/java-8-openjdk"))
+          jdee-jdk '("1.8")
+          jdee-enable-abbrev-mode t
+          jdee-gen-k&r t
+          tempo-interactive nil
+          jdee-gen-cflow-enable nil ;; We'll use yasnippets instead
+          jdee-complete-function 'jdee-complete-minibuf
+          jdee-compiler '("javac");;("javac server")
+          jdee-electric-return-p nil
+          jdee-global-classpath '("." "./lib")
+          jdee-import-sorted-groups t
+          jdee-build-function  'jdee-ant-build
+          jdee-project-file-name "prj.el"
+          jdee-jdk-doc-url "https://docs.oracle.com/javase/8/docs/api/overview-summary.html"
+          jdee-sourcepath "/usr/lib/jvm/java-8-openjdk/jre/lib")
     (defun jr/compile-and-run ()
       (interactive)
       (jdee-compile)
