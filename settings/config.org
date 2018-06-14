@@ -76,6 +76,12 @@ Implementation of the [[http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines
   :defer t
   :ensure t)
 #+END_SRC
+*** Waher
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package waher-theme
+  :ensure t
+  :defer t)
+#+END_SRC
 ** Fonts
 Current fonts of choice:
 #+BEGIN_SRC emacs-lisp :tangle yes
