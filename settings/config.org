@@ -653,6 +653,15 @@ by org mode through Bruce Rave's [[https://github.com/bruceravel/gnuplot-mode][g
 ** bongo
 The [[https://github.com/dbrock/bongo][bongo]] package provides a flexible media player for emacs.
 #+begin_src emacs-lisp :tangle yes
+(defvar jr/bongo-music-directory "/media/usb1/Share/Music"
+  "Location of music directory destined to be inserted into the bongo library.")
+
+(defvar jr/volume-raise-volume-command "pactl set-sink-volume @DEFAULT_SINK@ +5%"
+  "Shell command to raise system volume.")
+
+(defvar jr/volume-lower-volume-command "pactl set-sink-volume @DEFAULT_SINK@ +5%"
+  "Shell command to lower system volume.")
+
 (use-package bongo
   :init
   (progn
@@ -662,14 +671,24 @@ The [[https://github.com/dbrock/bongo][bongo]] package provides a flexible media
       (with-current-buffer bongo-default-playlist-buffer-name
         (when bongo-player
           (bongo-player-show-infoset bongo-player))))
-    (defun jr/pactl-raise-volume ()
-      "Raise default sink's volume through pactl."
+    (defun jr/volume-raise-volume ()
+      "Raise default sink's volume through the shell command
+specified by `jr/volume-raise-volume-command'."
       (interactive)
-      (shell-command "pactl set-sink-volume @DEFAULT_SINK@ +5%"))
-    (defun jr/pactl-lower-volume ()
-      "Lower default sink's volume through pactl."
+      (shell-command jr/volume-raise-volume-command))
+    (defun jr/volume-lower-volume ()
+      "Lower default sink's volume through the shell command
+specified by `jr/volume-lower-volume-command'."
       (interactive)
-      (shell-command "pactl set-sink-volume @DEFAULT_SINK@ -5%")))
+      (shell-command jr/volume-lower-volume-command))
+    (defun jr/bongo-mode-init ()
+      (interactive)
+      (let ((bongo-insert-whole-directory-trees t))
+        (when (file-exists-p jr/bongo-music-directory)
+          (bongo-insert-file jr/bongo-music-directory)
+          (with-current-buffer (bongo-playlist-buffer)
+            (bongo-sprinkle-mode 1)
+            (bongo-play))))))
   :ensure t
 
   :bind (("C-c m SPC" . bongo-pause/resume)
@@ -678,9 +697,8 @@ The [[https://github.com/dbrock/bongo][bongo]] package provides a flexible media
          ("C-c m r" . bongo-play-random)
          ("C-c m s" . jr/bongo-show-current-track)
          ("C-c m b" . bongo)
-         ("C-c m u" . jr/pactl-raise-volume)
-         ("C-c m d" . jr/pactl-lower-volume))
-
+         ("C-c m u" . jr/volume-raise-volume)
+         ("C-c m d" . jr/volume-lower-volume))
   :config
   (progn
     (setq
@@ -700,14 +718,6 @@ The [[https://github.com/dbrock/bongo][bongo]] package provides a flexible media
      bongo-display-playlist-after-enqueue nil
      bongo-seek-electric-mode t
      bongo-sprinkle-amount 50)
-    (defun jr/bongo-mode-init ()
-      (when (equal system-type 'gnu/linux)
-        (let ((music-directory "/media/usb1/Share/Music")
-              (bongo-insert-whole-directory-trees t))
-          (bongo-insert-file music-directory)
-          (with-current-buffer (bongo-playlist-buffer)
-            (bongo-sprinkle-mode 1)
-            (bongo-play)))))
     (jr/bongo-mode-init)))
 #+end_src
 
