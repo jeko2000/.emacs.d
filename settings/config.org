@@ -1088,7 +1088,8 @@ the whitespace-cleanup function running as part of the before-save-hook.
   :config
   (progn
     (require 'smartparens-config)
-    (add-hook 'jdee-mode-hook #'smartparens-strict-mode)))
+    (add-hook 'jdee-mode-hook #'smartparens-strict-mode)
+    (sp-use-paredit-bindings)))
 #+end_src
 *** projectile-mode
 The useful [[https://github.com/bbatsov/projectile][projectile-mode]] package by [[https://github.com/bbatsov/][bbastov]] provides lots of tools
