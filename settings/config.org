@@ -82,6 +82,16 @@ Implementation of the [[http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines
   :ensure t
   :defer t)
 #+END_SRC
+*** Theme of choice
+#+begin_src emacs-lisp :tangle yes
+(defvar jr/default-theme 'tangotango
+  "Default theme to be loaded as part of the initial
+  configuration.")
+
+(when (member jr/default-theme
+              (custom-available-themes))
+  (switch-theme jr/default-theme))
+#+end_src
 ** Fonts
 Current fonts of choice:
 #+BEGIN_SRC emacs-lisp :tangle yes
