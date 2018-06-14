@@ -95,17 +95,12 @@ Implementation of the [[http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines
 ** Fonts
 Current fonts of choice:
 #+BEGIN_SRC emacs-lisp :tangle yes
-(cond
- ((string-equal system-type "windows-nt")
+(let ((available-fonts (font-family-list)))
   (cond
-   ((member "Consolas" (font-family-list))
-    (set-face-attribute 'default nil :font "Consolas" :height 110))))
- ((string-equal system-type "gnu/linux")
-  (cond
-   ((member "Inconsolata" (font-family-list))
+   ((member "Inconsolata" available-fonts)
     (set-face-attribute 'default nil :font "Inconsolata" :height 160))
-   ((member "DejaVu Sans Mono" (font-family-list))
-    (set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 140)))))
+   ((member "DejaVu Sans Mono" available-fonts)
+    (set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 140))))
 
 (global-prettify-symbols-mode 1)
 #+END_SRC
