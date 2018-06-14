@@ -1121,6 +1121,18 @@ supported types.
         (add-hook 'css-mode-hook #'rainbow-mode)
         (counsel-projectile-mode)))))
  #+end_src
+*** Flycheck
+Per the [[http://www.flycheck.org/en/latest/][flycheck website]], Flycheck is a modern on-the-fly syntax
+checking extension for GNU Emacs, intended as replacement for the
+older Flymake extension which is part of GNU Emacs.
+#+begin_src emacs-lisp :tangle yes
+(use-package flycheck
+  :ensure t
+  :config
+  (when (executable-find "pylint")
+    (add-hook 'python-mode-hook 'flycheck-mode)))
+#+end_src
+
 ** Language Specific
 *** Eshell
 [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] is a shell-like command interpreter implemented in Emacs Lisp and written
