@@ -1312,6 +1312,17 @@ I like to edit README and other files written in Markdown so having
   :defer t
   :ensure t)
 #+END_SRC
+*** TeX/LaTeX
+#+begin_src emacs-lisp :tangle yes
+(use-package tex
+  :ensure auctex
+  :mode ("\\.tex\\'" . TeX-latex-mode)
+  :config
+  (progn
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)))
+#+end_src
+
 *** Web editing
 The [[http://web-mode.org/][web-mode]] is particularily good for editing HTML templates. It
 natively understands embedded CSS and JavaScript code blocks.
