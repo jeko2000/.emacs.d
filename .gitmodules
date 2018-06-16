@@ -4,3 +4,6 @@
 [submodule "dot-gnus"]
 	path = site-lisp/dot-gnus
 	url = https://github.com/jeko2000/dot-gnus.git
+[submodule "site-lisp/dot-org"]
+	path = site-lisp/dot-org
+	url = https://github.com/jeko2000/dot-org.git
