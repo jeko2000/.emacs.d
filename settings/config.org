@@ -555,7 +555,8 @@ keys from the home row instead of the numbers 1-9.
   :ensure t
   :bind ("M-o" . 'ace-window)
   :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+        aw-background nil))
 #+END_SRC
 ** erc
 #+BEGIN_SRC emacs-lisp :tangle yes
