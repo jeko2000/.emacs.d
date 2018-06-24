@@ -1140,10 +1140,7 @@ checking extension for GNU Emacs, intended as replacement for the
 older Flymake extension which is part of GNU Emacs.
 #+begin_src emacs-lisp :tangle yes
 (use-package flycheck
-  :ensure t
-  :config
-  (when (executable-find "pylint")
-    (add-hook 'python-mode-hook 'flycheck-mode)))
+  :ensure t)
 #+end_src
 
 ** Language Specific
