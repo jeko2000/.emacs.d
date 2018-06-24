@@ -88,9 +88,9 @@ Implementation of the [[http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines
   "Default theme to be loaded as part of the initial
   configuration.")
 
-(when (member jr/default-theme
-              (custom-available-themes))
-  (switch-theme jr/default-theme))
+  (when (and (window-system) (member jr/default-theme
+		(custom-available-themes)))
+    (switch-theme jr/default-theme))
 #+end_src
 ** Fonts
 Current fonts of choice:
