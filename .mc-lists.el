@@ -26,6 +26,8 @@
         paredit-open-round
         paredit-semicolon
         query-replace
+        sp-delete-char
+        sp-kill-region
         ))
 
 (setq mc/cmds-to-run-once
