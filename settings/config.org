@@ -1439,6 +1439,55 @@ I don't program much in Java these days but keep [[https://github.com/jdee-emacs
                (seq-map (lambda (p) (concat (car pair) "." (cdr p))) (jdee-complete-find-completion-for-pair pair)))))))
     (add-to-list 'company-backends 'jr/company-jdee-backend)))
 #+END_SRC
+*** Python
+#+begin_src emacs-lisp :tangle yes
+(use-package elpy
+  :bind
+  :config
+  (progn
+    (elpy-enable)
+
+    ;; elpy
+    (add-hook 'elpy-mode-hook 'smartparens-strict-mode)
+    (add-hook 'inferior-python-mode-hook 'smartparens-strict-mode)
+
+    ;;config
+    (defalias 'workon 'pyvenv-workon)
+
+    ;; documentation
+    (add-to-list 'elpy-modules 'elpy-module-autodoc)
+    (setq elpy-autodoc-delay 0.5)
+
+    ;; interpreter
+    (if (executable-find "ipython")
+        (setq python-shell-interpreter "ipython"
+              python-shell-interpreter-args "-i --simple-prompt")
+      (setq python-shell-interpreter "python"
+            python-shell-interpreter-args "-i"))
+
+    ;; Shell Buffer
+    (setq elpy-shell-use-project-root t
+          elpy-shell-echo-input t
+          elpy-shell-echo-input-cont-prompt t
+          elpy-shell-echo-input-lines-head 5
+          elpy-shell-echo-input-lines-tail 5
+          elpy-shell-echo-output 'when-shell-not-visible)
+
+    ;; Syntax checking
+    (setq python-check-command
+          (or (executable-find "flake8")
+              (executable-find) "pylint"))
+
+    (when (and (package-installed-p 'flycheck)
+               python-check-command)
+      (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+      (add-hook 'elpy-mode-hook 'flycheck-mode)
+      (define-key elpy-mode-map (kbd "C-c C-n") 'flycheck-next-error)
+      (define-key elpy-mode-map (kbd "C-c C-p") 'flycheck-previous-error))
+
+    (add-hook 'before-save-hook 'elpy-format-code)))
+#+end_src
+
 * Gnus
 [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
 It takes a while to get it used to it all (similar to emacs
