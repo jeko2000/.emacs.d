@@ -764,6 +764,16 @@ Mickey's [[http://sachachua.com/blog/2014/09/emacs-chat-mickey-petersen/][chat w
         alert-log-messages t))
 #+end_src
 
+** pinentry
+The [[https://elpa.gnu.org/packages/pinentry.html][pinentry]] package allows GnuPG passphrase to be prompted through
+the minibuffer, which is convenient in tty mode or while connecting
+through ssh.
+#+begin_src emacs-lisp :tangle yes
+(use-package pinentry
+  :ensure t
+  :config
+  (pinentry-start))
+#+end_src
 * Programming packages
 ** Generic
 *** Dired
