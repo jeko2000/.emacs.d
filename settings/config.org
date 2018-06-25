@@ -787,8 +787,16 @@ specified by `jr/volume-lower-volume-command'."
   :ensure t
   :config
   (pinentry-start))
-#+end_src
-#+end_src
+   #+end_src
+** smart-mode-line
+   #+begin_src emacs-lisp :tangle yes
+(use-package smart-mode-line
+  :ensure t
+  :init (setq sml/theme 'respectful)
+  :config
+  (progn
+    (sml/setup)))
+   #+end_src
 ** eval-sexp-fu
    #+begin_src emacs-lisp :tangle yes
 (when (require 'eval-sexp-fu nil :no-error)
