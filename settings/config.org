@@ -774,6 +774,13 @@ through ssh.
   :config
   (pinentry-start))
 #+end_src
+#+end_src
+** eval-sexp-fu
+#+begin_src emacs-lisp :tangle yes
+(when (require 'eval-sexp-fu nil :no-error)
+  (add-hook 'lisp-mode-hook 'turn-on-eval-sexp-fu-flash-mode)
+  (add-hook 'elpy-mode-hook 'turn-on-eval-sexp-fu-flash-mode))
+#+end_src
 * Programming packages
 ** Generic
 *** Dired
