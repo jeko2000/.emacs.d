@@ -1442,6 +1442,7 @@ specified by `jr/volume-lower-volume-command'."
       :hook ((web-mode . httpd-start)
              (web-mode . impatient-mode)
              (css-mode . httpd-start)))))
+    #+END_SRC
 *** Java/JDEE
     I don't program much in Java these days but keep [[https://github.com/jdee-emacs/jdee][JDEE]] around just in case.
     #+BEGIN_SRC emacs-lisp :tangle yes
