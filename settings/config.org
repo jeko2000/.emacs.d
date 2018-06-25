@@ -33,7 +33,6 @@
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package solarized-theme
   :if (window-system)
-  :ensure t
   :defer t
   :config (progn
             (setq solarized-distinct-fringe-background t)
@@ -45,7 +44,6 @@
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package monokai-theme
   :if (window-system)
-  :ensure t
   :defer t
   :config
   (setq monokai-use-variable-pitch nil))
@@ -56,8 +54,7 @@
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package eink-theme
   :if (window-system)
-  :defer t
-  :ensure t)
+  :defer t)
     #+END_SRC
 *** Material theme
     The [[https://github.com/cpaulik/emacs-material-theme][Material theme]] is based on the colors proposed by the [[http://www.google.com/design/spec/style/color.html#color-color-palette][Google
@@ -65,21 +62,18 @@
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package material-theme
   :if (window-system)
-  :defer t
-  :ensure t)
+  :defer t)
     #+END_SRC
 *** Tango theme
     Implementation of the [[http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines][Tango Desktop project palette]] by [[https://github.com/juba][Julien Barnier juba]]
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package tangotango-theme
   :if (window-system)
-  :defer t
-  :ensure t)
+  :defer t)
     #+END_SRC
 *** Waher
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package waher-theme
-  :ensure t
   :defer t)
     #+END_SRC
 *** Theme of choice
@@ -263,7 +257,6 @@
    customize how major and minor modes appear in the ModeLine.
    #+begin_src emacs-lisp :tangle yes
 (use-package delight
-  :ensure t
   :config
   (delight '((abbrev-mode " Abv" abbrev)
              (auto-fill-function nil t)
@@ -296,7 +289,6 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package winner
   :if (not noninteractive)
-  :ensure t
   :defer 10
   :bind (("C-c <left>" . winner-undo)
          ("C-c <right>" . winner-redo))
@@ -307,7 +299,6 @@
    The following allows for a quick transposition if you have multiple frames.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package transpose-frame
-  :ensure t
   :bind ("C-s-t" . transpose-frame))
    #+END_SRC
    [[https://github.com/winterTTr/ace-jump-mode][ace-jump-mode]] allows you to navigate around a window or frame by
@@ -315,7 +306,6 @@
    directly to it.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ace-jump-mode
-  :ensure t
   :commands ace-jump-mode
   :bind ("C-S-s" . ace-jump-mode))
    #+END_SRC
@@ -325,7 +315,6 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package password-store
   :defer t
-  :ensure t
   :bind ("C-c s c" . password-store-copy))
    #+END_SRC
 
@@ -334,7 +323,6 @@
    of such files for easy access
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package recentf
-  :ensure t
   :config
   (progn
     (recentf-mode 1)
@@ -344,8 +332,7 @@
 ** Tramp
    Of course! We need [[https://www.gnu.org/software/tramp/][remote file editing!]]
    #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package tramp
-  :ensure t)
+(use-package tramp)
    #+END_SRC
 
 ** PDF-Tools
@@ -353,7 +340,6 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package pdf-tools
   :defer t
-  :ensure t
   :config
   (let ((executable pdf-info-epdfinfo-program))
     (when (and (stringp executable)
@@ -366,7 +352,6 @@
    visualize actions.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package undo-tree
-  :ensure t
   :bind
   ("C-x u" . undo-tree-visualize)
   :config
@@ -408,7 +393,6 @@
 (when (and window-system
            (package-installed-p 'zoom-frm))
   (use-package zoom-frm
-    :ensure t
     :bind (("C-M-=" . zoom-in/out)
            ("H-z"   . toggle-zoom-frame)
            ("s-<f1>" . toggle-zoom-frame))
@@ -434,7 +418,6 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
 ;;TODO: Groom BBDB
 (use-package bbdb
-  :ensure t
   :config
   (progn
     (setq bbdb-complete-name-full-completion t
@@ -471,7 +454,6 @@
    [[https://github.com/wasamasa/nov.el][Nov]] mode provides a major mode for reading [[https://en.wikipedia.org/wiki/EPUB][EPUB]] documents.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package nov
-  :ensure t
   :mode ("\\.epub\\'" . nov-mode))
    #+END_SRC
 ** w3m
@@ -482,7 +464,6 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
 (when (executable-find "w3m")
   (use-package w3m
-    :ensure t
     :defer 5
     :bind (("C-x w" . 'w3m))
     :config
@@ -505,7 +486,6 @@
    [[https://github.com/rnkn/olivetti][Olivetti]] mode provides a nice environment to write distraction-free.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package olivetti
-  :ensure t
   :defer t
   :config
   (setq olivetti-body-width 120))
@@ -528,7 +508,6 @@
   (use-package synosaurus
     :defer t
     :delight
-    :ensure t
     :init
     (setq synosaurus-prefix (kbd "C-c s"))
     :config
@@ -551,12 +530,10 @@
    and its fonts before the icons theme works properly.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package neotree
-  :ensure t
   :defer t
   :config
   (progn
-    (use-package all-the-icons
-      :ensure t)
+    (use-package all-the-icons)
     (global-set-key [f8] 'neotree-toggle)
     (setq neo-theme (if (display-graphic-p) 'icons 'arrow))))
    #+END_SRC
@@ -566,7 +543,6 @@
    keys from the home row instead of the numbers 1-9.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ace-window
-  :ensure t
   :bind ("M-o" . 'ace-window)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
@@ -611,15 +587,12 @@
           erc-server-reconnect-timeout 3
           erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
                                     "324" "329" "332" "333" "353" "477"))
-    (use-package erc-hl-nicks
-      :ensure t)
-    (use-package erc-image
-      :ensure t)))
+    (use-package erc-hl-nicks)
+    (use-package erc-image)))
    #+END_SRC
 ** elfeed
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package elfeed
-  :ensure t
   :defer 10
   :config
   (progn
@@ -642,6 +615,7 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package appt
   :no-require
+  :ensure nil
   :config
   (progn
     (appt-activate 1)
@@ -661,8 +635,7 @@
    by org mode through Bruce Rave's [[https://github.com/bruceravel/gnuplot-mode][gnuplot-mode]]
    #+begin_src emacs-lisp :tangle yes
 (use-package gnuplot
-  :defer t
-  :ensure t)
+  :defer t)
    #+end_src
 
 ** bongo
@@ -704,7 +677,6 @@ specified by `jr/volume-lower-volume-command'."
           (with-current-buffer (bongo-playlist-buffer)
             (bongo-sprinkle-mode 1)
             (bongo-play))))))
-  :ensure t
 
   :bind (("C-c m SPC" . bongo-pause/resume)
          ("C-c m n" . bongo-play-next)
@@ -744,14 +716,12 @@ specified by `jr/volume-lower-volume-command'."
    #+begin_src emacs-lisp :tangle yes
 (when (executable-find "ag")
   (use-package ag
-    :ensure t
     :defer t
     :config
     (progn
       (setq ag-highlight-search t
             ag-reuse-buffers t)
-      (use-package wgrep-ag
-        :ensure t))))
+      (use-package wgrep-ag))))
    #+end_src
 ** smartscan
    The [[https://github.com/mickeynp/smart-scan][smartscan]] package written by [[https://github.com/mickeynp/][Mickey Petersen]] allows you to jump
@@ -759,7 +729,6 @@ specified by `jr/volume-lower-volume-command'."
    Mickey's [[http://sachachua.com/blog/2014/09/emacs-chat-mickey-petersen/][chat with Sasha Chua]].
    #+begin_src emacs-lisp :tangle yes
 (use-package smartscan
-  :ensure t
   :config
   (progn
     (setq global-smartscan-mode t
@@ -771,7 +740,6 @@ specified by `jr/volume-lower-volume-command'."
    #+begin_src emacs-lisp :tangle yes
 (use-package alert
   :defer t
-  :ensure t
   :config
   (setq alert-fade-time 4
         alert-default-style (if (executable-find "notify-send") 'libnotify 'message)
@@ -784,14 +752,12 @@ specified by `jr/volume-lower-volume-command'."
    through ssh.
    #+begin_src emacs-lisp :tangle yes
 (use-package pinentry
-  :ensure t
   :config
   (pinentry-start))
    #+end_src
 ** smart-mode-line
    #+begin_src emacs-lisp :tangle yes
 (use-package smart-mode-line
-  :ensure t
   :init (setq sml/theme 'respectful)
   :config
   (progn
@@ -841,7 +807,6 @@ specified by `jr/volume-lower-volume-command'."
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package disable-mouse
   :delight disable-mouse-global-mode
-  :ensure t
   :config (global-disable-mouse-mode))
     #+END_SRC
 *** Ediff
@@ -849,7 +814,6 @@ specified by `jr/volume-lower-volume-command'."
     files or buffers. Very handy for comparing commits.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ediff
-  :ensure t
   :init
   (defvar ctl-period-equals-map)
   (define-prefix-command 'ctl-period-equals-map)
@@ -881,8 +845,7 @@ specified by `jr/volume-lower-volume-command'."
 *** Utilities
     [[https://github.com/magnars/s.el][Magnar Sveen (magnars)'s String manipulation]] routines for emacs lisp
     #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package s
-  :ensure t)
+(use-package s)
     #+END_SRC
 *** Indentation
     I like to automatically indent when press RET
@@ -894,7 +857,6 @@ specified by `jr/volume-lower-volume-command'."
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package company
   :delight
-  :ensure t
   :demand t
   :bind (("C-c C-/" . company-complete)
          ("TAB" . company-complete))
@@ -906,7 +868,6 @@ specified by `jr/volume-lower-volume-command'."
 
 (use-package company-box
   :delight
-  :ensure t
   :hook (company-mode . company-box-mode))
     #+END_SRC
 *** Code Folding
@@ -915,7 +876,6 @@ specified by `jr/volume-lower-volume-command'."
 (use-package hideshow
   :delight
   :defer t
-  :ensure t
   :config
   (progn
     ;; Hide the comments too when you do a 'hs-hide-all'
@@ -931,7 +891,6 @@ specified by `jr/volume-lower-volume-command'."
     maintained by [[https://github.com/AndreaCrotti][AndreaCrotti]] named yasnippet-snippets.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package yasnippet
-  :ensure t
   :demand t
   :delight yas-minor-mode
   :bind (("C-c y TAB" . yas-expand)
@@ -941,14 +900,12 @@ specified by `jr/volume-lower-volume-command'."
   :config
   (yas-global-mode 1))
 
-(use-package yasnippet-snippets
-  :ensure t)
+(use-package yasnippet-snippets)
     #+END_SRC
 
     We also download [[https://github.com/mkcms/ivy-yasnippet][ivy-yasnippet]] by [[https://github.com/mkcms][mkcms]] to allow snippet previews through [[https://github.com/abo-abo/swiper][ivy]].
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy-yasnippet
-  :ensure t
   :bind ("C-c y y" . ivy-yasnippet))
     #+END_SRC
 *** Completion
@@ -960,7 +917,6 @@ specified by `jr/volume-lower-volume-command'."
 (use-package ivy
   :delight
   :demand t
-  :ensure t
   :bind
   ("C-x b" . ivy-switch-buffer)
   :config
@@ -973,10 +929,8 @@ specified by `jr/volume-lower-volume-command'."
           ivy-re-builders-alist ; configure regexp engine.
           '((t   . ivy--regex-ignore-order))) ; allow input not in order
     (use-package swiper
-      :ensure t
       :bind ("C-s" . swiper))
     (use-package counsel
-      :ensure t
       :bind
       (("C-h f" . counsel-describe-function)
        ("C-h l" . counsel-find-library)
@@ -1029,7 +983,6 @@ specified by `jr/volume-lower-volume-command'."
 
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
-  :ensure t
   :bind ("C-c g" . magit-status)
   :init
   (progn
@@ -1037,8 +990,7 @@ specified by `jr/volume-lower-volume-command'."
     (add-hook 'magit-log-mode-hook 'hl-line-mode))
   :config
   (progn
-    (use-package orgit
-      :ensure t)
+    (use-package orgit)
     (define-key magit-mode-map (kbd "C-<return>") nil)))
     #+END_SRC
 *** REST support
@@ -1049,7 +1001,6 @@ specified by `jr/volume-lower-volume-command'."
     keep things portable.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package restclient
-  :ensure t
   :mode ("\\.rest\\'" . restclient-mode))
     #+END_SRC
 *** Multiple cursors
@@ -1058,7 +1009,6 @@ specified by `jr/volume-lower-volume-command'."
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package multiple-cursors
   :demand  t
-  :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C-+"         . mc/mark-next-like-this)
          ("C-_"         . mc/mark-previous-like-this)
@@ -1071,16 +1021,14 @@ specified by `jr/volume-lower-volume-command'."
     expand-region.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package expand-region
-  :bind ("C-@" . er/expand-region)
-  :ensure t)
+  :bind ("C-@" . er/expand-region))
     #+END_SRC
 *** iy-go-to-char
     See [[http://emacsrocks.com/e04.html][Emacs Rocks! Episode 4]] to learn about [[https://github.com/doitian/iy-go-to-char][iy-go-to-char]].
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package iy-go-to-char
   :bind (("M-m" . iy-go-to-char)
-         ("M-i" . back-to-indentation))
-  :ensure t)
+         ("M-i" . back-to-indentation)))
     #+END_SRC
 *** Autofill mode
     I find myself using M-q often to [[https://www.emacswiki.org/emacs/FillParagraph][refill paragraphs]]. [[https://www.emacswiki.org/emacs/AutoFillMode][AutoFillMode]] mostly
@@ -1096,15 +1044,13 @@ specified by `jr/volume-lower-volume-command'."
     of semantic units.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package paredit
-  :delight
-  :ensure t)
+  :delight)
     #+END_SRC
 *** Nlinum
     Showing Line numbers in a buffer can be fairly useful when working
     with code. [[http://elpa.gnu.org/packages/nlinum.html][NLinum]] mode replaces the in-built linum-mode.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package nlinum
-  :ensure t
   :config
   (add-hook 'prog-mode-hook 'nlinum-mode))
 
@@ -1125,7 +1071,6 @@ specified by `jr/volume-lower-volume-command'."
     the whitespace-cleanup function running as part of the before-save-hook.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package whitespace-cleanup-mode
-  :ensure t
   :delight
   :config
   (global-whitespace-cleanup-mode 1))
@@ -1133,7 +1078,6 @@ specified by `jr/volume-lower-volume-command'."
 *** Smartparens
     #+begin_src emacs-lisp :tangle yes
 (use-package smartparens
-  :ensure t
   :defer t
   :config
   (progn
@@ -1148,7 +1092,6 @@ specified by `jr/volume-lower-volume-command'."
     supported types.
     #+begin_src emacs-lisp :tangle yes
 (use-package projectile
-  :ensure t
   :config
   (progn
     (setq projectile-cache-file "~/projectile.cache"
@@ -1164,7 +1107,6 @@ specified by `jr/volume-lower-volume-command'."
     (when (window-system)
       (setq projectile-mode-line '(:eval (format " Π[%s]" (projectile-project-name)))))
     (use-package counsel-projectile
-      :ensure t
       :config
       (progn
         (add-hook 'web-mode-hook #'rainbow-mode)
@@ -1176,8 +1118,7 @@ specified by `jr/volume-lower-volume-command'."
     checking extension for GNU Emacs, intended as replacement for the
     older Flymake extension which is part of GNU Emacs.
     #+begin_src emacs-lisp :tangle yes
-(use-package flycheck
-  :ensure t)
+(use-package flycheck)
     #+end_src
 
 ** Language Specific
@@ -1186,7 +1127,6 @@ specified by `jr/volume-lower-volume-command'."
     by the great [[https://www.google.com/search?q=eshell+jwiegleyt&ie=utf-8&oe=utf-8][John Wiegley]].
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package eshell
-  :ensure t
   :bind ("C-x t" . eshell))
 
 (defalias 'open 'find-file)
@@ -1199,11 +1139,9 @@ specified by `jr/volume-lower-volume-command'."
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package clojure-mode
   :defer t
-  :ensure t
   :config
   (progn
-    (use-package cider
-      :ensure t)
+    (use-package cider)
     (setq cider-cljs-lein-repl
           "(do (require 'figwheel-sidecar.repl-api)
            (figwheel-sidecar.repl-api/start-figwheel!)
@@ -1228,7 +1166,6 @@ specified by `jr/volume-lower-volume-command'."
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package slime
   :defer t
-  :ensure t
   :init
   (progn
     (setq inferior-lisp-program "/usr/bin/sbcl")
@@ -1252,7 +1189,6 @@ specified by `jr/volume-lower-volume-command'."
                       ('t (message "slime keybindings not sanitized"))))) ))
 
 (use-package slime-company
-  :ensure t
   :config
   (add-to-list 'slime-contribs 'slime-company))
 
@@ -1260,7 +1196,6 @@ specified by `jr/volume-lower-volume-command'."
 
 (use-package common-lisp-snippets
   :defer t
-  :ensure t
   :config
   (add-hook 'lisp-mode-hook 'enable-paredit-mode))
     #+END_SRC
@@ -1270,7 +1205,6 @@ specified by `jr/volume-lower-volume-command'."
     [[https://github.com/jaor/geiser][Geiser]] provides an improved development environment in emacs.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package geiser
-  :ensure t
   :config
   (progn
     (setq geiser-active-implementations '(mit)
@@ -1356,8 +1290,7 @@ specified by `jr/volume-lower-volume-command'."
     [[https://jblevins.org/projects/markdown-mode/][markdown-mode]] is very convenient.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package markdown-mode
-  :defer t
-  :ensure t)
+  :defer t)
     #+END_SRC
 *** TeX/LaTeX
     #+begin_src emacs-lisp :tangle yes
@@ -1375,7 +1308,6 @@ specified by `jr/volume-lower-volume-command'."
           TeX-engine 'xetex)
     (TeX-source-correlate-mode 1)
     (use-package company-auctex
-      :ensure t
       :config (company-auctex-init))))
     #+end_src
 
@@ -1393,7 +1325,6 @@ specified by `jr/volume-lower-volume-command'."
     (interactive "sEnter text to insert: ")
     (insert "{% " text " %}"))
   :bind (("C-c C-e j" . jr/insert-django-text))
-  :ensure t
   :config
   (progn
     (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -1414,16 +1345,13 @@ specified by `jr/volume-lower-volume-command'."
     (add-hook 'web-mode-hook  'jr/web-mode-hook)
     (use-package rainbow-mode
       :defer t
-      :ensure t
       :config
       (progn
         (add-hook 'web-mode-hook #'rainbow-mode)
         (add-hook 'css-mode-hook #'rainbow-mode)))
     (use-package less-css-mode
-      :mode "\\.less\\'"
-      :ensure t)
-    (use-package emmet-mode
-      :ensure t)))
+      :mode "\\.less\\'")
+    (use-package emmet-mode)))
     #+END_SRC
 
     [[https://github.com/skeeto/impatient-mode][Impatient mode]] allows one to see changes to HTML buffers _instantly_
@@ -1448,7 +1376,6 @@ specified by `jr/volume-lower-volume-command'."
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package jdee
   :defer t
-  :ensure t
   :config
   (progn
     (setq jdee-server-dir (concat user-emacs-directory "jars")
@@ -1502,7 +1429,6 @@ specified by `jr/volume-lower-volume-command'."
 *** Python
     #+begin_src emacs-lisp :tangle yes
 (use-package elpy
-  :ensure t
   :delight python-mode "π"
   :config
   (progn
@@ -1547,14 +1473,12 @@ specified by `jr/volume-lower-volume-command'."
       (define-key elpy-mode-map (kbd "C-c C-p") 'flycheck-previous-error))
 
     ;;(add-hook 'before-save-hook 'elpy-format-code)
-    (use-package pydoc-info
-      :ensure t)))
+    (use-package pydoc-info)))
     #+end_src
 
 *** SQL
     #+begin_src emacs-lisp :tangle yes
 (use-package sql-indent
-  :ensure t
   :mode "\\.sql\\'")
     #+end_src
 * Gnus
