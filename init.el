@@ -43,7 +43,8 @@
   (require 'use-package))
   (require 'diminish)
 (require 'bind-key)
-(setq use-package-verbose t)
+(setq use-package-verbose t
+      use-package-always-ensure t)
 
 ;; Set up user-settings-directory if it exists
 (let ((settings (expand-file-name "settings" user-emacs-directory)))
