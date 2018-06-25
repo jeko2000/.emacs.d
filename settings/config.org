@@ -1492,7 +1492,13 @@ specified by `jr/volume-lower-volume-command'."
              (let ((pair (s-split "|" arg)))
                (seq-map (lambda (p) (concat (car pair) "." (cdr p))) (jdee-complete-find-completion-for-pair pair)))))))
     (add-to-list 'company-backends 'jr/company-jdee-backend)))
-#+END_SRC
+
+(use-package gradle-mode
+  :delight gradle-mode "γ"
+  :mode "\\.gradle\\'"
+  :interpreter ("gradle" . gradle-mode))
+
+    #+END_SRC
 *** Python
     #+begin_src emacs-lisp :tangle yes
 (use-package elpy
