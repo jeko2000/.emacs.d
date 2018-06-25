@@ -987,7 +987,7 @@ specified by `jr/volume-lower-volume-command'."
        ("C-c k" . counsel-ag)
        ("C-x C-f" . counsel-find-file)
        ("C-x C-r" . counsel-recentf)
-;;       ("M-i" . counsel-imenu)
+       ;;("M-i" . counsel-imenu)
        ("M-x" . counsel-M-x)
        ("M-y" . counsel-yank-pop)))))
      #+END_SRC
