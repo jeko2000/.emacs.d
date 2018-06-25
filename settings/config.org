@@ -899,8 +899,16 @@ specified by `jr/volume-lower-volume-command'."
   :bind (("C-c C-/" . company-complete)
          ("TAB" . company-complete))
   :config
-  (global-company-mode 1))
-#+END_SRC
+  (progn
+    (setq company-show-numbers t
+          company-tooltip-align-annotations t)
+    (global-company-mode 1)))
+
+(use-package company-box
+  :diminish
+  :ensure t
+  :hook (company-mode . company-box-mode))
+    #+END_SRC
 *** Code Folding
     The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one to hide and show blocks of text.
     #+BEGIN_SRC emacs-lisp :tangle yes
