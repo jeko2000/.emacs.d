@@ -1496,7 +1496,8 @@ specified by `jr/volume-lower-volume-command'."
 *** Python
     #+begin_src emacs-lisp :tangle yes
 (use-package elpy
-  :bind
+  :ensure t
+  :delight python-mode "π"
   :config
   (progn
     (elpy-enable)
