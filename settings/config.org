@@ -211,6 +211,20 @@
   #+BEGIN_SRC emacs-lisp :tangle yes
 (setq max-specpdl-size 20000
       max-lisp-eval-depth 30000)
+  #+END_SRC
+
+  Let's update auth-sources for our configuration. In particular, let's
+  test if a [[https://github.com/syncthing/syncthing][Syncthing]] folder exists in the file system and if so, add 
+  #+BEGIN_SRC emacs-lisp :tangle yes
+(setq auth-sources '( "~/.authinfo.gpg"
+                      "~/.authinfo"
+                      "~/.netrc"))
+
+(let ((syncthing-auth-source "~/Sync/all/.authinfo.gpg"))
+  (when (file-exists-p syncthing-auth-source)
+    (add-to-list 'auth-sources syncthing-auth-source)))
+  #+END_SRC
+
 * Key Rebinding
   Convenient keybindings to resize windows.
   #+BEGIN_SRC emacs-lisp :tangle yes
