@@ -1533,6 +1533,12 @@ specified by `jr/volume-lower-volume-command'."
     (add-hook 'before-save-hook 'elpy-format-code)))
 #+end_src
 
+*** SQL
+    #+begin_src emacs-lisp :tangle yes
+(use-package sql-indent
+  :ensure t
+  :mode "\\.sql\\'")
+    #+end_src
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
