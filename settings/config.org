@@ -1494,7 +1494,7 @@ specified by `jr/volume-lower-volume-command'."
     (add-to-list 'company-backends 'jr/company-jdee-backend)))
 #+END_SRC
 *** Python
-#+begin_src emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package elpy
   :bind
   :config
@@ -1539,8 +1539,9 @@ specified by `jr/volume-lower-volume-command'."
       (define-key elpy-mode-map (kbd "C-c C-n") 'flycheck-next-error)
       (define-key elpy-mode-map (kbd "C-c C-p") 'flycheck-previous-error))
 
-    (add-hook 'before-save-hook 'elpy-format-code)))
-#+end_src
+    ;;(add-hook 'before-save-hook 'elpy-format-code)
+    ))
+    #+end_src
 
 *** SQL
     #+begin_src emacs-lisp :tangle yes
