@@ -1336,8 +1336,17 @@ I like to edit README and other files written in Markdown so having
   :mode ("\\.tex\\'" . TeX-latex-mode)
   :config
   (progn
-    (setq TeX-auto-save t)
-    (setq TeX-parse-self t)))
+    (setq TeX-auto-save t
+          TeX-parse-self t
+          TeX-byte-compile t
+          TeX-master 'dwim
+          TeX-view-program-selection '((output-pdf "Evince")
+                                       (output-html "xdg-open"))
+          TeX-engine 'xetex)
+    (TeX-source-correlate-mode 1)
+    (use-package company-auctex
+      :ensure t
+      :config (company-auctex-init))))
 #+end_src
 
 *** Web editing
