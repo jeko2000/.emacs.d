@@ -905,7 +905,7 @@ specified by `jr/volume-lower-volume-command'."
     (global-company-mode 1)))
 
 (use-package company-box
-  :diminish
+  :delight
   :ensure t
   :hook (company-mode . company-box-mode))
     #+END_SRC
