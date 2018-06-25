@@ -163,7 +163,7 @@
 
 (require 'uniquify)                          ; Add parts of each file's directory
 (setq uniquify-buffer-name-style 'forward    ; To the buffer name if not unique
-      ;electric-indent-mode nil               ; No electric indent
+      electric-indent-mode t                 ; No electric indent
       eval-expression-print-level nil)       ; Nic's recommendation (?!)
 
 ;; When popping the mark, continue popping until the cursor actually moves
