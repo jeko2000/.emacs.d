@@ -1563,6 +1563,18 @@ specified by `jr/volume-lower-volume-command'."
 (bind-key "C-x 2" 'vsplit-other-window)
 (bind-key "C-x 3" 'hsplit-other-window)
    #+END_SRC
+** Less intrusive visible bell
+#+begin_src emacs-lisp :tangle yes
+(defun jr/flash-mode-line ()
+  "Invert the mode-line face briefly.
+This can be used as a friendlier visual bell effect.
+Source: EmacsWiki"
+  (invert-face 'mode-line)
+  (run-with-timer 0.1 nil 'invert-face 'mode-line))
+
+(setq visible-bell nil
+      ring-bell-function #'jr/flash-mode-line)
+#+end_src
 * Personal
   Personal items
   #+BEGIN_SRC emacs-lisp :tangle yes
