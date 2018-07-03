@@ -1489,7 +1489,9 @@ specified by `jr/volume-lower-volume-command'."
       (define-key elpy-mode-map (kbd "C-c C-n") 'flycheck-next-error)
       (define-key elpy-mode-map (kbd "C-c C-p") 'flycheck-previous-error))
 
-    ;;(add-hook 'before-save-hook 'elpy-format-code)
+    (add-hook 'elpy-mode-hook
+              (lambda ()
+                (add-hook 'before-save-hook 'elpy-format-code nil t)))
     (use-package pydoc-info)))
     #+end_src
 
