@@ -873,7 +873,19 @@ specified by `jr/volume-lower-volume-command'."
 
 (use-package company-box
   :delight
-  :hook (company-mode . company-box-mode))
+  :hook (company-mode . company-box-mode)
+  :config
+  (progn
+    (setq company-box-enable-icon t
+          company-box-color-icon t
+          company-box-max-candidates 50
+          company-box-backends-colors
+          '((company-yasnippet :all "lime green"
+                               :selected
+                               (:background "lime green" :foreground "black"))
+            (company-elisp  :all "yellow"
+                            :selected
+                            (:background "orange" :foreground "black"))))))
     #+END_SRC
 *** Code Folding
     The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one to hide and show blocks of text.
