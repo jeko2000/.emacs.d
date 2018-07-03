@@ -758,10 +758,15 @@ specified by `jr/volume-lower-volume-command'."
 ** smart-mode-line
    #+begin_src emacs-lisp :tangle yes
 (use-package smart-mode-line
-  :init (setq sml/theme 'respectful)
   :config
   (progn
-    (sml/setup)))
+    (setq sml/no-confirm-load-theme t)
+    (sml/setup)
+    (setq sml/theme 'respectful
+          sml/shorten-directory t
+          sml/shorten-modes t
+          sml/name-width 40
+          sml/mode-width 'full)))
    #+end_src
 ** eval-sexp-fu
    #+begin_src emacs-lisp :tangle yes
