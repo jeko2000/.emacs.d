@@ -1218,7 +1218,7 @@ system to rule them all.
   :config
   (progn
     (require 'smartparens-config)
-    (add-hook 'jdee-mode-hook #'smartparens-strict-mode)
+    (setq sp-escape-quotes-after-insert nil)
     (sp-use-paredit-bindings)))
     #+end_src
 *** projectile-mode
