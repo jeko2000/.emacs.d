@@ -846,6 +846,21 @@ Configuration instructions can be found [[https://github.com/mhayashi1120/Emacs-
     (global-set-key "\C-x44" 'langtool-show-message-at-point)
     (global-set-key "\C-x4c" 'langtool-correct-buffer)))
 #+end_src
+** Ledger
+Yet another awesome piece of work from John Wiegley
+(http://www.newartisans.com/). [[http://git.ledger-cli.org/][Ledger]] is the double-entry accounting
+system to rule them all.
+#+begin_src emacs-lisp :tangle yes
+(use-package ledger-mode
+  :config
+  (progn
+    (setq ledger-clear-whole-transactions t
+          ledger-reconcile-default-commodity "USD"
+          ledger-reconcile-default-date-format "%Y/%m/%d")
+    (use-package flycheck-ledger
+      :init
+      (add-hook 'ledger-mode-hook #'flycheck-mode))))
+#+end_src
 * Programming packages
 ** Generic
 *** Dired
