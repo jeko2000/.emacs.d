@@ -398,8 +398,8 @@
            ("s-<f1>" . toggle-zoom-frame))
     :init
     (progn
-      (setq jr/zoom-frm-desired-zoom 6)
-      (zoom-in/out 6))
+      (setq jr/zoom-frm-desired-zoom 2)
+      (zoom-in/out jr/zoom-frm-desired-zoom))
     :config
     (progn
       (setq frame-zoom-font-difference 10)
