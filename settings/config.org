@@ -641,7 +641,7 @@
 ** bongo
    The [[https://github.com/dbrock/bongo][bongo]] package provides a flexible media player for emacs.
    #+begin_src emacs-lisp :tangle yes
-(defvar jr/bongo-music-directory "/media/usb1/Share/Music"
+(defvar jr/bongo-music-directory "/data/music/"
   "Location of music directory destined to be inserted into the bongo library.")
 
 (defvar jr/volume-raise-volume-command "pactl set-sink-volume @DEFAULT_SINK@ +5%"
