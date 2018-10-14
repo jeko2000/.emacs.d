@@ -801,6 +801,23 @@ engines.
       :keybinding "w"))
   (engine-mode t))
 #+end_src
+** Savehist
+[[https://www.emacswiki.org/emacs/SaveHist][Savehist]] is the quick and dirty way to handle session management in
+emacs.
+#+begin_src emacs-lisp :tangle yes
+(use-package savehist
+  :ensure nil
+  :custom
+  (history-delete-duplicates t)
+  (history-length t)
+  (savehist-additional-variables
+   '(kill-ring
+     search-ring
+     regexp-search-ring))
+  (savehist-file (expand-file-name "history" user-emacs-directory))
+  (savehist-save-minibuffer-history 1)
+  :config (savehist-mode 1))
+#+end_src
 ** Autorevert
 Quick configuration for auto reverting files.
 #+begin_src emacs-lisp :tangle yes
