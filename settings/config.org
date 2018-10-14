@@ -356,7 +356,9 @@
   ("C-x u" . undo-tree-visualize)
   :config
   (progn
-    (setq undo-tree-mode-lighter "")
+    (setq undo-tree-mode-lighter ""
+          undo-tree-visualizer-diff t
+          undo-tree-visualizer-timestamps t)
     (global-undo-tree-mode)))
    #+END_SRC
 
