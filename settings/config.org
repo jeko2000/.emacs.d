@@ -797,6 +797,14 @@ engines.
       :keybinding "w"))
   (engine-mode t))
 #+end_src
+** Autorevert
+Quick configuration for auto reverting files.
+#+begin_src emacs-lisp :tangle yes
+(use-package autorevert
+  :diminish auto-revert-mode
+  :bind ("C-x R" . revert-buffer)
+  :config (global-auto-revert-mode 1))
+#+end_src
 * Programming packages
 ** Generic
 *** Dired
