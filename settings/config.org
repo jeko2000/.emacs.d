@@ -1494,8 +1494,9 @@ system to rule them all.
     #+END_SRC
 *** Java/JDEE
     I don't program much in Java these days but keep [[https://github.com/jdee-emacs/jdee][JDEE]] around just in case.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle no
 (use-package jdee
+  :disabled t
   :defer t
   :config
   (progn
