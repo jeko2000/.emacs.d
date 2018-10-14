@@ -775,6 +775,10 @@ specified by `jr/volume-lower-volume-command'."
   (add-hook 'lisp-mode-hook 'turn-on-eval-sexp-fu-flash-mode)
   (add-hook 'elpy-mode-hook 'turn-on-eval-sexp-fu-flash-mode))
    #+end_src
+** CSV
+#+begin_src emacs-lisp :tangle yes
+(use-package csv-mode)
+#+end_src
 ** Engine mode
 This is a useful mode that allows quick results from defined search
 engines.
