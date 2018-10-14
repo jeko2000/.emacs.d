@@ -62,7 +62,7 @@
 (load custom-file)
 
 ;; Load org-mode source early on when emacs is recent
-(when (> emacs-major-version 25)
+(when (>= emacs-major-version 27)
   (let ((org-source (expand-file-name "org-mode/lisp" site-lisp-directory))
         (org-contrib-source (expand-file-name "org-mode/contrib/lisp" site-lisp-directory)))
     (when (file-exists-p org-source)
