@@ -1,0 +1,5 @@
+(setq user-init-file (or load-file-name (buffer-file-name)))
+(setq user-emacs-directory (file-name-directory user-init-file))
+(let ((dir "/data/rep/personal/org"))
+  (if (file-exists-p dir)
+      (setq jr/org-directory dir)))
