@@ -1655,7 +1655,7 @@ utility eclim can be used to issue requests to that server.
 (use-package sql-indent
   :mode "\\.sql\\'")
     #+end_src
-*** javascript
+*** JavaScript
 #+begin_src emacs-lisp :tangle yes
 (use-package js2-mode
   :mode ("\\.js\\'")
@@ -1677,16 +1677,117 @@ utility eclim can be used to issue requests to that server.
                                   #'xref-js2-xref-backend nil t)))
             ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
             ;; unbind it.
-            (define-key js-mode-map (kbd "M-.") nil)))))
-    (use-package company-tern
-      :config
-      (progn
-        (add-to-list 'company-backends 'company-tern)
-        (add-hook 'js2-mode-hook (lambda ()
-                                   (tern-mode)))
-        ;; Disable completion keybindings, as we use xref-js2 instead
-        (define-key tern-mode-keymap (kbd "M-.") nil)
-        (define-key tern-mode-keymap (kbd "M-,") nil)))))
+            (define-key js-mode-map (kbd "M-.") nil)))
+        (use-package company-tern
+          :config
+          (progn
+            (add-to-list 'company-backends 'company-tern)
+            (add-hook 'js2-mode-hook (lambda ()
+                                       (tern-mode)))
+            ;; Disable completion keybindings, as we use xref-js2 instead
+            (define-key tern-mode-keymap (kbd "M-.") nil)
+            (define-key tern-mode-keymap (kbd "M-,") nil)))))))
+#+end_src
+*** Move-text
+#+begin_src emacs-lisp :tangle yes
+(use-package move-text
+  :defer 2
+  :bind (("M-p" . move-text-up)
+         ("M-n" . move-text-down))
+  :config (move-text-default-bindings))
+#+end_src
+*** Multi-term
+#+begin_src emacs-lisp :tangle yes
+(use-package multi-term
+  :bind (("C-x T T" . multi-term)
+         ("C-c C-n" . multi-term-next)
+         ("C-c C-p" . multi-term-prev))
+  :init
+  (defun jr/term-mode-hook ()
+    (copy-face 'default 'term-face)
+    (yas-minor-mode -1)
+    (auto-fill-mode -1)
+    (compilation-shell-minor-mode t))
+  :config
+  (progn
+    (setq multi-term-program "/bin/bash"
+          multi-term-buffer-name "term"
+          term-unbind-key-list '("C-x"
+                                 "C-h"
+                                 "M-x"
+                                 "C-z")
+          multi-term-scroll-to-bottom-on-output t)
+    (cl-flet ((set-color (pair)
+                         (multiple-value-bind (face color)
+                             pair
+                           (set-face-attribute face
+                                               nil
+                                               :foreground color
+                                               :background nil))))
+      (mapc #'set-color
+            '((term-color-black "#2e3434")
+              (term-color-red "tomato")
+              (term-color-green "#6ac214")
+              (term-color-yellow "#edd400")
+              (term-color-blue "light sky blue")
+              (term-color-magenta "magenta")
+              (term-color-cyan "cyan")
+              (term-color-white "#eeeeec"))))
+    (setq-default ansi-term-color-vector
+                  [term-face
+                   term-color-black
+                   term-color-red
+                   term-color-green
+                   term-color-yellow
+                   term-color-blue
+                   term-color-magenta
+                   term-color-cyan
+                   term-color-white])
+    (add-hook 'term-mode-hook 'jr/term-mode-hook)
+    (define-key term-raw-map (kbd "C-c C-n") 'multi-term-next)
+    (define-key term-raw-map (kbd "C-c C-p") 'multi-term-prev)))
+#+end_src
+*** C++
+#+begin_src emacs-lisp :tangle yes
+(use-package ggtags
+  :config
+  (progn
+    (add-hook 'c-mode-common-hook
+              (lambda ()
+                (ggtags-mode 1)
+                (add-to-list 'c-default-style '(c++ . "stroustrup"))
+                (smartparens-strict-mode 1)
+                (define-key c++-mode-map (kbd "<f5>") (lambda ()
+                                                        (interactive)
+                                                        (setq-local compilation-read-command nil)
+                                                        (call-interactively 'compile)))
+                (sp-with-modes '(c-mode c++-mode java-mode)
+                  (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
+                  (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
+                                                            ("* ||\n[i]" "RET"))))))
+    (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)))
+
+(use-package irony
+  :init
+  (add-hook 'c++-mode-hook 'irony-mode)
+  :config
+  (defun jr/irony-mode-hook ()
+    (define-key irony-mode-map [remap completion-at-point]
+      'irony-completion-at-point-async)
+    (define-key irony-mode-map [remap complete-symbol]
+      'irony-completion-at-point-async)
+    (setq company-backends (delete 'company-semantic company-backends))
+    (setq-local eldoc-documentation-function #'ggtags-eldoc-function))
+  (add-hook 'irony-mode-hook 'jr/irony-mode-hook)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+(use-package company-c-headers
+  :config
+  (progn
+    (add-to-list 'company-c-headers-path-system "/usr/include/c++/8.2.1/")
+    (add-to-list 'company-backends 'company-c-headers)))
+#+end_src
+
 *** Octave
 [[https://www.gnu.org/software/octave/][GNU Octave]] is a powerful programming language for scientific
 computing. Its syntax is largely compatible with Matlab alongside a
