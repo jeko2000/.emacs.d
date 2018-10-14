@@ -3,14 +3,28 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        LaTeX-insert-left-brace
+        beginning-of-buffer
+        c-electric-lt-gt
+        c-electric-paren
+        c-electric-semi&comma
+        c-electric-slash
         counsel-M-x
         downcase-region
+        elpy-nav-indent-shift-right
         end-of-buffer
+        eval-and-replace
         eval-last-sexp
         fill-paragraph
+        forward-sentence
+        hungry-delete-backward
+        hungry-delete-forward
         kill-region
+        ledger-post-align-xact
+        message-beginning-of-line
         org-beginning-of-line
         org-cycle
+        org-delete-char
         org-end-of-line
         org-force-self-insert
         org-kill-line
@@ -20,14 +34,21 @@
         org-self-insert-command
         org-shiftleft
         org-yank
+        paredit-backslash
+        paredit-close-round
+        paredit-doublequote
         paredit-forward-delete
         paredit-forward-slurp-sexp
         paredit-kill
         paredit-open-round
         paredit-semicolon
         query-replace
+        sp-backward-kill-word
         sp-delete-char
+        sp-forward-slurp-sexp
+        sp-kill-hybrid-sexp
         sp-kill-region
+        upcase-region
         ))
 
 (setq mc/cmds-to-run-once
