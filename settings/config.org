@@ -1548,6 +1548,32 @@ system to rule them all.
   :interpreter ("gradle" . gradle-mode))
 
     #+END_SRC
+**** Eclim
+From the [[https://github.com/emacs-eclim/emacs-eclim#user-content-overview][emacs-eclim readme]]:
+
+Eclim is an Eclipse plugin which exposes Eclipse features through a
+server interface. When this server is started, the command line
+utility eclim can be used to issue requests to that server.
+#+begin_src emacs-lisp :tangle yes
+(use-package eclim
+  :config
+  (progn
+    ;; Eclim settings
+    (setq eclim-accepted-file-regexps
+          '("\\.java$" "\\.xml$" "\\.h$")
+          eclim-use-yasnippet t
+          help-at-pt-display-when-idle t
+          help-at-pt-timer-delay 0.5)
+    (help-at-pt-set-timer)
+    (define-key eclim-mode-map (kbd "C-c C-e C-c") 'eclim-problems-correct)
+    (require 'eclimd)
+    (setq eclimd-autostart t
+          eclimd-default-workspace "/data/rep/personal/prog/java/EclimProjects")
+    (add-hook 'java-mode-hook 'eclim-mode)
+    (use-package company-emacs-eclim
+      :config
+      (company-emacs-eclim-setup))))
+#+end_src
 *** Python
     #+begin_src emacs-lisp :tangle yes
 (use-package elpy
