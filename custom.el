@@ -3,6 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(aggressive-indent-comments-too nil)
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
@@ -31,16 +32,20 @@
      ("#8B2C02" . 70)
      ("#93115C" . 85)
      ("#073642" . 100)))
+ '(history-delete-duplicates t)
+ '(history-length t)
  '(hl-bg-colors
    '("#DEB542" "#F2804F" "#FF6E64" "#F771AC" "#9EA0E5" "#69B7F0" "#69CABF" "#B4C342"))
  '(hl-fg-colors
    '("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3"))
  '(hl-sexp-background-color "#1c1f26")
+ '(langtool-language-tool-jar "~/installs/LangueageTool-4.2/languagetool-commandline.jar")
+ '(langtool-language-tool-server-jar "~/installs/LanguageTool-4.2/languagetool-server.jar")
  '(magit-diff-use-overlays nil)
  '(nrepl-message-colors
    '("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4"))
  '(package-selected-packages
-   '(pydoc-info company-box sql-indent company-auctex smart-mode-line pinentry py-autopep8 hide-mode-line org-present counsel swiper clojure-mode iy-go-to-char magit ivy yasnippet-snippets yasnippet company emms org-plus-contrib org frame-cmds frame-fns 0blayout pdf-tools nov geiser slime-company common-lisp-snippets commonlisp-snippets column-marker deferred rainbow-delimiters impatient-mode markdown-mode zoom-frm zenburn-theme which-key web-mode waher-theme w3m visual-regexp-steroids use-package undo-tree transpose-frame tangotango-theme swiper-helm sr-speedbar solarized-theme smooth-scrolling smex smartscan smartparens slime skewer-mode shell-pop scratch restclient quickrun python-mode perspective pdb-mode password-store paredit org-pandoc olivetti nlinum neotree multiple-cursors multi-term monokai-theme material-theme magit-gitflow less-css-mode jdee ido-vertical-mode hydra hindent helm-swoop helm-projectile helm-gtags helm-ag hayoo haskell-mode gradle-mode gnus-desktop-notify ggtags flycheck expand-region emmet-mode edit-server drag-stuff disable-mouse cyberpunk-theme crux counsel-projectile company-c-headers command-log-mode bongo bbdb arjen-grey-theme android-mode alert ace-window ace-jump-mode ac-html ac-cider 4clojure))
+   '(company-emacs-eclim eclimd eclim irony flycheck-ledger ledger-mode ledger hungry-delete git-gutter lorem-ipsum langtool wiki-summary move-text aggressive-indent engine-mode csv-mode scss-mode nord-theme pydoc-info company-box sql-indent company-auctex smart-mode-line pinentry py-autopep8 hide-mode-line org-present counsel swiper clojure-mode iy-go-to-char magit ivy yasnippet-snippets yasnippet company emms org-plus-contrib org frame-cmds frame-fns 0blayout pdf-tools nov geiser slime-company common-lisp-snippets commonlisp-snippets column-marker deferred rainbow-delimiters impatient-mode markdown-mode zoom-frm zenburn-theme which-key web-mode waher-theme w3m visual-regexp-steroids use-package undo-tree transpose-frame tangotango-theme swiper-helm sr-speedbar solarized-theme smooth-scrolling smex smartscan smartparens slime skewer-mode shell-pop scratch restclient quickrun python-mode perspective pdb-mode password-store paredit org-pandoc olivetti nlinum neotree multiple-cursors multi-term monokai-theme material-theme magit-gitflow less-css-mode jdee ido-vertical-mode hydra hindent helm-swoop helm-projectile helm-gtags helm-ag hayoo haskell-mode gradle-mode gnus-desktop-notify ggtags flycheck expand-region emmet-mode edit-server drag-stuff disable-mouse cyberpunk-theme crux counsel-projectile company-c-headers command-log-mode bongo bbdb arjen-grey-theme android-mode alert ace-window ace-jump-mode ac-html ac-cider 4clojure))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(safe-local-variable-values
@@ -115,6 +120,9 @@
      (Base . 10)
      (Package . CL-USER)
      (Syntax . COMMON-LISP)))
+ '(savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
+ '(savehist-file "/home/jeko/.emacs.d/history")
+ '(savehist-save-minibuffer-history 1)
  '(send-mail-function 'smtpmail-send-it)
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
  '(smtpmail-smtp-server "smtp.gmail.com")
