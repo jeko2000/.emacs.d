@@ -1239,10 +1239,13 @@ system to rule them all.
     by the great [[https://www.google.com/search?q=eshell+jwiegleyt&ie=utf-8&oe=utf-8][John Wiegley]].
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package eshell
-  :bind ("C-x t" . eshell))
-
-(defalias 'open 'find-file)
-(defalias 'openo 'find-file-other-window)
+  :bind ("C-x t" . eshell)
+  :config
+  (progn
+    (defalias 'open 'find-file)
+    (defalias 'openo 'find-file-other-window)
+    (add-hook 'eshell-mode-hook (lambda ()
+                                  (company-mode -1)))))
     #+END_SRC
 
 *** Clojure
