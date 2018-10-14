@@ -989,6 +989,7 @@ system to rule them all.
     (global-company-mode 1)))
 
 (use-package company-box
+  :disabled t
   :delight
   :hook (company-mode . company-box-mode)
   :config
