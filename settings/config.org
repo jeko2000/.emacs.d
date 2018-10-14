@@ -593,17 +593,50 @@
     (use-package erc-image)))
    #+END_SRC
 ** elfeed
+[[https://github.com/skeeto][Skeeto]]'s excellent [[https://github.com/skeeto/elfeed][elfeed]] package provides an excellent RSS and Atom
+feed client for emacs.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package elfeed
+  :bind ("C-x F" . 'elfeed)
+  :init
+  (defmacro jr/elfeed-add-face (face spec doc &rest args)
+    "Create a new face elfeed-FACE and push it to the
+`elfeed-search-face-alist'."
+    (declare (indent 0))
+    (let ((elfeed-face-symbol
+           (intern (concat "elfeed-" (symbol-name face)))))
+      `(progn
+         (defface ,elfeed-face-symbol
+           ,spec
+           ,doc
+           ,@ args)
+         (push '(,face ,elfeed-face-symbol)
+               elfeed-search-face-alist))))
   :defer 10
   :config
   (progn
     (setq elfeed-feeds
           '(("https://estamosaquitravel.com/feed.atom" travel estamosaqui)
-            ("http://nullprogram.com/feed/" blog emacs)
-            "http://planet.emacsen.org/atom.xml"))
-    (setf url-queue-timeout 10)
-    (setq-default elfeed-search-filter "@1-week-ago +unread ")))
+            ("http://endlessparentheses.com/atom.xml" tech emacs)
+            ("http://planet.emacsen.org/atom.xml" tech emacs)
+            ("http://nullprogram.com/feed/" tech)
+            ("https://felixcrux.com/blog/rss.xml" tech)
+            ("https://www.xkcd.com/atom.xml" webcomic)
+            ("http://nedroid.com/feed/" webcomic)
+            ))
+    (setq url-queue-timeout 20)
+    (add-hook 'elfeed-new-entry-hook
+              (elfeed-make-tagger :before "2 weeks ago"
+                                  :remove 'unread))
+    ;; Faces
+    (jr/elfeed-add-face audio
+                        '((t :foreground "#FA0"))
+                        "Marks podcasts in Elfeed."
+                        :group 'elfeed)
+    (jr/elfeed-add-face webcomic
+                        '((t :foreground "#BFF"))
+                        "Marks webcomics in Elfeed."
+                        :group 'elfeed)))
    #+END_SRC
 ** emacs-server
    #+BEGIN_SRC emacs-lisp :tangle yes
