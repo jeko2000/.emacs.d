@@ -775,6 +775,28 @@ specified by `jr/volume-lower-volume-command'."
   (add-hook 'lisp-mode-hook 'turn-on-eval-sexp-fu-flash-mode)
   (add-hook 'elpy-mode-hook 'turn-on-eval-sexp-fu-flash-mode))
    #+end_src
+** Engine mode
+This is a useful mode that allows quick results from defined search
+engines.
+#+begin_src emacs-lisp :tangle yes
+(use-package engine-mode
+  :defer 3
+  :config
+  (progn
+    (defengine duckduckgo
+      "https://duckduckgo.com/?q=%s"
+      :keybinding "d")
+    (defengine github
+      "https://github.com/search?ref=simplesearch&q=%s"
+      :keybinding "g")
+    (defengine stack-overflow
+      "https://stackoverflow.com/search?q=%s"
+      :keybinding "s")
+    (defengine wikipedia
+      "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+      :keybinding "w"))
+  (engine-mode t))
+#+end_src
 * Programming packages
 ** Generic
 *** Dired
