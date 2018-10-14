@@ -26,7 +26,8 @@
 (add-to-list 'package-archives melpa-stable)
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
-;;(package-initialize)
+(when (< emacs-major-version 27)
+  (package-initialize))
 
 ;; Set up load-path
 (setq site-lisp-directory (expand-file-name "site-lisp" user-emacs-directory))
