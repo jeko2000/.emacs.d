@@ -1347,11 +1347,17 @@ system to rule them all.
   (eval-buffer)
   (message "Visible section in buffer %s has been evaluated." (buffer-name)))
 
-(define-key emacs-lisp-mode-map (kbd "C-c e b") 'jr/noisy-eval-buffer)
-(define-key emacs-lisp-mode-map (kbd "C-c e d") 'toggle-debug-on-error)
-(define-key emacs-lisp-mode-map (kbd "C-c e c") 'emacs-lisp-byte-compile-and-load)
-(define-key emacs-lisp-mode-map (kbd "C-c e r") 'eval-region)
-(define-key emacs-lisp-mode-map (kbd "C-c e e") 'eval-and-replace)
+(define-key lisp-mode-map (kbd "C-c e b") 'jr/noisy-eval-buffer)
+(define-key lisp-mode-map (kbd "C-c e d") 'toggle-debug-on-error)
+(define-key lisp-mode-map (kbd "C-c e c") 'emacs-lisp-byte-compile-and-load)
+(define-key lisp-mode-map (kbd "C-c e r") 'eval-region)
+(define-key lisp-mode-map (kbd "C-c e e") 'eval-and-replace)
+
+(define-key lisp-interaction-mode-map (kbd "C-c e b") 'jr/noisy-eval-buffer)
+(define-key lisp-interaction-mode-map (kbd "C-c e d") 'toggle-debug-on-error)
+(define-key lisp-interaction-mode-map (kbd "C-c e c") 'emacs-lisp-byte-compile-and-load)
+(define-key lisp-interaction-mode-map (kbd "C-c e r") 'eval-region)
+(define-key lisp-interaction-mode-map (kbd "C-c e e") 'eval-and-replace)
 
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
 
