@@ -943,6 +943,13 @@ system to rule them all.
     I like to automatically indent when press RET
     #+BEGIN_SRC emacs-lisp :tangle yes
 (global-set-key (kbd "RET") 'newline-and-indent)
+(use-package aggressive-indent
+  :defer 2
+  :hook ((css-mode . aggressive-indent-mode)
+         (emacs-lisp-mode . aggressive-indent-mode)
+         (js-mode . aggressive-indent-mode)
+         (lisp-mode . aggressive-indent-mode))
+  :custom (aggressive-indent-comments-too))
     #+END_SRC
 *** Company
     [[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
