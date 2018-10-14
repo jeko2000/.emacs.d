@@ -805,6 +805,17 @@ Quick configuration for auto reverting files.
   :bind ("C-x R" . revert-buffer)
   :config (global-auto-revert-mode 1))
 #+end_src
+** Which-key
+Useful package that displays possible keybindings from the currently
+entered incomplete command.
+#+begin_src emacs-lisp :tangle yes
+(use-package which-key
+  :diminish
+  :config
+  (which-key-mode)
+  (setq which-key-idle-delay 1)
+  (setq which-key-max-description-length 30))
+#+end_src
 * Programming packages
 ** Generic
 *** Dired
