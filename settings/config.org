@@ -1687,8 +1687,24 @@ utility eclim can be used to issue requests to that server.
         ;; Disable completion keybindings, as we use xref-js2 instead
         (define-key tern-mode-keymap (kbd "M-.") nil)
         (define-key tern-mode-keymap (kbd "M-,") nil)))))
+*** Octave
+[[https://www.gnu.org/software/octave/][GNU Octave]] is a powerful programming language for scientific
+computing. Its syntax is largely compatible with Matlab alongside a
+few improvements.
+#+begin_src emacs-lisp :tangle yes
+(use-package octave
+  :ensure nil
+  :config
+  (progn
+    (setq inferior-octave-startup-args '("-i" "--no-line-editing" "-q" "--braindead" "--no-gui"))
+    (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
+    (add-hook 'inferior-octave-mode-hook
+              (lambda ()
+                (define-key inferior-octave-mode-map [up]
+                  'comint-previous-input)
+                (define-key inferior-octave-mode-map [down]
+                  'comint-next-input)))))
 #+end_src
-
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
