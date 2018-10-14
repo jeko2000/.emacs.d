@@ -816,6 +816,15 @@ entered incomplete command.
   (setq which-key-idle-delay 1)
   (setq which-key-max-description-length 30))
 #+end_src
+** Lorem Ipsum
+#+begin_src emacs-lisp :tangle yes
+(use-package lorem-ipsum
+  :defer 5
+  :bind (("C-c C-v l" . lorem-ipsum-insert-list)
+         ("C-c C-v p" . lorem-ipsum-insert-paragraphs)
+         ("C-c C-v s" . lorem-ipsum-insert-sentences)))
+#+end_src
+
 * Programming packages
 ** Generic
 *** Dired
