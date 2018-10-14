@@ -1,4 +1,9 @@
 ;;;Emacs init file
+;;;Early overrides
+
+;; First, let's run any early-overrides if they exist.
+(load "~/.emacs.d/early-overrides.el" 'noerror)
+
 ;; Basic GUI changes
 (menu-bar-mode -1)
 (tool-bar-mode -1)
