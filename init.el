@@ -80,4 +80,5 @@
   (when (file-exists-p conf)
     (org-babel-load-file conf nil)))
 
+(load "~/.emacs.d/late-overrides.el" 'noerror)
 (message "Config: OK")
