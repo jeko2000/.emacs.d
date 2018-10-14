@@ -983,7 +983,9 @@ system to rule them all.
   :config
   (progn
     (setq company-show-numbers t
-          company-tooltip-align-annotations t)
+          company-tooltip-align-annotations t
+          company-idle-delay 0.5
+          company-minimum-prefix-length 3)
     (global-company-mode 1)))
 
 (use-package company-box
