@@ -1102,7 +1102,8 @@ system to rule them all.
   :config
   (progn
     (use-package orgit)
-    (define-key magit-mode-map (kbd "C-<return>") nil)))
+    (define-key magit-mode-map (kbd "C-<return>") nil)
+    (use-package git-gutter)))
     #+END_SRC
 *** REST support
     See [[http://emacsrocks.com/e15.html][Emacs Rocks! Episode 15]] to learn how [[https://github.com/pashky/restclient.el][restclient]] can help out with
