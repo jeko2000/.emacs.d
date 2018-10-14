@@ -739,7 +739,6 @@ specified by `jr/volume-lower-volume-command'."
 ** alert
    #+begin_src emacs-lisp :tangle yes
 (use-package alert
-  :defer t
   :config
   (setq alert-fade-time 4
         alert-default-style (if (executable-find "notify-send") 'libnotify 'message)
