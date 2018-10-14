@@ -1611,7 +1611,7 @@ utility eclim can be used to issue requests to that server.
     ;; Syntax checking
     (setq python-check-command
           (or (executable-find "flake8")
-              (executable-find) "pylint"))
+              (executable-find "pylint")))
 
     (when (and (package-installed-p 'flycheck)
                python-check-command)
