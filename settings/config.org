@@ -1900,6 +1900,10 @@ Source: EmacsWiki"
 (setq visible-bell nil
       ring-bell-function #'jr/flash-mode-line)
 #+end_src
+** PKGBUILD files
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'auto-mode-alist '("PKGBUILD" . shell-script-mode))
+#+end_src
 * Personal
   Personal items
   #+BEGIN_SRC emacs-lisp :tangle yes
