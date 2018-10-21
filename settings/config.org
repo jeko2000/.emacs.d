@@ -921,6 +921,19 @@ system to rule them all.
       :init
       (add-hook 'ledger-mode-hook #'flycheck-mode))))
 #+end_src
+** Super Save
+[[https://github.com/bbatsov/super-save/][Super Save]] replces the standard auto-save-mode.
+#+begin_src emacs-lisp :tangle yes
+(use-package super-save
+  :config
+  (progn
+    (super-save-mode 1)
+    (setq super-save-auto-save-when-idle t
+          super-save-remote-files nil)
+    (add-to-list 'super-save-triggers 'ace-window)
+    (add-to-list 'super-save-hook-triggers 'counsel-find-file)))
+#+end_src
+
 * Programming packages
 ** Generic
 *** Dired
