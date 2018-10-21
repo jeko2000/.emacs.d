@@ -219,6 +219,12 @@
     (add-to-list 'auth-sources syncthing-auth-source)))
   #+END_SRC
 
+As pointed out in [[http://puntoblogspot.blogspot.com/2018/10/kill-ring-max-is-thing.html][here]], we can increase the value of kill-ring-max to
+allow for a larger kill-ring
+#+begin_src emacs-lisp :tangle yes
+(setq kill-ring-max 180)
+#+end_src
+
 * Key Rebinding
   Convenient keybindings to resize windows.
   #+BEGIN_SRC emacs-lisp :tangle yes
