@@ -225,6 +225,11 @@
 (setq kill-ring-max 180)
   #+end_src
 
+  Let's make it a bit harder to quit out of emacs
+  #+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "C-x C-c") nil)
+(global-set-key (kbd "C-x r q") 'save-buffers-kill-terminal)
+  #+end_src
 
 * Key Rebinding
   Convenient keybindings to resize windows.
