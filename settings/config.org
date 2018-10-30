@@ -1233,7 +1233,14 @@ specified by `jr/volume-lower-volume-command'."
     of semantic units.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package paredit
-  :delight)
+  :delight
+  :hook
+  ((emacs-lisp-mode
+    eval-expression-minibuffer-setup
+    ielm-mode
+    lisp-mode
+    lisp-interaction-mode
+    scheme-mode) . enable-paredit-mode))
     #+END_SRC
 *** Nlinum
     Showing Line numbers in a buffer can be fairly useful when working
