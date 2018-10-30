@@ -219,11 +219,12 @@
     (add-to-list 'auth-sources syncthing-auth-source)))
   #+END_SRC
 
-As pointed out in [[http://puntoblogspot.blogspot.com/2018/10/kill-ring-max-is-thing.html][here]], we can increase the value of kill-ring-max to
-allow for a larger kill-ring
-#+begin_src emacs-lisp :tangle yes
+  As pointed out in [[http://puntoblogspot.blogspot.com/2018/10/kill-ring-max-is-thing.html][here]], we can increase the value of kill-ring-max to
+  allow for a larger kill-ring
+  #+begin_src emacs-lisp :tangle yes
 (setq kill-ring-max 180)
-#+end_src
+  #+end_src
+
 
 * Key Rebinding
   Convenient keybindings to resize windows.
@@ -599,8 +600,8 @@ allow for a larger kill-ring
     (use-package erc-image)))
    #+END_SRC
 ** elfeed
-[[https://github.com/skeeto][Skeeto]]'s excellent [[https://github.com/skeeto/elfeed][elfeed]] package provides an excellent RSS and Atom
-feed client for emacs.
+   [[https://github.com/skeeto][Skeeto]]'s excellent [[https://github.com/skeeto/elfeed][elfeed]] package provides an excellent RSS and Atom
+   feed client for emacs.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package elfeed
   :bind ("C-x F" . 'elfeed)
@@ -819,11 +820,10 @@ specified by `jr/volume-lower-volume-command'."
 (use-package csv-mode)
 #+end_src
 ** Engine mode
-This is a useful mode that allows quick results from defined search
-engines.
-#+begin_src emacs-lisp :tangle yes
+   This is a useful mode that allows quick results from defined search
+   engines.
+   #+begin_src emacs-lisp :tangle yes
 (use-package engine-mode
-  :defer 3
   :config
   (progn
     (defengine duckduckgo
@@ -839,11 +839,11 @@ engines.
       "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
       :keybinding "w"))
   (engine-mode t))
-#+end_src
+   #+end_src
 ** Savehist
-[[https://www.emacswiki.org/emacs/SaveHist][Savehist]] is the quick and dirty way to handle session management in
-emacs.
-#+begin_src emacs-lisp :tangle yes
+   [[https://www.emacswiki.org/emacs/SaveHist][Savehist]] is the quick and dirty way to handle session management in
+   emacs.
+   #+begin_src emacs-lisp :tangle yes
 (use-package savehist
   :ensure nil
   :custom
@@ -856,39 +856,39 @@ emacs.
   (savehist-file (expand-file-name "history" user-emacs-directory))
   (savehist-save-minibuffer-history 1)
   :config (savehist-mode 1))
-#+end_src
+   #+end_src
 ** Autorevert
-Quick configuration for auto reverting files.
-#+begin_src emacs-lisp :tangle yes
+   Quick configuration for auto reverting files.
+   #+begin_src emacs-lisp :tangle yes
 (use-package autorevert
   :diminish auto-revert-mode
   :bind ("C-x R" . revert-buffer)
   :config (global-auto-revert-mode 1))
-#+end_src
+   #+end_src
 ** Which-key
-Useful package that displays possible keybindings from the currently
-entered incomplete command.
-#+begin_src emacs-lisp :tangle yes
+   Useful package that displays possible keybindings from the currently
+   entered incomplete command.
+   #+begin_src emacs-lisp :tangle yes
 (use-package which-key
   :diminish
   :config
   (which-key-mode)
   (setq which-key-idle-delay 1)
   (setq which-key-max-description-length 30))
-#+end_src
+   #+end_src
 ** Lorem Ipsum
-#+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package lorem-ipsum
   :defer 5
   :bind (("C-c C-v l" . lorem-ipsum-insert-list)
          ("C-c C-v p" . lorem-ipsum-insert-paragraphs)
          ("C-c C-v s" . lorem-ipsum-insert-sentences)))
-#+end_src
+   #+end_src
 
 ** LanguageTool
-[[http://www.languagetool.org/][LanguageTool]] is a spell and grammar checker written in Java.
-Configuration instructions can be found [[https://github.com/mhayashi1120/Emacs-langtool][here]].
-#+begin_src emacs-lisp :tangle yes
+   [[http://www.languagetool.org/][LanguageTool]] is a spell and grammar checker written in Java.
+   Configuration instructions can be found [[https://github.com/mhayashi1120/Emacs-langtool][here]].
+   #+begin_src emacs-lisp :tangle yes
 (use-package langtool
   :diminish
   :custom
@@ -905,12 +905,12 @@ Configuration instructions can be found [[https://github.com/mhayashi1120/Emacs-
     (global-set-key "\C-x4l" 'langtool-switch-default-language)
     (global-set-key "\C-x44" 'langtool-show-message-at-point)
     (global-set-key "\C-x4c" 'langtool-correct-buffer)))
-#+end_src
+   #+end_src
 ** Ledger
-Yet another awesome piece of work from John Wiegley
-(http://www.newartisans.com/). [[http://git.ledger-cli.org/][Ledger]] is the double-entry accounting
-system to rule them all.
-#+begin_src emacs-lisp :tangle yes
+   Yet another awesome piece of work from John Wiegley
+   (http://www.newartisans.com/). [[http://git.ledger-cli.org/][Ledger]] is the double-entry accounting
+   system to rule them all.
+   #+begin_src emacs-lisp :tangle yes
 (use-package ledger-mode
   :config
   (progn
@@ -920,10 +920,10 @@ system to rule them all.
     (use-package flycheck-ledger
       :init
       (add-hook 'ledger-mode-hook #'flycheck-mode))))
-#+end_src
+   #+end_src
 ** Super Save
-[[https://github.com/bbatsov/super-save/][Super Save]] replces the standard auto-save-mode.
-#+begin_src emacs-lisp :tangle yes
+   [[https://github.com/bbatsov/super-save/][Super Save]] replaces the standard auto-save-mode.
+   #+begin_src emacs-lisp :tangle yes
 (use-package super-save
   :config
   (progn
@@ -932,7 +932,8 @@ system to rule them all.
           super-save-remote-files nil)
     (add-to-list 'super-save-triggers 'ace-window)
     (add-to-list 'super-save-hook-triggers 'counsel-find-file)))
-#+end_src
+   #+end_src
+
 
 * Programming packages
 ** Generic
@@ -1798,27 +1799,9 @@ utility eclim can be used to issue requests to that server.
     (add-hook 'term-mode-hook 'jr/term-mode-hook)
     (define-key term-raw-map (kbd "C-c C-n") 'multi-term-next)
     (define-key term-raw-map (kbd "C-c C-p") 'multi-term-prev)))
-#+end_src
+    #+end_src
 *** C++
-#+begin_src emacs-lisp :tangle yes
-(use-package ggtags
-  :config
-  (progn
-    (add-hook 'c-mode-common-hook
-              (lambda ()
-                (ggtags-mode 1)
-                (add-to-list 'c-default-style '(c++ . "stroustrup"))
-                (smartparens-strict-mode 1)
-                (define-key c++-mode-map (kbd "<f5>") (lambda ()
-                                                        (interactive)
-                                                        (setq-local compilation-read-command nil)
-                                                        (call-interactively 'compile)))
-                (sp-with-modes '(c-mode c++-mode java-mode)
-                  (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
-                  (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
-                                                            ("* ||\n[i]" "RET"))))))
-    (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)))
-
+    #+begin_src emacs-lisp :tangle yes
 (use-package irony
   :init
   (add-hook 'c++-mode-hook 'irony-mode)
@@ -1838,13 +1821,13 @@ utility eclim can be used to issue requests to that server.
   (progn
     (add-to-list 'company-c-headers-path-system "/usr/include/c++/8.2.1/")
     (add-to-list 'company-backends 'company-c-headers)))
-#+end_src
+    #+end_src
 
 *** Octave
-[[https://www.gnu.org/software/octave/][GNU Octave]] is a powerful programming language for scientific
-computing. Its syntax is largely compatible with Matlab alongside a
-few improvements.
-#+begin_src emacs-lisp :tangle yes
+    [[https://www.gnu.org/software/octave/][GNU Octave]] is a powerful programming language for scientific
+    computing. Its syntax is largely compatible with Matlab alongside a
+    few improvements.
+    #+begin_src emacs-lisp :tangle yes
 (use-package octave
   :ensure nil
   :config
@@ -1857,7 +1840,7 @@ few improvements.
                   'comint-previous-input)
                 (define-key inferior-octave-mode-map [down]
                   'comint-next-input)))))
-#+end_src
+    #+end_src
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
@@ -1941,7 +1924,7 @@ few improvements.
 (bind-key "C-x 3" 'hsplit-other-window)
    #+END_SRC
 ** Less intrusive visible bell
-#+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (defun jr/flash-mode-line ()
   "Invert the mode-line face briefly.
 This can be used as a friendlier visual bell effect.
@@ -1951,11 +1934,11 @@ Source: EmacsWiki"
 
 (setq visible-bell nil
       ring-bell-function #'jr/flash-mode-line)
-#+end_src
+   #+end_src
 ** PKGBUILD files
-#+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (add-to-list 'auto-mode-alist '("PKGBUILD" . shell-script-mode))
-#+end_src
+   #+end_src
 * Personal
   Personal items
   #+BEGIN_SRC emacs-lisp :tangle yes
