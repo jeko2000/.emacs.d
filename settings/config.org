@@ -1324,18 +1324,19 @@ specified by `jr/bongo-volumn-lower-cmd'."
     with code. [[http://elpa.gnu.org/packages/nlinum.html][NLinum]] mode replaces the in-built linum-mode.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package nlinum
+  :init
+  (defun my-nlinum-mode-hook ()
+    (when nlinum-mode
+      (setq-local nlinum-format
+                  (concat "%" (number-to-string
+                               ;; Guesstimate number of buffer lines.
+                               (ceiling (log (max 1 (/ (buffer-size) 80)) 10)))
+                          "d"))))
   :config
-  (add-hook 'prog-mode-hook 'nlinum-mode))
-
-;; Preset `nlinum-format' for minimum width. (from https://www.emacswiki.org/emacs/LineNumbers)
-(defun my-nlinum-mode-hook ()
-  (when nlinum-mode
-    (setq-local nlinum-format
-                (concat "%" (number-to-string
-                             ;; Guesstimate number of buffer lines.
-                             (ceiling (log (max 1 (/ (buffer-size) 80)) 10)))
-                        "d"))))
-(add-hook 'nlinum-mode-hook #'my-nlinum-mode-hook)
+  (progn
+    ;; Preset `nlinum-format' for minimum width. (from https://www.emacswiki.org/emacs/LineNumbers)  
+    (add-hook 'prog-mode-hook 'nlinum-mode)
+    (add-hook 'nlinum-mode-hook #'my-nlinum-mode-hook)))
 
     #+END_SRC
 
