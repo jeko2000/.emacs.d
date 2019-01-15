@@ -1394,7 +1394,12 @@ specified by `jr/bongo-volumn-lower-cmd'."
     checking extension for GNU Emacs, intended as replacement for the
     older Flymake extension which is part of GNU Emacs.
     #+begin_src emacs-lisp :tangle yes
-(use-package flycheck)
+(use-package flycheck
+  :config
+  (use-package flycheck-cask
+    :commands flycheck-cask-setup
+    :config (add-hook 'emacs-lisp-mode-hook (flycheck-cask-setup))))
+    #+end_src
 *** GGTags
     #+begin_src emacs-lisp :tangle yes
 ;; GNU Global Tags
