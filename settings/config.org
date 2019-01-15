@@ -1273,7 +1273,6 @@ specified by `jr/bongo-volumn-lower-cmd'."
     by [[https://github.com/magnars/.emacs.d][Magnars Sveen]].
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package multiple-cursors
-  :demand  t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C-+"         . mc/mark-next-like-this)
          ("C-_"         . mc/mark-previous-like-this)
