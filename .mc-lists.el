@@ -5,11 +5,14 @@
       '(
         LaTeX-insert-left-brace
         beginning-of-buffer
+        c-electric-colon
         c-electric-lt-gt
         c-electric-paren
         c-electric-semi&comma
         c-electric-slash
+        company-complete
         counsel-M-x
+        counsel-yank-pop
         downcase-region
         elpy-nav-indent-shift-right
         end-of-buffer
@@ -17,9 +20,12 @@
         eval-last-sexp
         fill-paragraph
         forward-sentence
+        ggtags-navigation-mode-done
         hungry-delete-backward
         hungry-delete-forward
         kill-region
+        ledger-magic-tab
+        ledger-post-align-dwim
         ledger-post-align-xact
         message-beginning-of-line
         org-beginning-of-line
@@ -33,6 +39,7 @@
         org-return
         org-self-insert-command
         org-shiftleft
+        org-shiftup
         org-yank
         paredit-backslash
         paredit-close-round
@@ -41,14 +48,23 @@
         paredit-forward-slurp-sexp
         paredit-kill
         paredit-open-round
+        paredit-open-square
+        paredit-reindent-defun
         paredit-semicolon
+        paredit-splice-sexp-killing-backward
+        python-nav-forward-block
         query-replace
+        rectangle-number-lines
+        shell-command-on-region
+        sp-backward-delete-char
         sp-backward-kill-word
         sp-delete-char
         sp-forward-slurp-sexp
         sp-kill-hybrid-sexp
         sp-kill-region
+        sp-splice-sexp-killing-backward
         upcase-region
+        wdired-downcase-word
         ))
 
 (setq mc/cmds-to-run-once
