@@ -1090,34 +1090,46 @@ specified by `jr/bongo-volumn-lower-cmd'."
     [[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package company
-  :delight
+  :delight t
   :demand t
+  :init
+  (setq
+   company-dabbrev-ignore-case nil
+   company-dabbrev-code-ignore-case nil
+   company-dabbrev-downcase nil
+   company-idle-delay 0
+   company-minimum-prefix-length 4)
   :bind (("C-c C-/" . company-complete)
          ("TAB" . company-complete))
   :config
   (progn
     (setq company-show-numbers t
           company-tooltip-align-annotations t
-          company-idle-delay 0.5
+          company-idle-delay 1.0
           company-minimum-prefix-length 3)
-    (global-company-mode 1)))
+    (global-company-mode 1)
+    (use-package company-statistics
+      :config
+      (add-hook 'after-init-hook 'company-statistics-mode))
+    (use-package company-box
+      :disabled t
+      :delight
+      :hook (company-mode . company-box-mode)
+      :config
+      (progn
+        (setq company-box-enable-icon t
+              company-box-color-icon t
+              company-box-max-candidates 50
+              company-box-backends-colors
+              '((company-yasnippet :all "lime green"
+                                   :selected
+                                   (:background "lime green" :foreground "black"))
+                (company-elisp  :all "yellow"
+                                :selected
+                                (:background "orange" :foreground "black"))))))
+    (define-key company-active-map [tab] nil)
+    (define-key company-active-map (kbd "TAB") nil)))
 
-(use-package company-box
-  :disabled t
-  :delight
-  :hook (company-mode . company-box-mode)
-  :config
-  (progn
-    (setq company-box-enable-icon t
-          company-box-color-icon t
-          company-box-max-candidates 50
-          company-box-backends-colors
-          '((company-yasnippet :all "lime green"
-                               :selected
-                               (:background "lime green" :foreground "black"))
-            (company-elisp  :all "yellow"
-                            :selected
-                            (:background "orange" :foreground "black"))))))
     #+END_SRC
 *** Code Folding
     The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one to hide and show blocks of text.
