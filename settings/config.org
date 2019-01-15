@@ -817,10 +817,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
    #+begin_src emacs-lisp :tangle yes
 (use-package smartscan
   :config
-  (progn
-    (setq global-smartscan-mode t
-          smartscan-symbol-selector "word")
-    (smartscan-mode 1)))
+  (global-smartscan-mode 1))
    #+end_src
 
 ** alert
