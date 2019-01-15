@@ -1856,6 +1856,20 @@ utility eclim can be used to issue requests to that server.
     #+begin_src emacs-lisp :tangle yes
 (use-package sql-indent
   :mode "\\.sql\\'")
+(use-package sql
+  :mode "\\.sql\\'"
+  :config
+  (progn
+    (use-package sqlup-mode)
+    (use-package sql-indent)
+    (defun jr/sql-modes-hook ()
+      (sqlup-mode 1)
+      (sqlind-minor-mode 1)
+      (smartparens-strict-mode))
+
+    (add-hook 'sql-mode-hook 'jr/sql-modes-hook)
+    (add-hook 'sql-interactive-mode-hook 'jr/sql-modes-hook)
+    (add-to-list 'sqlup-blacklist "user")))
     #+end_src
 *** JavaScript
 #+begin_src emacs-lisp :tangle yes
