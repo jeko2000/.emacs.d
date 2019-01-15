@@ -1186,9 +1186,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
           ivy-initial-inputs-alist nil ; no regexp by default
           ivy-re-builders-alist ; configure regexp engine.
           '((t   . ivy--regex-ignore-order))) ; allow input not in order
-    (use-package swiper
-      :bind ("C-s" . swiper))
+    (use-package swiper)
     (use-package counsel
+      :init
+      (setq counsel-grep-swiper-limit 3000000)
       :bind
       (("C-h f" . counsel-describe-function)
        ("C-h l" . counsel-find-library)
@@ -1200,8 +1201,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
        ("C-x C-f" . counsel-find-file)
        ("C-x C-r" . counsel-recentf)
        ;;("M-i" . counsel-imenu)
+       ("C-c o" . counsel-linux-app)
        ("M-x" . counsel-M-x)
-       ("M-y" . counsel-yank-pop)))))
+       ("M-y" . counsel-yank-pop)
+       ("C-s" . counsel-grep-or-swiper)))))
      #+END_SRC
 **** Ido mode
      [[https://www.emacswiki.org/emacs/InteractivelyDoThings][Interactively do things]] used to my completion framework at the
