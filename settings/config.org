@@ -1367,6 +1367,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     supported types.
     #+begin_src emacs-lisp :tangle yes
 (use-package projectile
+  :init   (setq projectile-use-git-grep t)
   :config
   (progn
     (setq projectile-cache-file "~/projectile.cache"
@@ -1379,14 +1380,14 @@ specified by `jr/bongo-volumn-lower-cmd'."
           projectile-track-known-projects-automatically t)
     (add-to-list 'projectile-other-file-alist '("clj" "cljs"))
     (add-to-list 'projectile-other-file-alist '("cljs" "clj"))
+    (global-set-key (kbd "M-.") 'projectile-find-tag)
+    (global-set-key (kbd "M-,") 'pop-tag-mark)
     (when (window-system)
       (setq projectile-mode-line '(:eval (format " Π[%s]" (projectile-project-name)))))
     (use-package counsel-projectile
       :config
       (progn
-        (add-hook 'web-mode-hook #'rainbow-mode)
-        (add-hook 'css-mode-hook #'rainbow-mode)
-        (counsel-projectile-mode)))))
+        (counsel-projectile-mode 1)))))
     #+end_src
 *** Flycheck
     Per the [[http://www.flycheck.org/en/latest/][flycheck website]], Flycheck is a modern on-the-fly syntax
