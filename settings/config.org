@@ -955,6 +955,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
    system to rule them all.
    #+begin_src emacs-lisp :tangle yes
 (use-package ledger-mode
+  :mode "\\.ledger\\'"
   :config
   (progn
     (setq ledger-clear-whole-transactions t
