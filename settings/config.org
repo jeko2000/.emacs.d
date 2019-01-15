@@ -1158,16 +1158,14 @@ specified by `jr/bongo-volumn-lower-cmd'."
          ("C-c y n"   . yas-new-snippet)
          ("C-c y v"   . yas-visit-snippet-file))
   :config
-  (yas-global-mode 1))
+  (progn
+    (yas-global-mode 1)
+    (use-package yasnippet-snippets)
+    (use-package ivy-yasnippet
+      :bind ("C-c y y" . ivy-yasnippet))))
 
-(use-package yasnippet-snippets)
     #+END_SRC
 
-    We also download [[https://github.com/mkcms/ivy-yasnippet][ivy-yasnippet]] by [[https://github.com/mkcms][mkcms]] to allow snippet previews through [[https://github.com/abo-abo/swiper][ivy]].
-    #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ivy-yasnippet
-  :bind ("C-c y y" . ivy-yasnippet))
-    #+END_SRC
 *** Completion
 **** Ivy
      [[https://github.com/abo-abo/swiper][Ivy]] provides a completion mechanism for Emacs.
