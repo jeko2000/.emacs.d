@@ -649,7 +649,7 @@
 ** emacs-server
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package server
-  :no-require
+  :ensure nil
   :config (progn
             (server-start)
             (require 'org-protocol)))
@@ -657,7 +657,6 @@
 ** appt
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package appt
-  :no-require
   :ensure nil
   :config
   (progn
