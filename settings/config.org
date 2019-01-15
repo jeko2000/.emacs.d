@@ -1037,7 +1037,6 @@ specified by `jr/bongo-volumn-lower-cmd'."
   (defvar ctl-period-equals-map)
   (define-prefix-command 'ctl-period-equals-map)
   (bind-key "C-. =" #'ctl-period-equals-map)
-
   :bind (("C-. = b" . ediff-buffers)
          ("C-. = B" . ediff-buffers3)
          ("C-. = c" . compare-windows)
