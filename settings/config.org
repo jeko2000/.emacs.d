@@ -1066,6 +1066,14 @@ specified by `jr/bongo-volumn-lower-cmd'."
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package s)
     #+END_SRC
+*** Highlight
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package highlight-symbol
+  :diminish highlight-symbol-mode
+  :commands highlight-symbol
+  :bind ("C-x H" . highlight-symbol))
+
+#+END_SRC
 *** Indentation
     I like to automatically indent when press RET
     #+BEGIN_SRC emacs-lisp :tangle yes
