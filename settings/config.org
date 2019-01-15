@@ -978,6 +978,15 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (add-to-list 'super-save-hook-triggers 'counsel-find-file)))
    #+end_src
 
+** EasyPG
+   #+begin_src emacs-lisp :tangle yes
+(require 'epg-config)
+(add-to-list 'epg-config--program-alist
+             `(OpenPGP epg-gpg-program
+                       ("gpg" . ,epg-gpg-minimum-version)))
+(setq epa-file-cache-passphrase-for-symmetric-encryption t
+      epg--configurations nil)
+   #+end_src
 
 * Programming packages
 ** Generic
