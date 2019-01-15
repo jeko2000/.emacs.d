@@ -1286,8 +1286,8 @@ specified by `jr/bongo-volumn-lower-cmd'."
     expand-region.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package expand-region
-  :bind ("C-@" . er/expand-region))
   :defer 2
+  :bind ("C-=" . er/expand-region))
     #+END_SRC
 *** iy-go-to-char
     See [[http://emacsrocks.com/e04.html][Emacs Rocks! Episode 4]] to learn about [[https://github.com/doitian/iy-go-to-char][iy-go-to-char]].
