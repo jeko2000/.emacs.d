@@ -1080,10 +1080,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
 (global-set-key (kbd "RET") 'newline-and-indent)
 (use-package aggressive-indent
   :defer 2
-  :hook ((css-mode . aggressive-indent-mode)
+  :hook ((css-mode        . aggressive-indent-mode)
          (emacs-lisp-mode . aggressive-indent-mode)
-         (js-mode . aggressive-indent-mode)
-         (lisp-mode . aggressive-indent-mode))
+         (js-mode         . aggressive-indent-mode)
+         (lisp-mode       . aggressive-indent-mode))
   :custom (aggressive-indent-comments-too))
     #+END_SRC
 *** Company
