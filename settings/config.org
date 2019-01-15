@@ -730,19 +730,19 @@
           (bongo-player-show-infoset bongo-player))))
     (defun jr/volume-raise-volume ()
       "Raise default sink's volume through the shell command
-specified by `jr/volume-raise-volume-command'."
+specified by `jr/bongo-volume-raise-cmd'."
       (interactive)
-      (shell-command jr/volume-raise-volume-command))
+      (shell-command jr/bongo-volume-raise-cmd))
     (defun jr/volume-lower-volume ()
       "Lower default sink's volume through the shell command
-specified by `jr/volume-lower-volume-command'."
+specified by `jr/bongo-volumn-lower-cmd'."
       (interactive)
-      (shell-command jr/volume-lower-volume-command))
+      (shell-command jr/bongo-volumn-lower-cmd))
     (defun jr/bongo-mode-init ()
       (interactive)
       (let ((bongo-insert-whole-directory-trees t))
-        (when (file-exists-p jr/bongo-music-directory)
-          (bongo-insert-file jr/bongo-music-directory)
+        (when (file-exists-p jr/bongo-music-dir)
+          (bongo-insert-file jr/bongo-music-dir)
           (with-current-buffer (bongo-playlist-buffer)
             (bongo-sprinkle-mode 1)
             (bongo-play))))))
