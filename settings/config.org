@@ -397,26 +397,30 @@
    I add an advice to the switch-theme function to zoom in to my desired
    zoom. Similarly, I add a hook to do the same when I create new frames.
    #+BEGIN_SRC emacs-lisp :tangle yes
-(when (and window-system
+(use-package zoom-frm
+  :demand t
+  :if (and window-system
            (package-installed-p 'zoom-frm))
-  (use-package zoom-frm
-    :bind (("C-M-=" . zoom-in/out)
-           ("H-z"   . toggle-zoom-frame)
-           ("s-<f1>" . toggle-zoom-frame))
-    :init
-    (progn
-      (setq jr/zoom-frm-desired-zoom 2)
-      (zoom-in/out jr/zoom-frm-desired-zoom))
-    :config
-    (progn
-      (setq frame-zoom-font-difference 10)
-      (advice-add 'switch-theme :after (lambda (theme)
-                                         (dolist (frm (frame-list))
-                                           (with-selected-frame frm
-                                             (zoom-in/out jr/zoom-frm-desired-zoom)))))
-      (add-hook 'after-make-frame-functions (lambda (frm)
-                                              (with-selected-frame frm
-                                                (zoom-in/out jr/zoom-frm-desired-zoom)))))))
+  :bind (("C-M-=" . zoom-in/out)
+         ("H-z"   . toggle-zoom-frame)
+         ("s-<f1>" . toggle-zoom-frame))
+  :init
+  (setq jr/zoom-frm-zoom
+        (or (and (boundp 'jr/zoom-frm-desired-zoom)
+                 jr/zoom-frm-desired-zoom)
+            1))
+  (defun jr/zoom-in-on-frame (frame)
+    (with-selected-frame frame
+      (zoom-in/out jr/zoom-frm-zoom)))
+  (defun jr/zoom-in-on-all-frames ()
+    (mapc #'jr/zoom-in-on-frame (frame-list)))
+  :config
+  (progn
+    (jr/zoom-in-on-all-frames)
+    (setq frame-zoom-font-difference 10)
+    (advice-add 'switch-theme :after (lambda (theme)
+                                       (jr/zoom-in-on-all-frames)))
+    (add-hook 'after-make-frame-functions #'jr/zoom-in-on-frame)))
    #+END_SRC
 
 ** BBDB
