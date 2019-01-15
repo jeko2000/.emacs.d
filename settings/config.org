@@ -858,9 +858,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
   (add-hook 'elpy-mode-hook 'turn-on-eval-sexp-fu-flash-mode))
    #+end_src
 ** CSV
-#+begin_src emacs-lisp :tangle yes
-(use-package csv-mode)
-#+end_src
+   #+begin_src emacs-lisp :tangle yes
+(use-package csv-mode
+  :mode "\\.csv\\'")
+   #+end_src
 ** Engine mode
    This is a useful mode that allows quick results from defined search
    engines.
