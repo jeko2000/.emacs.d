@@ -475,25 +475,25 @@
    We also add a couple of bindings to open urls externally through
    Firefox.
    #+BEGIN_SRC emacs-lisp :tangle yes
-(when (executable-find "w3m")
-  (use-package w3m
-    :defer 5
-    :bind (("C-x w" . 'w3m))
-    :config
-    (progn
-      ;;    (setq w3m-user-agent "Mozilla/5.0 (Linux; U; Android 2.3.3; zh-tw; HTC_Pyramid Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.")
-      (setq browse-url-browser-function 'w3m-goto-url-new-session)
-      (setq w3m-home-page "https://duckduckgo.com/lite/")
-      (defun jr/w3m-open-link-at-point-in-firefox ()
-        "Open the w3m anchor at point in Firefox."
-        (interactive)
-        (browse-url-firefox (w3m-anchor)))
-      (defun jr/w3m-open-current-url-in-firefox ()
-        "Open the `w3m-current-url' in Firefox"
-        (interactive)
-        (browse-url-firefox w3m-current-url))
-      (define-key w3m-mode-map "X" 'jr/w3m-open-link-at-point-in-firefox)
-      (define-key w3m-mode-map "x" 'jr/w3m-open-current-url-in-firefox))))
+(use-package w3m
+  :if (executable-find "w3m")
+  :bind ("C-x w" . 'w3m)
+  :defer t
+  :config
+  (progn
+    ;;    (setq w3m-user-agent "Mozilla/5.0 (Linux; U; Android 2.3.3; zh-tw; HTC_Pyramid Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.")
+    (setq browse-url-browser-function 'w3m-goto-url-new-session)
+    (setq w3m-home-page "https://duckduckgo.com/lite/")
+    (defun jr/w3m-open-link-at-point-in-firefox ()
+      "Open the w3m anchor at point in Firefox."
+      (interactive)
+      (browse-url-firefox (w3m-anchor)))
+    (defun jr/w3m-open-current-url-in-firefox ()
+      "Open the `w3m-current-url' in Firefox"
+      (interactive)
+      (browse-url-firefox w3m-current-url))
+    (define-key w3m-mode-map "X" 'jr/w3m-open-link-at-point-in-firefox)
+    (define-key w3m-mode-map "x" 'jr/w3m-open-current-url-in-firefox)))
    #+END_SRC
 ** Olivetti
    [[https://github.com/rnkn/olivetti][Olivetti]] mode provides a nice environment to write distraction-free.
@@ -517,17 +517,15 @@
    the prefix to "C-c s" instead.
 
    #+BEGIN_SRC emacs-lisp :tangle yes
-(when (executable-find "wn")
-  (use-package synosaurus
-    :defer t
-    :delight
-    :init
-    (setq synosaurus-prefix (kbd "C-c s"))
-    :config
-    (progn
-      (setq synosaurus-backend 'synosaurus-backend-wordnet
-            synosaurus-choose-method 'default)
-      (add-hook 'text-mode-hook 'synosaurus-mode))))
+(use-package synosaurus
+  :if (executable-find "wn")
+  :delight
+  :hook (text-mode . synosaurus-mode)
+  :init
+  (setq synosaurus-prefix (kbd "C-c s"))
+  :config
+  (setq synosaurus-backend 'synosaurus-backend-wordnet
+        synosaurus-choose-method 'default))
    #+END_SRC
 
 ** Diminish
