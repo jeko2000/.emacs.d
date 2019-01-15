@@ -301,7 +301,6 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package winner
   :if (not noninteractive)
-  :defer 10
   :bind (("C-c <left>" . winner-undo)
          ("C-c <right>" . winner-redo))
   :config
@@ -326,7 +325,6 @@
    manager.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package password-store
-  :defer t
   :bind ("C-c s c" . password-store-copy))
    #+END_SRC
 
@@ -344,7 +342,8 @@
 ** Tramp
    Of course! We need [[https://www.gnu.org/software/tramp/][remote file editing!]]
    #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package tramp)
+(use-package tramp
+  :defer 10)
    #+END_SRC
 
 ** PDF-Tools
@@ -561,8 +560,7 @@
 ;; This causes ERC to connect to the Freenode network upon hitting
 ;; C-c e f.  Replace MYNICK with your IRC nick.
 (use-package erc
-  :defer 5
-  :preface
+  :init
   (defun jr/connect-to-erc ()
     (interactive)
     (erc :server "irc.freenode.net"
@@ -570,6 +568,7 @@
          :nick "jeko2000"))
   :bind ("C-c e f" . 'jr/connect-to-erc)
   ;;  :delight erc-mode "ε"
+  :defer t
   :config
   (progn
     (add-to-list 'erc-modules 'notifications)
@@ -618,7 +617,6 @@
            ,@ args)
          (push '(,face ,elfeed-face-symbol)
                elfeed-search-face-alist))))
-  :defer 10
   :config
   (progn
     (setq elfeed-feeds
@@ -676,7 +674,11 @@
    by org mode through Bruce Rave's [[https://github.com/bruceravel/gnuplot-mode][gnuplot-mode]]
    #+begin_src emacs-lisp :tangle yes
 (use-package gnuplot
-  :defer t)
+  :if (executable-find "gnuplot")
+  :mode (("\\.gpi\\'" . gnuplot-mode)
+         ("\\.plt\\'" . gnuplot-mode)
+         ("\\.gp\\'" . gnuplot-mode)
+         ("\\.gnuplot\\'" . gnuplot-mode)))
    #+end_src
 
 ** bongo
@@ -823,6 +825,7 @@ specified by `jr/volume-lower-volume-command'."
    engines.
    #+begin_src emacs-lisp :tangle yes
 (use-package engine-mode
+  :defer 10
   :config
   (progn
     (defengine duckduckgo
@@ -878,7 +881,6 @@ specified by `jr/volume-lower-volume-command'."
 ** Lorem Ipsum
    #+begin_src emacs-lisp :tangle yes
 (use-package lorem-ipsum
-  :defer 5
   :bind (("C-c C-v l" . lorem-ipsum-insert-list)
          ("C-c C-v p" . lorem-ipsum-insert-paragraphs)
          ("C-c C-v s" . lorem-ipsum-insert-sentences)))
@@ -1210,6 +1212,7 @@ specified by `jr/volume-lower-volume-command'."
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package expand-region
   :bind ("C-@" . er/expand-region))
+  :defer 2
     #+END_SRC
 *** iy-go-to-char
     See [[http://emacsrocks.com/e04.html][Emacs Rocks! Episode 4]] to learn about [[https://github.com/doitian/iy-go-to-char][iy-go-to-char]].
@@ -1273,7 +1276,9 @@ specified by `jr/volume-lower-volume-command'."
 *** Smartparens
     #+begin_src emacs-lisp :tangle yes
 (use-package smartparens
-  :defer t
+  :diminish t
+  :init
+  (setq sp-interactive-dwim t)
   :config
   (progn
     (require 'smartparens-config)
@@ -1403,6 +1408,7 @@ specified by `jr/volume-lower-volume-command'."
     [[https://github.com/jaor/geiser][Geiser]] provides an improved development environment in emacs.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package geiser
+  :defer t
   :config
   (progn
     (setq geiser-active-implementations '(mit)
@@ -1494,7 +1500,7 @@ specified by `jr/volume-lower-volume-command'."
     [[https://jblevins.org/projects/markdown-mode/][markdown-mode]] is very convenient.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package markdown-mode
-  :defer t)
+  :mode "\\.md\\'")
     #+END_SRC
 *** TeX/LaTeX
     #+begin_src emacs-lisp :tangle yes
@@ -1522,7 +1528,6 @@ specified by `jr/volume-lower-volume-command'."
     We also install [[https://github.com/emacsmirror/rainbow-mode][rainbow-mode]] to colorize color names in web and CSS buffers.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package web-mode
-  :defer 5
   :preface
   (defun jr/insert-django-text (text)
     "Inserts selmer text"
@@ -1566,7 +1571,7 @@ specified by `jr/volume-lower-volume-command'."
     YouTube videos!
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package simple-httpd
-  :defer 4
+  :defer t
   :config
   (progn
     (setq httpd-root "/var/www/html")
