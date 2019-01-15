@@ -792,6 +792,14 @@ specified by `jr/bongo-volumn-lower-cmd'."
           ag-reuse-buffers t)
     (use-package wgrep-ag)))
    #+end_src
+** wgrep
+   #+begin_src emacs-lisp :tangle yes
+(use-package wgrep
+  :defer 10
+  :config
+  ;;This fixes an issue as discussed on
+  ;;https://groups.google.com/forum/#!topic/gnu.emacs.help/uu6ZQZGQ9FA/discussion
+  (setq grep-command "grep --color -nH -e "))
    #+end_src
 ** smartscan
    The [[https://github.com/mickeynp/smart-scan][smartscan]] package written by [[https://github.com/mickeynp/][Mickey Petersen]] allows you to jump
