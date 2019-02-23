@@ -27,6 +27,12 @@
 ;;bind keys
 (bind-key "s-<f12>" 'switch-theme)
     #+END_SRC
+*** Zenburn
+    #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package zenburn-theme
+  :if (window-system)
+  :defer t)
+    #+END_SRC
 *** Solarized theme
     The [[https://github.com/bbatsov/solarized-emacs][Solarized colour theme]] is a port by [[https://github.com/bbatsov][Bozhidar Batsov (bbatsov)]] from
     the original [[http://ethanschoonover.com/solarized][Solarized theme by Ethan Schoonover]].
@@ -78,7 +84,7 @@
     #+END_SRC
 *** Theme of choice
     #+begin_src emacs-lisp :tangle yes
-(defvar jr/default-theme 'tangotango
+(defvar jr/default-theme 'zenburn
   "Default theme to be loaded as part of the initial
     configuration.")
 
