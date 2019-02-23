@@ -1329,7 +1329,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
 *** Nlinum
     Showing Line numbers in a buffer can be fairly useful when working
     with code. [[http://elpa.gnu.org/packages/nlinum.html][NLinum]] mode replaces the in-built linum-mode.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle no
 (use-package nlinum
   :init
   (defun my-nlinum-mode-hook ()
@@ -1347,6 +1347,9 @@ specified by `jr/bongo-volumn-lower-cmd'."
 
     #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+#+END_SRC
 *** Whitespace-cleanup-mode
     [[https://github.com/purcell/whitespace-cleanup-mode][whitespace-cleanup-mode]] is a better solution than just having
     the whitespace-cleanup function running as part of the before-save-hook.
@@ -1456,7 +1459,8 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (defalias 'open 'find-file)
     (defalias 'openo 'find-file-other-window)
     (add-hook 'eshell-mode-hook (lambda ()
-                                  (company-mode -1)))))
+                                  (company-mode -1)
+                                  (display-line-numbers-mode -1)))))
     #+END_SRC
 
 *** Clojure
