@@ -975,6 +975,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
    [[https://github.com/bbatsov/super-save/][Super Save]] replaces the standard auto-save-mode.
    #+begin_src emacs-lisp :tangle yes
 (use-package super-save
+  :delight
   :config
   (progn
     (super-save-mode 1)
@@ -1260,6 +1261,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (use-package orgit)
     (define-key magit-mode-map (kbd "C-<return>") nil)
     (use-package git-gutter
+      :delight
       :config
       (global-git-gutter-mode +1))
     (use-package git-timemachine)))
