@@ -2269,6 +2269,18 @@ Source: EmacsWiki"
 
 (global-set-key (kbd "C-<backspace>") 'contextual-backspace)
 #+END_SRC
+** Regex helpers
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package re-builder
+  :ensure nil
+  ;; C-c C-u errors, C-c C-w copy, C-c C-q exit
+  :init (bind-key "C-c r" 're-builder emacs-lisp-mode-map))
+
+(use-package pcre2el
+  :commands rxt-toggle-elisp-rx
+  :init (bind-key "C-c / t" 'rxt-toggle-elisp-rx emacs-lisp-mode-map))
+
+#+END_SRC
 * Personal
   Personal items
   #+BEGIN_SRC emacs-lisp :tangle yes
