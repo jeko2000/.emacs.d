@@ -1911,8 +1911,6 @@ specified by `jr/bongo-volumn-lower-cmd'."
 
 *** SQL
     #+begin_src emacs-lisp :tangle yes
-(use-package sql-indent
-  :mode "\\.sql\\'")
 (use-package sql
   :mode "\\.sql\\'"
   :config
