@@ -1791,21 +1791,25 @@ specified by `jr/bongo-volumn-lower-cmd'."
              (let ((pair (s-split "|" arg)))
                (seq-map (lambda (p) (concat (car pair) "." (cdr p))) (jdee-complete-find-completion-for-pair pair)))))))
     (add-to-list 'company-backends 'jr/company-jdee-backend)))
-
+    #+END_SRC
+**** Gradle
+     #+begin_src emacs-lisp :tangle yes
 (use-package gradle-mode
   :delight gradle-mode "γ"
   :mode "\\.gradle\\'"
-  :interpreter ("gradle" . gradle-mode))
-
-    #+END_SRC
+  :interpreter ("gradle" . gradle-mode)
+  :config
+  (add-hook 'java-mode-hook '(lambda() (gradle-mode 1))))
+     #+end_src
 **** Eclim
-From the [[https://github.com/emacs-eclim/emacs-eclim#user-content-overview][emacs-eclim readme]]:
+     From the [[https://github.com/emacs-eclim/emacs-eclim#user-content-overview][emacs-eclim readme]]:
 
-Eclim is an Eclipse plugin which exposes Eclipse features through a
-server interface. When this server is started, the command line
-utility eclim can be used to issue requests to that server.
-#+begin_src emacs-lisp :tangle yes
+     Eclim is an Eclipse plugin which exposes Eclipse features through a
+     server interface. When this server is started, the command line
+     utility eclim can be used to issue requests to that server.
+     #+begin_src emacs-lisp :tangle yes
 (use-package eclim
+  :disabled t
   :config
   (progn
     ;; Eclim settings
