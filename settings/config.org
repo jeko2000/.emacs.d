@@ -1,9 +1,9 @@
 #+TITLE: Emacs Configuration
 #+AUTHOR: Johnny Ruiz
 ** dmenu
-#+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package dmenu)
-#+END_SRC
+   #+END_SRC
 * Look and Feel
 ** Blink cursor
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1077,13 +1077,13 @@ specified by `jr/bongo-volumn-lower-cmd'."
 (use-package s)
     #+END_SRC
 *** Highlight
-#+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package highlight-symbol
   :diminish highlight-symbol-mode
   :commands highlight-symbol
   :bind ("C-x H" . highlight-symbol))
 
-#+END_SRC
+    #+END_SRC
 *** Indentation
     I like to automatically indent when press RET
     #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1352,9 +1352,9 @@ specified by `jr/bongo-volumn-lower-cmd'."
 
     #+END_SRC
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle yes
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-#+END_SRC
+    #+END_SRC
 *** Whitespace-cleanup-mode
     [[https://github.com/purcell/whitespace-cleanup-mode][whitespace-cleanup-mode]] is a better solution than just having
     the whitespace-cleanup function running as part of the before-save-hook.
@@ -1468,10 +1468,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
                                                         (setq-local compilation-read-command nil)
                                                         (call-interactively 'compile)))
                 (sp-with-modes '(c-mode c++-mode java-mode)
-                               (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
-                               ;; (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
-                               ;;                                           ("* ||\n[i]" "RET")))
-                               )))))
+                  (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
+                  ;; (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
+                  ;;                                           ("* ||\n[i]" "RET")))
+                  )))))
     #+end_src
 
 ** Language Specific
@@ -1927,7 +1927,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (add-to-list 'sqlup-blacklist "user")))
     #+end_src
 *** JavaScript
-#+begin_src emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package js2-mode
   :mode ("\\.js\\'")
   :config
@@ -1977,16 +1977,16 @@ specified by `jr/bongo-volumn-lower-cmd'."
     #+end_src
 
 *** Move-text
-#+begin_src emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package move-text
   :disabled t
   :defer 2
   :bind (("M-p" . move-text-up)
          ("M-n" . move-text-down))
   :config (move-text-default-bindings))
-#+end_src
+    #+end_src
 *** Multi-term
-#+begin_src emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package multi-term
   :bind (("C-x T T" . multi-term)
          ("C-c C-n" . multi-term-next)
@@ -2078,7 +2078,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
                   'comint-next-input)))))
     #+end_src
 *** Scala
-#+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ensime
   :pin melpa-stable
   :config
@@ -2151,7 +2151,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
                                (smartparens-strict-mode +1)
                                (sp-use-paredit-bindings)
                                (scala-mode:goto-start-of-code))))
-#+END_SRC
+    #+END_SRC
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
@@ -2251,7 +2251,7 @@ Source: EmacsWiki"
 (add-to-list 'auto-mode-alist '("PKGBUILD" . shell-script-mode))
    #+end_src
 ** Hungry delete
-#+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp :tangle yes
 (defun contextual-backspace ()
   "Hungry whitespace or delete word depending on context."
   (interactive)
@@ -2269,9 +2269,9 @@ Source: EmacsWiki"
       (backward-kill-word 1)))))
 
 (global-set-key (kbd "C-<backspace>") 'contextual-backspace)
-#+END_SRC
+   #+END_SRC
 ** Regex helpers
-#+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package re-builder
   :ensure nil
   ;; C-c C-u errors, C-c C-w copy, C-c C-q exit
@@ -2281,9 +2281,9 @@ Source: EmacsWiki"
   :commands rxt-toggle-elisp-rx
   :init (bind-key "C-c / t" 'rxt-toggle-elisp-rx emacs-lisp-mode-map))
 
-#+END_SRC
+   #+END_SRC
 ** Indentation
-#+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp :tangle yes
 (defun indent-buffer ()
   "Indent the entire buffer."
   (interactive)
@@ -2291,7 +2291,7 @@ Source: EmacsWiki"
     (delete-trailing-whitespace)
     (indent-region (point-min) (point-max) nil)
     (untabify (point-min) (point-max))))
-#+END_SRC
+   #+END_SRC
 * Personal
   Personal items
   #+BEGIN_SRC emacs-lisp :tangle yes
