@@ -2016,6 +2016,81 @@ utility eclim can be used to issue requests to that server.
                 (define-key inferior-octave-mode-map [down]
                   'comint-next-input)))))
     #+end_src
+*** Scala
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ensime
+  :pin melpa-stable
+  :config
+  (progn
+    (let ((sbt "/usr/bin/sbt"))
+      (when (file-exists-p sbt)
+        (setq ensure-sbt-command sbt
+              sbt:program-name sbt)))
+    (setq ensime-eldoc-hints 'all
+          ensime-search-interface 'ivy
+          ensime-sbt-perform-on-save t
+          ensime-startup-notification nil
+          ensime-typecheck-idle-interval 1
+          ensime-typecheck-interval 2
+          ensime-company-idle-delay 1)
+    (bind-key "s-<delete>" (sp-restrict-c 'sp-kill-sexp) scala-mode-map)
+    (bind-key "s-<backspace>" (sp-restrict-c 'sp-backward-kill-sexp) scala-mode-map)
+    (bind-key "s-<home>" (sp-restrict-c 'sp-beginning-of-sexp) scala-mode-map)
+    (bind-key "s-<end>" (sp-restrict-c 'sp-end-of-sexp) scala-mode-map)
+    (bind-key "C-<tab>" 'dabbrev-expand scala-mode-map)
+    (require 'ensime-expand-region)))
+
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map)
+  (add-hook 'sbt-mode-hook
+            (lambda ()
+              (setq prettify-symbols-alist
+                    `((,(expand-file-name (directory-file-name default-directory)) . ?⌂)
+                      (,(expand-file-name "~") . ?~)))
+              (prettify-symbols-mode t))))
+
+(use-package scala-mode
+  :interpreter
+  ("scala" . scala-mode)
+  :mode ((".ensime" . scala-mode)
+         ("\\.scala\\'" . scala-mode))
+  :config
+  (setq scala-indent:use-javadoc-style nil
+        scala-indent:add-space-for-scaladoc-asterisk t
+        scala-indent:default-run-on-strategy 2
+        scala-indent:indent-value-expression nil
+        scala-indent:align-parameters nil
+        scala-indent:align-forms nil)
+  (defun scala-mode-newline-comments ()
+    "Custom newline appropriate for `scala-mode'."
+    ;; shouldn't this be in a post-insert hook?
+    (interactive)
+    (newline-and-indent)
+    (scala-indent:insert-asterisk-on-multiline-comment))
+  (bind-key "RET" 'scala-mode-newline-comments scala-mode-map)
+  (add-hook 'scala-mode-hook (lambda ()
+                               (setq prettify-symbols-alist scala-prettify-symbols-alist
+                                     comment-start "/* "
+                                     comment-end " */"
+                                     comment-style 'multi-line
+                                     comment-empty-lines t
+                                     fill-column 100)
+                               (show-paren-mode +1)
+                               (setq company-backends '((ensime-company company-dabbrev-code company-capf company-semantic)))
+                               (yas-minor-mode +1)
+                               (ensime-mode +1)
+                               (prettify-symbols-mode)
+                               (smartparens-strict-mode +1)
+                               (sp-use-paredit-bindings)
+                               (scala-mode:goto-start-of-code))))
+#+END_SRC
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
