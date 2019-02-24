@@ -1639,8 +1639,19 @@ specified by `jr/bongo-volumn-lower-cmd'."
             (pop-to-buffer-same-window last-buff)
           (pop-to-buffer last-buff))))))
 
-(require 'ielm)
-(define-key ielm-map (kbd "C-c C-z") 'jr/ielm-switch-to-last-emacs-lisp-buffer)
+(use-package ielm
+  :config
+  (progn
+    (add-hook 'ielm-mode-hook 'enable-paredit-mode)
+    (define-key ielm-map (kbd "C-c C-z") 'jr/ielm-switch-to-last-emacs-lisp-buffer)))
+
+(bind-key "RET" 'comment-indent-new-line emacs-lisp-mode-map)
+
+(use-package eldoc
+  :ensure nil
+  :diminish eldoc-mode
+  :commands eldoc-mode)
+
     #+END_SRC
 *** Markdown
     I like to edit README and other files written in Markdown so having
