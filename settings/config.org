@@ -1722,7 +1722,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
         (add-hook 'css-mode-hook #'rainbow-mode)))
     (use-package less-css-mode
       :mode "\\.less\\'")
-    (use-package emmet-mode)))
+    (use-package emmet-mode)
+    (use-package company-web
+      :config
+      (define-key web-mode-map (kbd "C-'") 'company-web-html))))
     #+END_SRC
 
     [[https://github.com/skeeto/impatient-mode][Impatient mode]] allows one to see changes to HTML buffers _instantly_
