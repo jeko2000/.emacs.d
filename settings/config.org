@@ -1373,7 +1373,29 @@ specified by `jr/bongo-volumn-lower-cmd'."
   (progn
     (require 'smartparens-config)
     (setq sp-escape-quotes-after-insert nil)
-    (sp-use-paredit-bindings)))
+    (sp-use-paredit-bindings)
+    (sp-pair "(" ")" :wrap "C-(") ;; how do people live without this?
+    (sp-pair "[" "]" :wrap "s-[") ;; C-[ sends ESC
+    (sp-pair "{" "}" :wrap "C-{")
+    (bind-key "C-<left>" nil smartparens-mode-map)
+    (bind-key "C-<right>" nil smartparens-mode-map)
+    (sp-with-modes '(js2-mode)
+      (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET"))))
+    (defun sp-restrict-c (sym)
+      "Smartparens restriction on `SYM' for C-derived parenthesis."
+      (sp-restrict-to-pairs-interactive "{([" sym))
+
+
+    (bind-key "s-{" 'sp-rewrap-sexp smartparens-mode-map)
+    ;; (sp-local-pair 'scala-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
+    ;; (sp-local-pair 'scala-mode "{" nil :post-handlers '(("||\n[i]" "RET") ("| " "SPC")))
+
+    (defun sp-web-mode-is-code-context (id action context)
+      (and (eq action 'insert)
+           (not (or (get-text-property
+                     (point) 'part-side)
+                    (get-text-property (point) 'block-side)))))
+    (sp-local-pair 'web-mode "<" nil :when '(sp-web-mode-is-code-context))))
     #+end_src
 *** projectile-mode
     The useful [[https://github.com/bbatsov/projectile][projectile-mode]] package by [[https://github.com/bbatsov/][bbastov]] provides lots of tools
