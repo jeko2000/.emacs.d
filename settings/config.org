@@ -1822,12 +1822,14 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (define-key eclim-mode-map (kbd "C-c C-e C-c") 'eclim-problems-correct)
     (require 'eclimd)
     (setq eclimd-autostart t
-          eclimd-default-workspace "/data/rep/personal/prog/java/EclimProjects")
+          eclimd-default-workspace "/data/rep/personal/prog/java/EclimProjects"
+          eclim-print-debug-messages t)
     (add-hook 'java-mode-hook 'eclim-mode)
+    (define-key java-mode-map (kbd "C-c C-c") 'compile)
     (use-package company-emacs-eclim
       :config
       (company-emacs-eclim-setup))))
-#+end_src
+     #+end_src
 **** Meghanada
      #+begin_src emacs-lisp :tangle yes
 (use-package meghanada
