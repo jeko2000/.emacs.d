@@ -2159,10 +2159,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
 ;; (let ((gnus-config-file (expand-file-name "settings/gnus-init.el" user-emacs-directory)))
 ;;   (when (file-exists-p gnus-config-file)
 ;;     (setq gnus-init-file gnus-config-file)))
+(setq jr/gnus-config-file (expand-file-name "site-lisp/dot-gnus/dot-gnus.org" user-emacs-directory))
 
-(let ((gnus-config-file (expand-file-name "site-lisp/dot-gnus/dot-gnus.org" user-emacs-directory)))
-  (when (file-exists-p gnus-config-file)
-    (setq gnus-init-file (car (org-babel-tangle-file gnus-config-file)))))
+(when (file-exists-p jr/gnus-config-file)
+  (setq gnus-init-file (car (org-babel-tangle-file jr/gnus-config-file))))
   #+END_SRC
 
   Let's set gnus as our mail handler
