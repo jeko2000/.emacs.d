@@ -1107,7 +1107,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
    company-dabbrev-ignore-case nil
    company-dabbrev-code-ignore-case nil
    company-dabbrev-downcase nil
-   company-idle-delay 0
+   company-idle-delay 1.0
    company-minimum-prefix-length 4)
   :bind (("C-c C-/" . company-complete)
          ("TAB" . company-complete))
