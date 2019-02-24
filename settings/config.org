@@ -1495,7 +1495,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     Unicode. It's one of my main languages right now.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package clojure-mode
-  :defer t
+  :mode "\\.cljs?\\'"
   :config
   (progn
     (use-package cider)
