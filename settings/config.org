@@ -1686,31 +1686,35 @@ specified by `jr/bongo-volumn-lower-cmd'."
     We also install [[https://github.com/emacsmirror/rainbow-mode][rainbow-mode]] to colorize color names in web and CSS buffers.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package web-mode
-  :preface
-  (defun jr/insert-django-text (text)
-    "Inserts selmer text"
-    (interactive "sEnter text to insert: ")
-    (insert "{% " text " %}"))
-  :bind (("C-c C-e j" . jr/insert-django-text))
+  :init
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-indent-style 2
+        web-mode-style-padding 1
+        web-mode-script-padding 1
+        web-mode-block-padding 0
+        web-mode-enable-auto-closing t
+        web-mode-enable-auto-quoting t
+        web-mode-engines-alist
+        '(("django"    . "\\.html\\'")
+          ("jinja2"    . "\\.html\\'")
+          ("php"       . "\\.phtml\\'"))
+        web-mode-enable-css-colorization t
+        web-mode-enable-auto-pairing nil
+        web-mode-enable-engine-detection t)
+  :mode (("\\.phtml\\'" . web-mode)
+         ("\\.tpl\\.php\\'" . web-mode)
+         ("\\.jsp\\'" . web-mode)
+         ("\\.mustache\\'" . web-mode)
+         ("\\.djhtml\\'" . web-mode)
+         ("\\.html?\\'" . web-mode)
+         ("\\.xhtml?\\'" . web-mode)
+         ("\\.xml\\'" . web-mode))
   :config
   (progn
-    (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . web-mode))
-    (setq web-mode-enable-current-element-highlight t)
-    (defun jr/web-mode-hook ()
-      "Hooks for Web mode."
-      (setq web-mode-enable-auto-closing t
-            web-mode-enable-auto-quoting t
-            web-mode-markup-indent-offset 2))
-    (add-hook 'web-mode-hook  'jr/web-mode-hook)
     (use-package rainbow-mode
+      :hook (web-mode css-mode)
       :defer t
       :config
       (progn
