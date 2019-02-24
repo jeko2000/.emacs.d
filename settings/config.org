@@ -1979,6 +1979,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
 *** Move-text
 #+begin_src emacs-lisp :tangle yes
 (use-package move-text
+  :disabled t
   :defer 2
   :bind (("M-p" . move-text-up)
          ("M-n" . move-text-down))
