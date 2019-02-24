@@ -2281,6 +2281,16 @@ Source: EmacsWiki"
   :init (bind-key "C-c / t" 'rxt-toggle-elisp-rx emacs-lisp-mode-map))
 
 #+END_SRC
+** Indentation
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun indent-buffer ()
+  "Indent the entire buffer."
+  (interactive)
+  (save-excursion
+    (delete-trailing-whitespace)
+    (indent-region (point-min) (point-max) nil)
+    (untabify (point-min) (point-max))))
+#+END_SRC
 * Personal
   Personal items
   #+BEGIN_SRC emacs-lisp :tangle yes
