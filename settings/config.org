@@ -2065,10 +2065,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
     #+begin_src emacs-lisp :tangle yes
 (use-package octave
   :ensure nil
+  :mode "\\.m\\'"
   :config
   (progn
     (setq inferior-octave-startup-args '("-i" "--no-line-editing" "-q" "--braindead" "--no-gui"))
-    (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
     (add-hook 'inferior-octave-mode-hook
               (lambda ()
                 (define-key inferior-octave-mode-map [up]
