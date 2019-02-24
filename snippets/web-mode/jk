@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: jk
+# key: jk
+# description: adds a jinga2 command
+# --
+{{ $0 }}

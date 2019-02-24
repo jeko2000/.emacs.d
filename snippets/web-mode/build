@@ -1,0 +1,31 @@
+# key: build
+# name: build
+# --
+<project name="$1" basedir="." default="main">
+
+  <property name="main-class" value="$2"/>
+  <property name="src.dir" value="src"/>
+  <property name="out.dir" value="out"/>
+  <property name="production.dir" value="\${out.dir}/production"/>
+
+  <target name="clean">
+    <delete dir="\${out.dir}"/>
+  </target>
+
+  <target name="compile">
+    <mkdir dir="\${production.dir}"/>
+    <javac includeantruntime="false" srcdir="\${src.dir}" destdir="\${production.dir}"/>
+  </target>
+
+  <target name="run" depends="compile">
+    <java classname="\${main-class}">
+      <classpath>
+        <pathelement location="\${production.dir}"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="clean-build" depends="clean"/>
+  <target name="main" depends="clean,run"/>
+  $0
+</project>
