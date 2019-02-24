@@ -1531,29 +1531,23 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (add-to-list 'slime-contribs 'slime-repl))
   :config
   (progn
-    (define-key slime-mode-map (kbd "C-<return>") 'other-window)
     (setq slime-net-coding-system 'utf-8-unix)
     (add-hook 'slime-repl-mode-hook 'enable-paredit-mode)
-    (add-hook 'slime-repl-mode-hook
-              (lambda ()
-                (define-key slime-repl-mode-map (kbd "C-<return>") 'other-window)))
     (add-hook 'slime-mode-hook
               (lambda ()
                 (cond ((boundp 'slime-mode-map)
                        (define-key slime-mode-map (kbd "C-c x") nil)
                        (message "slime keybinding on C-c x has been sanitized"))
-                      ('t (message "slime keybindings not sanitized"))))) ))
+                      ('t (message "slime keybindings not sanitized")))))
+    (use-package slime-company
+      :config
+      (add-to-list 'slime-contribs 'slime-company))
 
-(use-package slime-company
-  :config
-  (add-to-list 'slime-contribs 'slime-company))
-
-(add-to-list 'company-backends '(company-slime :with company-dabbrev))
-
-(use-package common-lisp-snippets
-  :defer t
-  :config
-  (add-hook 'lisp-mode-hook 'enable-paredit-mode))
+    (add-to-list 'company-backends '(company-slime :with company-dabbrev))
+    (use-package common-lisp-snippets
+      :defer t
+      :config
+      (add-hook 'lisp-mode-hook 'enable-paredit-mode))))
     #+END_SRC
 *** Scheme
     [[https://en.wikipedia.org/wiki/Scheme_%2528programming_language%2529][Scheme]] is a dialect of Lisp developed by Gerald Sussman and Guy
