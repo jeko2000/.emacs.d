@@ -999,6 +999,15 @@ specified by `jr/bongo-volumn-lower-cmd'."
       epg--configurations nil)
    #+end_src
 
+** Golden ratio
+   A nice package that helps working with many windows is
+   [[https://github.com/roman/golden-ratio.el][golden-ratio]], which resizes the current buffer to occupy an optimal
+   part of the screen.
+   #+begin_src emacs-lisp :tangle yes
+(use-package golden-ratio
+  :config
+  (setq golden-ratio-auto-scale t))
+   #+end_src
 * Programming packages
 ** Generic
 *** Dired
