@@ -66,10 +66,10 @@
 (org-babel-load-file org-config-file nil)
 
 ;; Load any system specific configuration
-(let ((conf (expand-file-name (concat "config-" (symbol-name system-type) ".org")
-                              user-settings-directory)))
-  (when (file-exists-p conf)
-    (org-babel-load-file conf nil)))
+;; (let ((conf (expand-file-name (concat "config-" (symbol-name system-type) ".org")
+;;                               user-settings-directory)))
+;;   (when (file-exists-p conf)
+;;     (org-babel-load-file conf nil)))
 
 (message "Emacs init.el end")
 (message "Emacs ready")
