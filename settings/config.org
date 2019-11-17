@@ -282,6 +282,14 @@
 (define-key global-map (kbd "C-z") nil)
   #+END_SRC
 * Non-programming packages
+** exec-path-from-shell
+   #+begin_src emacs-lisp :tangle yes
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns x))
+  :init
+  (exec-path-from-shell-initialize))
+   #+end_src
+
 ** delight
    Quoting directly from the [[https://www.emacswiki.org/emacs/DelightedModes][wiki]], Delight enables you to easily
    customize how major and minor modes appear in the ModeLine.
@@ -1051,7 +1059,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
 *** Disable-mouse-mode
     [[https://github.com/purcell][Steve Purcell]] comes to the rescue to create a minor mode that disables
     mouse events
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle no
 (use-package disable-mouse
   :delight disable-mouse-global-mode
   :config (global-disable-mouse-mode))
