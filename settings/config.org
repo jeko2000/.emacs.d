@@ -15,12 +15,6 @@
       inhibit-startup-message t
       initial-scratch-message "")
 #+END_SRC
-** Blink cursor
-   #+BEGIN_SRC emacs-lisp :tangle yes
-(progn
-  (blink-cursor-mode 1)
-  (setq blink-cursor-blinks 0))
-   #+END_SRC
 ** Themes
 *** Daniel Mai's convenient theme function
     [[https://github.com/danielmai/.emacs.d/blob/master/config.org][Daniel Mai's configuration]] file has been a great resource of good ideas.
@@ -123,60 +117,90 @@
   Chua]].
 
   #+BEGIN_SRC emacs-lisp :tangle yes
-(if (>= emacs-major-version 24)              ; Allow pasting selection outside of Emacs
-    (setq select-enable-clipboard t)
-  (setq x-select-enable-clipboard t))
+;; Enable some disabled functions
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternative-file 'disabled nil)
 
-(global-auto-revert-mode 1)                  ; Auto refresh buffers
+;; Blink cursor
+(blink-cursor-mode 1)
+(setq blink-cursor-blinks 0)
 
-(setq global-auto-revert-non-file-buffers t  ; Auto refresh dired ...
-      auto-revert-verbose nil                ; ...quietly
-      echo-keystrokes 0.1                    ; Show keywords in progress
-      shift-select-mode nil)                 ; Remove shift select
-
-(global-auto-revert-mode 1)                  ; Auto refresh buffers
-(auto-compression-mode t)                    ; Transparently open compressed files
-(global-font-lock-mode t)                    ; Enable syntax highlighting for older Emacsen that have it off
-(defalias 'yes-or-no-p 'y-or-n-p)            ; Answering just 'y' or 'n' will do
-
-(setq locale-coding-system 'utf-8)           ; UTF-8 please
+;; UTF-8 settings
+(setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-(transient-mark-mode 1)                      ; Show active region
+;; Line numbers
+(setq line-number-mode t
+      line-number-display-limit nil
+      line-number-display-limit-width 30)
+
+;; Column settings
+(setq column-number-mode t
+      fill-column 80)
+
+;; Windows resizing
+(bind-key "s-C-<left>" 'shrink-window-horizontally global-map)
+(bind-key "s-C-<right>" 'enlarge-window-horizontally global-map)
+(bind-key "s-C-<down>" 'shrink-window global-map)
+(bind-key "s-C-<up>" 'enlarge-window global-map)
+
+;; Next, I find that every once in a while I hit "C-z", `suspend-frame'
+;; by accident and it takes me a couple of seconds to realize what
+;; happened. I think this is rather annoying so let's unbind it here:
+(define-key global-map (kbd "C-z") nil)
+
+(if (>= emacs-major-version 24)
+    (setq select-enable-clipboard t)
+  (setq x-select-enable-clipboard t))
+
+(setq echo-keystrokes 0.2
+      shift-select-mode nil
+      jump-char-lazy-highlight-face nil
+      eval-expression-print-level nil
+      visible-bell nil
+      enable-recursive-minibuffers t
+      gc-cons-threshold 20000000)
+
+(setq-default indent-tabs-mode nil
+	      indicate-empty-lines t
+	      truncate-lines t
+	      sentence-end-double-space nil)
+
+(transient-mark-mode 1)
 (make-variable-buffer-local 'transient-mark-mode)
-(setq-default transient-mark-mode t)
+(auto-compression-mode t)
 
-(put 'downcase-region 'disabled nil)          ; Enable functions disabled by default
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-(put 'dired-find-alternative-file 'disabled nil)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
-(delete-selection-mode 1)                    ; Remove text in active region if inserting text
-(setq jump-char-lazy-highlight-face nil      ; Don't highlight matches with jump-char - it's distracting
-      line-number-mode t                     ; Always display line number
-      column-number-mode t                   ; and column numbers
-      fill-column 80)                        ; Set lines to be 80 characters wide
+(use-package uniquify
+  :ensure nil
+  :config
+  (setq uniquify-buffer-name-style 'forward))
 
-(savehist-mode 1)                            ; Save minibuffer history
-(setq history-length 1000)
+(use-package savehist
+  :ensure nil
+  :config
+  (progn
+    (savehist-mode 1)
+    (setq history-length 1000)))
 
-(set-default 'indent-tabs-mode nil)          ; Never insert tabs
-(set-default 'indicate-empty-lines t)        ; Show me empty lines after buffer end
-(setq-default truncate-lines t)              ; Don't break lines for me, please
-;;(require 'smooth-scrolling)                  ; Keep cursor away from edges when scrolling up/down
+(use-package autorevert
+  :ensure nil
+  :config
+  (progn
+    (global-auto-revert-mode +1)
+    (setq global-auto-revert-non-file-buffers t
+	  auto-revert-verbose t)))
 
-(setq enable-recursive-minibuffers t         ; Allow recursive minibuffers
-      gc-cons-threshold 20000000)            ; Increase memory threshold
-
-(set-default 'sentence-end-double-space nil) ; Sentences do not need double spaces to end. Period.
-
-(require 'uniquify)                          ; Add parts of each file's directory
-(setq uniquify-buffer-name-style 'forward    ; To the buffer name if not unique
-      electric-indent-mode t                 ; No electric indent
-      eval-expression-print-level nil)       ; Nic's recommendation (?!)
+(use-package font-lock
+  :ensure nil
+  :config
+  (global-font-lock-mode t))
 
 ;; When popping the mark, continue popping until the cursor actually moves
 ;; Also, if the last command was a copy - skip past all the expand-region cruft.
@@ -192,30 +216,32 @@
 
 ;; Offer to create parent directories if they do not exist
 ;; http://iqbalansari.github.io/blog/2014/12/07/automatically-create-parent-directories-on-visiting-a-new-file-in-emacs/
-(defun my-create-non-existent-directory ()
+(defun jr/create-non-existent-directory ()
   (let ((parent-directory (file-name-directory buffer-file-name)))
     (when (and (not (file-exists-p parent-directory))
-               (y-or-n-p (format "Directory `%s' does not exist! Create it?" parent-directory)))
+	       (y-or-n-p (format "Directory `%s' does not exist! Create it recursively?" parent-directory)))
       (make-directory parent-directory t))))
 
-(add-to-list 'find-file-not-found-functions 'my-create-non-existent-directory)
+(add-to-list 'find-file-not-found-functions 'jr/create-non-existent-directory)
 
-;;Keep all backup and auto-save files in one single directory
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
-      auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t))
-      make-backup-files t               ; backup of a file the first time it is saved.
-      backup-by-copying t               ; don't clobber symlinks
-      version-control t                 ; version numbers for backup files
-      delete-old-versions t             ; delete excess backup files silently
-      delete-by-moving-to-trash t
-      kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
-      kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
-      auto-save-default t               ; auto-save every buffer that visits a file
-      auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
-      auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
-      visible-bell t)                   ; enable visible bell
-
-(message "Sane defaults...Loaded!")
+;; autosave
+(let ((backups (expand-file-name "backups" user-emacs-directory))
+      (auto-save-list (expand-file-name "auto-save-list")))
+  (setq backup-directory-alist `(("." . ,backups))
+	auto-save-file-name-transforms `((".*" ,auto-save-list t))
+	make-backup-files t
+	backup-by-copying t
+	version-control t
+	delete-old-versions t
+	delete-by-moving-to-trash t
+	kept-old-versions 12
+	kept-new-versions 12
+	auto-save-default t
+	auto-save-timeout 10
+	auto-save-interval 100))
+(if (>= emacs-major-version 24)
+    (setq select-enable-clipboard t)
+  (setq x-select-enable-clipboard t))
   #+END_SRC
 
   From [[info:eintr#Loops%20&%20Recursion][info:eintr#Loops & Recursion]]
@@ -248,39 +274,6 @@
 (global-set-key (kbd "C-x C-c") nil)
 (global-set-key (kbd "C-x r q") 'save-buffers-kill-terminal)
   #+end_src
-
-* Key Rebinding
-  Convenient keybindings to resize windows.
-  #+BEGIN_SRC emacs-lisp :tangle yes
-(bind-key "s-C-<left>"  'shrink-window-horizontally)
-(bind-key "s-C-<right>" 'enlarge-window-horizontally)
-(bind-key "s-C-<down>"  'shrink-window)
-(bind-key "s-C-<up>"    'enlarge-window)
-  #+END_SRC
-
-  +Extra bindings for other-window and other-frame+
-
-  Update: I no longer wish to use C-<return> for 'other-window as this
-  fails to work in tty mode
-  #+BEGIN_SRC emacs-lisp :tangle no
-(global-set-key (kbd "C-<return>") 'other-window)
-(global-set-key (kbd "C-c C-<return>") 'other-frame)
-  #+END_SRC
-
-  I sometimes need a scratch buffer of the same major-mode as the one I
-  am in. Conveniently, the function ~scratch~ can take care of this.
-
-  Let's bind it to something useful
-  #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "C-c e s") 'scratch)
-  #+END_SRC
-
-  Next, I find that every once in a while I hit "C-z", `suspend-frame'
-  by accident and it takes me a couple of seconds to realize what
-  happened. I think this is rather annoying so let's unbind it here:
-  #+BEGIN_SRC emacs-lisp :tangle yes
-(define-key global-map (kbd "C-z") nil)
-  #+END_SRC
 * Non-programming packages
 ** exec-path-from-shell
    #+begin_src emacs-lisp :tangle yes
