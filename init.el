@@ -1,18 +1,9 @@
 ;;;Emacs init file
-;;;Early overrides
+(message "Emacs init.el start")
 
-;; First, let's run any early-overrides if they exist.
-(load "~/.emacs.d/early-overrides.el" 'noerror)
-
-;; Basic GUI changes
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(tooltip-mode -1)
-
-(setq visible-cursor nil
-      inhibit-startup-message t
-      initial-scratch-message "")
+;; First, load private.el and properties.el if they exist
+(load (expand-file-name "private-el" user-emacs-directory) 'noerror)
+(load (expand-file-name "properties.el" user-emacs-directory) 'noerror)
 
 ;;; Set up package
 (require 'package)
@@ -33,9 +24,9 @@
 (setq site-lisp-directory (expand-file-name "site-lisp" user-emacs-directory))
 (add-to-list 'load-path site-lisp-directory)
 
-(dolist (project (directory-files site-lisp-directory t "\\w+"))
-  (when (file-directory-p project)
-    (add-to-list 'load-path project)))
+;; (dolist (project (directory-files site-lisp-directory t "\\w+"))
+;;   (when (file-directory-p project)
+;;     (add-to-list 'load-path project)))
 
 ;; Bootstrap use-package
 ;; The excellent use-package by John Wiegley is described here:
@@ -62,13 +53,13 @@
 (load custom-file)
 
 ;; Load org-mode source early on when emacs is recent
-(when (>= emacs-major-version 27)
-  (let ((org-source (expand-file-name "org-mode/lisp" site-lisp-directory))
-        (org-contrib-source (expand-file-name "org-mode/contrib/lisp" site-lisp-directory)))
-    (when (file-exists-p org-source)
-      (add-to-list 'load-path org-source))
-    (when (file-exists-p org-contrib-source)
-      (add-to-list 'load-path org-contrib-source))))
+;; (when (>= emacs-major-version 27)
+;;   (let ((org-source (expand-file-name "org-mode/lisp" site-lisp-directory))
+;;         (org-contrib-source (expand-file-name "org-mode/contrib/lisp" site-lisp-directory)))
+;;     (when (file-exists-p org-source)
+;;       (add-to-list 'load-path org-source))
+;;     (when (file-exists-p org-contrib-source)
+;;       (add-to-list 'load-path org-contrib-source))))
 
 ;; Load the rest of the configuration
 (setq org-config-file (expand-file-name "config.org" user-settings-directory))
@@ -80,5 +71,5 @@
   (when (file-exists-p conf)
     (org-babel-load-file conf nil)))
 
-(load "~/.emacs.d/late-overrides.el" 'noerror)
-(message "Config: OK")
+(message "Emacs init.el end")
+(message "Emacs ready")
