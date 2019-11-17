@@ -23,6 +23,7 @@
 
 # file-level
 /.lsp-session-*
+/.mc-lists.el
 /.org-id-locations
 /bbdb
 /bookmarks
