@@ -1,10 +1,20 @@
 #+TITLE: Emacs Configuration
 #+AUTHOR: Johnny Ruiz
-** dmenu
-   #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package dmenu)
-   #+END_SRC
+* Header
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Emacs config.el start")
+#+END_SRC
 * Look and Feel
+** Basic GUI
+#+BEGIN_SRC emacs-lisp :tangle yes
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(tooltip-mode -1)
+(setq visible-cursor nil
+      inhibit-startup-message t
+      initial-scratch-message "")
+#+END_SRC
 ** Blink cursor
    #+BEGIN_SRC emacs-lisp :tangle yes
 (progn
@@ -149,8 +159,6 @@
       line-number-mode t                     ; Always display line number
       column-number-mode t                   ; and column numbers
       fill-column 80)                        ; Set lines to be 80 characters wide
-(recentf-mode 1)                             ; Save a list of recent files visited. (open recent file with C-x f)
-(setq recentf-max-saved-items 100)           ; just 20 is too recent
 
 (savehist-mode 1)                            ; Save minibuffer history
 (setq history-length 1000)
@@ -298,6 +306,7 @@
    [[https://en.wikipedia.org/wiki/Camel_case][camelCase]].
    #+begin_src emacs-lisp :tangle yes
 (use-package subword
+  :ensure nil
   :delight
   :config
   (global-subword-mode 1))
@@ -310,7 +319,7 @@
    original configuration? Well... with winner-undo.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package winner
-  :if (not noninteractive)
+  :ensure nil
   :bind (("C-c <left>" . winner-undo)
          ("C-c <right>" . winner-redo))
   :config
@@ -343,6 +352,7 @@
    of such files for easy access
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package recentf
+  :ensure nil
   :config
   (progn
     (recentf-mode 1)
@@ -353,6 +363,7 @@
    Of course! We need [[https://www.gnu.org/software/tramp/][remote file editing!]]
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package tramp
+  :ensure nil
   :defer 10)
    #+END_SRC
 
@@ -408,6 +419,7 @@
    zoom. Similarly, I add a hook to do the same when I create new frames.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package zoom-frm
+  :disabled t
   :demand t
   :if (and window-system
            (package-installed-p 'zoom-frm))
@@ -576,14 +588,8 @@
 ;; This causes ERC to connect to the Freenode network upon hitting
 ;; C-c e f.  Replace MYNICK with your IRC nick.
 (use-package erc
-  :init
-  (defun jr/connect-to-erc ()
-    (interactive)
-    (erc :server "irc.freenode.net"
-         :port "6667"
-         :nick "jeko2000"))
-  :bind ("C-c e f" . 'jr/connect-to-erc)
-  ;;  :delight erc-mode "ε"
+  :ensure nil
+  :delight erc-mode "ε"
   :defer t
   :config
   (progn
@@ -619,6 +625,7 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package elfeed
   :bind ("C-x F" . 'elfeed)
+  :defer 10
   :init
   (defmacro jr/elfeed-add-face (face spec doc &rest args)
     "Create a new face elfeed-FACE and push it to the
@@ -915,6 +922,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
    Quick configuration for auto reverting files.
    #+begin_src emacs-lisp :tangle yes
 (use-package autorevert
+  :ensure nil
   :diminish auto-revert-mode
   :bind ("C-x R" . revert-buffer)
   :config (global-auto-revert-mode 1))
@@ -1053,6 +1061,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     files or buffers. Very handy for comparing commits.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ediff
+  :ensure nil
   :init
   (defvar ctl-period-equals-map)
   (define-prefix-command 'ctl-period-equals-map)
@@ -1154,6 +1163,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one to hide and show blocks of text.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package hideshow
+  :ensure nil
   :delight
   :defer t
   :config
@@ -1272,7 +1282,6 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (add-hook 'magit-log-mode-hook 'hl-line-mode))
   :config
   (progn
-    (use-package orgit)
     (define-key magit-mode-map (kbd "C-<return>") nil)
     (use-package git-gutter
       :delight
@@ -1414,6 +1423,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     supported types.
     #+begin_src emacs-lisp :tangle yes
 (use-package projectile
+  :defer 5
   :init   (setq projectile-use-git-grep t)
   :config
   (progn
@@ -1489,6 +1499,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     by the great [[https://www.google.com/search?q=eshell+jwiegleyt&ie=utf-8&oe=utf-8][John Wiegley]].
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package eshell
+  :ensure nil
   :bind ("C-x t" . eshell)
   :config
   (progn
@@ -1650,6 +1661,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
           (pop-to-buffer last-buff))))))
 
 (use-package ielm
+  :disabled t
   :config
   (progn
     (add-hook 'ielm-mode-hook 'enable-paredit-mode)
@@ -1870,6 +1882,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     #+begin_src emacs-lisp :tangle yes
 (use-package elpy
   :delight python-mode "π"
+  :disabled t
   :config
   (progn
     (elpy-enable)
@@ -1921,6 +1934,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
 *** SQL
     #+begin_src emacs-lisp :tangle yes
 (use-package sql
+  :disabled t
   :mode "\\.sql\\'"
   :config
   (progn
@@ -2089,6 +2103,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
 *** Scala
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ensime
+  :defer t
   :pin melpa-stable
   :config
   (progn
@@ -2301,9 +2316,7 @@ Source: EmacsWiki"
     (indent-region (point-min) (point-max) nil)
     (untabify (point-min) (point-max))))
    #+END_SRC
-* Personal
-  Personal items
-  #+BEGIN_SRC emacs-lisp :tangle yes
-(setq user-full-name "Johnny Ruiz"
-      user-mail-address "jeko2000@yandex.com")
-  #+END_SRC
+* Footer
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Emacs config.el end")
+#+END_SRC
