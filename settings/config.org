@@ -267,6 +267,55 @@
 (global-set-key (kbd "C-x r q") 'save-buffers-kill-terminal)
   #+end_src
 * Non-programming packages
+** LSP
+   #+begin_src emacs-lisp :tangle yes
+(use-package lsp-mode
+  :hook (python-mode . lsp-deferred)
+  :commands (lsp lsp-deferred)
+  :init
+  (defun jr/lsp-mode-hook ()
+    (setq company-idle-delay 0.3)
+    (global-set-key (kbd "C-<tab>") 'company-complete))
+  :config
+  (progn
+    (setq lsp-prefer-flymake nil)
+    (add-hook 'lsp-mode-hook #'jr/lsp-mode-hook)
+    (use-package company-lsp
+      :requires company
+      :config
+      (progn
+        (add-to-list 'company-backends 'company-lsp)
+        (setq company-transformers nil
+              company-lsp-async t
+              company-lsp-cache-candidates nil)))
+    (use-package lsp-ui
+      :requires lsp-mode flycheck
+      :config
+      (progn
+        (setq
+         lsp-ui-doc-enable t
+         lsp-ui-doc-alignment 'window
+         lsp-ui-doc-delay 0.5
+         lsp-ui-doc-header t
+         lsp-ui-doc-include-signature t
+         lsp-ui-doc-max-height 15
+         lsp-ui-doc-max-width 100
+         lsp-ui-doc-position 'at-point
+         lsp-ui-doc-use-childframe t
+         lsp-ui-doc-use-webkit t
+         lsp-ui-flycheck-enable t
+         lsp-ui-flycheck-list-position 'bottom
+         lsp-ui-flycheck-live-reporting t
+         lsp-ui-imenu-enable t
+         lsp-ui-imenu-kind-position 'top
+         lsp-ui-peek-enable t
+         lsp-ui-peek-always-show t
+         lsp-ui-peek-list-width 60
+         lsp-ui-peek-peek-height 25
+         lsp-ui-peek-fontify 'always
+         lsp-ui-peek-show-directory t)
+        (add-hook 'lsp-mode-hook 'lsp-ui-mode)))))
+   #+end_src
 ** exec-path-from-shell
    #+begin_src emacs-lisp :tangle yes
 (use-package exec-path-from-shell
