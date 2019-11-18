@@ -189,14 +189,6 @@
     (savehist-mode 1)
     (setq history-length 1000)))
 
-(use-package autorevert
-  :ensure nil
-  :config
-  (progn
-    (global-auto-revert-mode +1)
-    (setq global-auto-revert-non-file-buffers t
-	  auto-revert-verbose t)))
-
 (use-package font-lock
   :ensure nil
   :config
@@ -226,7 +218,7 @@
 
 ;; autosave
 (let ((backups (expand-file-name "backups" user-emacs-directory))
-      (auto-save-list (expand-file-name "auto-save-list")))
+      (auto-save-list (expand-file-name "auto-save-list/" user-emacs-directory)))
   (setq backup-directory-alist `(("." . ,backups))
 	auto-save-file-name-transforms `((".*" ,auto-save-list t))
 	make-backup-files t
@@ -279,8 +271,10 @@
    #+begin_src emacs-lisp :tangle yes
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns x))
-  :init
-  (exec-path-from-shell-initialize))
+  :config
+  (progn
+    (exec-path-from-shell-copy-env "JAVA_HOME")
+    (exec-path-from-shell-initialize)))
    #+end_src
 
 ** delight
@@ -338,13 +332,15 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ace-jump-mode
   :commands ace-jump-mode
-  :bind ("C-S-s" . ace-jump-mode))
+  :bind (("C-S-s" . ace-jump-mode)
+         ("s-s" . ace-jump-mode)))
    #+END_SRC
 ** Password store
    Password store allows to you to interface with the [[https://www.passwordstore.org/][pass]] password
    manager.
    #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package password-store
+  :if (file-exists-p "~/.password-store")
   :bind ("C-c s c" . password-store-copy))
    #+END_SRC
 
@@ -369,10 +365,12 @@
    #+END_SRC
 
 ** PDF-Tools
-   [[https://github.com/politza/pdf-tools][Alternative to DocView for PDF files]]. Requires initial setup though
+   [[https://github.com/politza/pdf-tools][Alternative to DocView for PDF files]]. Requires initial setup though.
    #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package pdf-tools
-  :mode ("\\.pdf\\'" . pdf-view-mode))
+(if (executable-find "poppler")
+    (use-package pdf-tools
+      :mode ("\\.pdf\\'" . pdf-view-mode))
+  (warn "Unable to find \"poppler\" in the path. Skipping pdf-tools setup..."))
    #+END_SRC
 ** Undo Tree
    [[https://www.emacswiki.org/emacs/UndoTree][Undo Tree]] tries to improve on emacs undo system by helping you
@@ -419,8 +417,19 @@
    I add an advice to the switch-theme function to zoom in to my desired
    zoom. Similarly, I add a hook to do the same when I create new frames.
    #+BEGIN_SRC emacs-lisp :tangle yes
+(unless (package-installed-p 'zoom-frm)
+  (let ((site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)))
+    (with-temp-buffer
+      (insert-file-contents (expand-file-name "frame-fns.el" site-lisp-dir))
+      (package-install-from-buffer))
+    (with-temp-buffer
+      (insert-file-contents (expand-file-name "frame-cmds.el" site-lisp-dir))
+      (package-install-from-buffer))
+    (with-temp-buffer
+      (insert-file-contents (expand-file-name "zoom-frm.el" site-lisp-dir))
+      (package-install-from-buffer))))
+
 (use-package zoom-frm
-  :disabled t
   :demand t
   :if (and window-system
            (package-installed-p 'zoom-frm))
@@ -481,10 +490,6 @@
     (add-hook 'bbdb-initialize-hook
               '(lambda ()
                  (setq compose-mail-user-agent-warnings nil)))))
-
-
-
-
    #+END_SRC
 ** Epub - Nov
    [[https://github.com/wasamasa/nov.el][Nov]] mode provides a major mode for reading [[https://en.wikipedia.org/wiki/EPUB][EPUB]] documents.
@@ -728,7 +733,6 @@
 ** bongo
    The [[https://github.com/dbrock/bongo][bongo]] package provides a flexible media player for emacs.
    #+begin_src emacs-lisp :tangle yes
-
 (use-package bongo
   :init
   (progn
@@ -926,7 +930,11 @@ specified by `jr/bongo-volumn-lower-cmd'."
   :ensure nil
   :diminish auto-revert-mode
   :bind ("C-x R" . revert-buffer)
-  :config (global-auto-revert-mode 1))
+  :config
+  (progn
+    (global-auto-revert-mode 1)
+    (setq global-auto-revert-non-file-buffers t
+	  auto-revert-verbose t)))
    #+end_src
 ** Which-key
    Useful package that displays possible keybindings from the currently
@@ -952,6 +960,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
    Configuration instructions can be found [[https://github.com/mhayashi1120/Emacs-langtool][here]].
    #+begin_src emacs-lisp :tangle yes
 (use-package langtool
+  :disabled t
   :diminish
   :custom
   (langtool-language-tool-jar "~/installs/LangueageTool-4.2/languagetool-commandline.jar")
