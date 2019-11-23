@@ -50,7 +50,8 @@
 
 ;; Load custom-file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file)
+(when (file-exists-p custom-file)
+    (load custom-file))
 
 ;; Load org-mode source early on when emacs is recent
 ;; (when (>= emacs-major-version 27)

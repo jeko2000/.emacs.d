@@ -1482,7 +1482,8 @@ specified by `jr/bongo-volumn-lower-cmd'."
     supported types.
     #+begin_src emacs-lisp :tangle yes
 (use-package projectile
-  :defer 5
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
   :init   (setq projectile-use-git-grep t)
   :config
   (progn
@@ -1767,33 +1768,48 @@ specified by `jr/bongo-volumn-lower-cmd'."
     We also install [[https://github.com/emacsmirror/rainbow-mode][rainbow-mode]] to colorize color names in web and CSS buffers.
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package web-mode
-  :init
-  (setq web-mode-markup-indent-offset 2
-        web-mode-css-indent-offset 2
-        web-mode-code-indent-offset 2
-        web-mode-indent-style 2
-        web-mode-style-padding 1
-        web-mode-script-padding 1
-        web-mode-block-padding 0
-        web-mode-enable-auto-closing t
-        web-mode-enable-auto-quoting t
-        web-mode-engines-alist
-        '(("django"    . "\\.html\\'")
-          ("jinja2"    . "\\.html\\'")
-          ("php"       . "\\.phtml\\'"))
-        web-mode-enable-css-colorization t
-        web-mode-enable-auto-pairing nil
-        web-mode-enable-engine-detection t)
-  :mode (("\\.phtml\\'" . web-mode)
-         ("\\.tpl\\.php\\'" . web-mode)
-         ("\\.jsp\\'" . web-mode)
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.jsx?\\'" . web-mode)
          ("\\.mustache\\'" . web-mode)
-         ("\\.djhtml\\'" . web-mode)
-         ("\\.html?\\'" . web-mode)
          ("\\.xhtml?\\'" . web-mode)
          ("\\.xml\\'" . web-mode))
   :config
   (progn
+    (use-package prettier-js)
+    (use-package add-node-modules-path
+      :config
+      (progn
+        (defun jr/web-mode-init-prettier-hook ()
+          (add-node-modules-path)
+          (prettier-js-mode))
+        (add-hook 'web-mode-hook 'jr/web-mode-init-prettier-hook)))
+    (defun jr/web-mode-hook ()
+      (when (boundp 'flycheck-disabled-checkers)
+        (add-to-list 'flycheck-disabled-checkers 'javascript-jshint)
+        (add-to-list 'flycheck-disabled-checkers 'json-jsonlist)
+        (flycheck-add-mode 'javascript-eslint 'web-mode)
+        (smartparens-global-strict-mode +1)
+        (flycheck-mode +1)))
+    (add-hook 'web-mode-hook #'jr/web-mode-hook)
+    (setq web-mode-engines-alist
+          '(("django"    . "\\.html\\'")
+            ("jinja2"    . "\\.html\\'")
+            ("php"       . "\\.phtml\\'"))
+          web-mode-content-types-alist
+          '(("jsx" . "\\.js[x]?\\'"))
+          web-mode-markup-indent-offset 2
+          web-mode-css-indent-offset 2
+          web-mode-code-indent-offset 2
+          web-mode-indent-style 2
+          web-mode-style-padding 1
+          web-mode-script-padding 1
+          web-mode-block-padding 0
+          web-mode-enable-auto-closing t
+          web-mode-enable-auto-closing t
+          web-mode-enable-auto-quoting t
+          web-mode-enable-auto-pairing t
+          web-mode-enable-css-colorization t
+          web-mode-enable-engine-detection t)
     (use-package rainbow-mode
       :hook (web-mode css-mode)
       :defer t
@@ -1801,8 +1817,6 @@ specified by `jr/bongo-volumn-lower-cmd'."
       (progn
         (add-hook 'web-mode-hook #'rainbow-mode)
         (add-hook 'css-mode-hook #'rainbow-mode)))
-    (use-package less-css-mode
-      :mode "\\.less\\'")
     (use-package emmet-mode)
     (use-package company-web
       :config
@@ -2009,7 +2023,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (add-to-list 'sqlup-blacklist "user")))
     #+end_src
 *** JavaScript
-    #+begin_src emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle no
 (use-package js2-mode
   :mode ("\\.js\\'")
   :config
