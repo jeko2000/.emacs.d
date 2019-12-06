@@ -1903,7 +1903,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
       (company-emacs-eclim-setup))))
      #+end_src
 **** Meghanada
-     #+begin_src emacs-lisp :tangle yes
+     #+begin_src emacs-lisp :tangle no
 (use-package meghanada
   :init
   (defun jr/meghanada-java-mode-hook ()
