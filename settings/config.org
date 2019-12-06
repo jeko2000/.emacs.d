@@ -1740,7 +1740,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     natively understands embedded CSS and JavaScript code blocks.
 
     We also install [[https://github.com/emacsmirror/rainbow-mode][rainbow-mode]] to colorize color names in web and CSS buffers.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle no
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
          ("\\.jsx?\\'" . web-mode)
