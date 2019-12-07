@@ -2028,6 +2028,22 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
             js-jsx-detect-syntax t
             js-jsx-align->-with-< t
             js-jsx-indent-level indent-level))))
+
+(use-package tide
+  :after (company flycheck)
+  :init
+  (defun jr/tide-mode-hook ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode)
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1)
+    (company-mode +1))
+  :hook (js-mode . jr/tide-mode-hook)
+  :config
+  ;; configure javascript-tide checker to run after your default javascript checker
+  ;;(flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
+  )
 #+END_SRC
     #+begin_src emacs-lisp :tangle no
 (use-package js2-mode
