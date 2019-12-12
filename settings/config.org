@@ -389,10 +389,12 @@
 ** PDF-Tools
    [[https://github.com/politza/pdf-tools][Alternative to DocView for PDF files]]. Requires initial setup though.
    #+BEGIN_SRC emacs-lisp :tangle yes
-(if (executable-find "poppler")
-    (use-package pdf-tools
-      :mode ("\\.pdf\\'" . pdf-view-mode))
-  (warn "Unable to find \"poppler\" in the path. Skipping pdf-tools setup..."))
+(use-package pdf-tools
+  :init
+  (when (condition-case nil
+            (progn (pdf-info-check-epdfinfo) t)
+          (error nil))
+    (add-to-list 'auto-mode-alist '("\\.[pP][dD][fF]\\'" . pdf-view-mode))))
    #+END_SRC
 ** Undo Tree
    [[https://www.emacswiki.org/emacs/UndoTree][Undo Tree]] tries to improve on emacs undo system by helping you
