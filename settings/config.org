@@ -1845,7 +1845,26 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
              (css-mode . httpd-start)))))
     #+END_SRC
 *** Java/JDEE
-    I don't program much in Java these days but keep [[https://github.com/jdee-emacs/jdee][JDEE]] around just in case.
+    And, of course, Java. The programming language that many people love to hate.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package lsp-java
+  :requires lsp
+  :init
+  (defun jr/lsp-java-config ()
+    (setq-local tab-width 4
+                c-basic-offset 4)
+    (lsp))
+  :hook (java-mode . jr/lsp-java-config)
+  :config
+  (setq lsp-file-watch-ignored
+        '(".idea" ".ensime_cache" ".eunit" "node_modules"
+          ".git" ".hg" ".fslckout" "_FOSSIL_"
+          ".bzr" "_darcs" ".tox" ".svn" ".stack-work"
+          "build")
+        lsp-java-import-order '["" "java" "javax" "#"]))
+
+(use-package java-snippets)
+#+END_SRC
     #+BEGIN_SRC emacs-lisp :tangle no
 (use-package jdee
   :disabled t
