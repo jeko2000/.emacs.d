@@ -1537,7 +1537,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
 mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     #+end_src
 *** GGTags
-    #+begin_src emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle false
 ;; GNU Global Tags
 (use-package ggtags
   :commands ggtags-mode
