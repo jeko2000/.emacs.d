@@ -273,10 +273,48 @@
   :commands (lsp lsp-deferred)
   :config
   (progn
-    (setq lsp-prefer-flymake nil)))
+    (setq lsp-log-io nil
+          lsp-auto-guess-root nil
+          lsp-eldoc-enable-hover t
+          lsp-eldoc-render-all t
+          lsp-enable-file-watchers t
+          lsp-enable-folding nil
+          lsp-enable-indentation t
+          lsp-enable-xref t
+          lsp-prefer-flymake nil)))
+
+(use-package lsp-ui
+  :after lsp-mode
+  :init (defun jr/lsp-ui-mode-hook ()
+          (lsp-ui-flycheck-enable t))
+  :hook ((lsp-mode . lsp-ui-mode)
+         (lsp-ui-mode . jr/lsp-ui-mode-hook))
+  :config
+  (setq lsp-ui-doc-enable t
+        lsp-ui-doc-alignment 'window
+        lsp-ui-doc-delay 0.5
+        lsp-ui-doc-header nil
+        lsp-ui-doc-include-signature t
+        lsp-ui-doc-position 'at-point
+        lsp-ui-doc-use-childframe nil
+        lsp-ui-flycheck-enable t
+        lsp-ui-flycheck-list-position 'right
+        lsp-ui-flycheck-live-reporting t
+        lsp-ui-peek-enable t
+        lsp-ui-peek-always-show nil
+        lsp-ui-peek-fontify t
+        lsp-ui-peek-show-directory t
+        lsp-ui-imenu-enable nil
+        lsp-ui-sideline-enable t
+        lsp-ui-sideline-delay 1
+        lsp-ui-sideline-ignore-duplicate t
+        lsp-ui-sideline-show-symbol t
+        lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-showcode-actions t
+        lsp-ui-sideline-update-mode 'point))
 
 (use-package company-lsp
-  :requires company
+  :after company
   :init
   (defun jr/company-lsp-hook ()
     (setq company-idle-delay 0.3))
