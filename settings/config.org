@@ -1854,8 +1854,12 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
   :requires lsp
   :init
   (defun jr/lsp-java-config ()
+    (setq c-default-style "java")
     (setq-local tab-width 4
                 c-basic-offset 4)
+    (c-set-offset 'arglist-intro '+)
+    (c-set-offset 'arglist-close '0)
+    (c-set-offset 'case-label '+)
     (lsp))
   :hook (java-mode . jr/lsp-java-config)
   :config
@@ -1866,7 +1870,10 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
           "build")
         lsp-java-import-order '["" "java" "javax" "#"]))
 
-(use-package java-snippets)
+(use-package java-snippets
+  :after yasnippet
+  :config
+  (java-snippets-initialize))
 #+END_SRC
     #+BEGIN_SRC emacs-lisp :tangle no
 (use-package jdee
