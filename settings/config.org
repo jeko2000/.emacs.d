@@ -1625,7 +1625,11 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
   :defer t
   :init
   (progn
-    (setq inferior-lisp-program "/usr/bin/sbcl")
+    (cond
+     ((file-exists-p "/usr/bin/sbcl")
+      (setq inferior-lisp-program "/usr/bin/sbcl"))
+     ((file-exists-p "/opt/local/bin/sbcl")
+      (setq inferior-lisp-program "/opt/local/bin/sbcl")))
     (require 'slime-autoloads)
     (when (file-exists-p "~/quicklisp/slime-helper.el")
       (load (expand-file-name "~/quicklisp/slime-helper.el")))
