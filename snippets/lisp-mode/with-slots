@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: with-slots
+# key: ws
+# --
+(with-slots ($1) $2
+$0)

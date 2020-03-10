@@ -938,6 +938,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
 ** eval-sexp-fu
    #+begin_src emacs-lisp :tangle yes
 (when (require 'eval-sexp-fu nil :no-error)
+  (setq lisp-mode-hook nil)
   (add-hook 'lisp-mode-hook 'turn-on-eval-sexp-fu-flash-mode)
   (add-hook 'elpy-mode-hook 'turn-on-eval-sexp-fu-flash-mode))
    #+end_src
@@ -1620,9 +1621,9 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     [[https://common-lisp.net/][Common Lisp]], the programmable programming language.
     The following sets up [[https://www.emacswiki.org/emacs/SlimeMode][slime]] to use [[http://www.sbcl.org/][SBCL]] so ensure you have SBCL
     installed first.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle no
 (use-package slime
-  :defer t
+  :disabled t
   :init
   (progn
     (cond
@@ -1630,12 +1631,19 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
       (setq inferior-lisp-program "/usr/bin/sbcl"))
      ((file-exists-p "/opt/local/bin/sbcl")
       (setq inferior-lisp-program "/opt/local/bin/sbcl")))
+    (when (file-exists-p "/home/jeko/build/slime")
+      (add-to-list 'load-path "/home/jeko/build/slime"))
+    (setq inferior-lisp-program "sbcl")
     (require 'slime-autoloads)
+    (add-to-list 'slime-contribs 'slime-fancy)
     (when (file-exists-p "~/quicklisp/slime-helper.el")
       (load (expand-file-name "~/quicklisp/slime-helper.el")))
     (add-to-list 'slime-contribs 'slime-repl))
   :config
   (progn
+    (when (file-exists-p "/home/jeko/build/sbcl.core-for-slime")
+      (setq slime-lisp-implementations
+            '((sbcl ("sbcl" "--core" "/home/jeko/build/sbcl.core-for-slime")))))    
     (setq slime-net-coding-system 'utf-8-unix)
     (add-hook 'slime-mode-hook
               (lambda ()
@@ -1651,6 +1659,26 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     (use-package common-lisp-snippets
       :defer t)))
     #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; sly
+(use-package sly
+  :init
+  (progn
+    (when (file-exists-p "/home/jeko/build/sly")
+      (add-to-list 'load-path "/home/jeko/build/sly")
+      (require 'sly-autoloads))
+    (setq inferior-lisp-program "sbcl"))
+  :config
+  (progn
+    (defun jr/sly-hook ()
+      (sly-mode +1)
+      (sly-autodoc-mode +1))
+    (add-hook 'lisp-mode-hook 'jr/sly-hook)
+    (setq sly-complete-symbol-function 'sly-flex-completions)))
+
+(use-package common-lisp-snippets
+  :after sly)
+#+END_SRC
 *** Scheme
     [[https://en.wikipedia.org/wiki/Scheme_%2528programming_language%2529][Scheme]] is a dialect of Lisp developed by Gerald Sussman and Guy
     Steele.
