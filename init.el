@@ -1,76 +1,53 @@
 ;;;Emacs init file
 (message "Emacs init.el start")
 
-;; First, load private.el and properties.el if they exist
-(load (expand-file-name "private-el" user-emacs-directory) 'noerror)
-(load (expand-file-name "properties.el" user-emacs-directory) 'noerror)
+;; Load private.el, if it exists.
+;; This file contains any user-specific information to keep outside of
+;; version control
+(load (expand-file-name "private.el" user-emacs-directory) 'noerror)
 
-;;; Set up package
+;; Configure package archives.
 (require 'package)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+;; Optionally, uncomment line below to also add melpa-stable to the
+;; package archives. The 'append keyword allows for the archive to be
+;; added to be appended to the end of the list, which effectively
+;; gives it lower priority when searching for packages.
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") 'append)
+(package-initialize)
 
-(defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
-(defvar melpa '("melpa" . "https://melpa.org/packages/"))
-(defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
-
-(setq package-archives '())
-
-(add-to-list 'package-archives melpa-stable)
-(add-to-list 'package-archives melpa t)
-(add-to-list 'package-archives gnu t)
-(when (< emacs-major-version 27)
-  (package-initialize))
-
-;; Set up load-path
+;; Add the site-lisp directory to the load path.
+;; This is where I usually put files which fail to be found in the
+;; package archives above.
 (setq site-lisp-directory (expand-file-name "site-lisp" user-emacs-directory))
 (add-to-list 'load-path site-lisp-directory)
 
-;; (dolist (project (directory-files site-lisp-directory t "\\w+"))
-;;   (when (file-directory-p project)
-;;     (add-to-list 'load-path project)))
-
-;; Bootstrap use-package
-;; The excellent use-package by John Wiegley is described here:
+;; Bootstrap use-package which we will use for the bulk of the
+;; configurations.
+;; This excellent package by John Wiegley is described here:
 ;; https://github.com/jwiegley/use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
 ;; The following comes from the use-package README
 (eval-when-compile
   (require 'use-package))
   (require 'diminish)
 (require 'bind-key)
-(setq use-package-verbose t
-      use-package-always-ensure t)
+(setq use-package-verbose t)
 
-;; Set up user-settings-directory if it exists
-(let ((settings (expand-file-name "settings" user-emacs-directory)))
-  (setq user-settings-directory
-        (if (file-exists-p settings) settings user-emacs-directory)))
+;; Load custom.el, if it exits.
+(load (expand-file-name "custom.el" user-emacs-directory) 'noerror)
 
-;; Load custom-file
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-    (load custom-file))
+;; Load configuration in config.org, if file exists.
 
-;; Load org-mode source early on when emacs is recent
-;; (when (>= emacs-major-version 27)
-;;   (let ((org-source (expand-file-name "org-mode/lisp" site-lisp-directory))
-;;         (org-contrib-source (expand-file-name "org-mode/contrib/lisp" site-lisp-directory)))
-;;     (when (file-exists-p org-source)
-;;       (add-to-list 'load-path org-source))
-;;     (when (file-exists-p org-contrib-source)
-;;       (add-to-list 'load-path org-contrib-source))))
+;; Note that config.org is _not_ an emacs-lisp source file, which
+;; explains why we don't use `load' to load it. See the Org manual for
+;; all the details.
+(let ((org-config
+       (expand-file-name "settings/config.org" user-emacs-directory)))
+  (when (file-exists-p org-config)
+    (org-babel-load-file org-config)))
 
-;; Load the rest of the configuration
-(setq org-config-file (expand-file-name "config.org" user-settings-directory))
-(org-babel-load-file org-config-file nil)
-
-;; Load any system specific configuration
-;; (let ((conf (expand-file-name (concat "config-" (symbol-name system-type) ".org")
-;;                               user-settings-directory)))
-;;   (when (file-exists-p conf)
-;;     (org-babel-load-file conf nil)))
-
-(message "Emacs init.el end")
 (message "Emacs ready")
