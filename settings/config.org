@@ -1,12 +1,25 @@
 #+TITLE: Emacs Configuration
 #+AUTHOR: Johnny Ruiz
 * Header
-#+BEGIN_SRC emacs-lisp :tangle yes
-(message "Emacs config.el start")
-#+END_SRC
+  #+begin_src emacs-lisp :tangle yes
+(message "Emacs config.el started at %s" (current-time-string))
+  #+end_src
+  #+begin_src emacs-lisp :tangle yes
+;; We set a few variables we use for dispatching
+(defconst jr/display-p (display-graphic-p)
+  "Value is t when the current display is a graphical display.")
+
+(defconst jr/macos-p (eq system-type 'darwin)
+  "Value is t when current operating system is Darwin/macOS.")
+
+(defconst jr/gnu-linux-p (eq system-type 'gnu/linux)
+  "Value is t when current operating system is GNU/Linux.")
+  #+end_src
 * Look and Feel
 ** Basic GUI
-#+BEGIN_SRC emacs-lisp :tangle yes
+   Remove GUI elements geared to mouse usage.
+   This will maximize the screen space for our buffers.
+   #+begin_src emacs-lisp :tangle yes
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -14,95 +27,106 @@
 (setq visible-cursor nil
       inhibit-startup-message t
       initial-scratch-message "")
-#+END_SRC
+   #+end_src
 ** Themes
-*** Daniel Mai's convenient theme function
-    [[https://github.com/danielmai/.emacs.d/blob/master/config.org][Daniel Mai's configuration]] file has been a great resource of good ideas.
-    Here, I borrow the switch-theme function:
-    #+BEGIN_SRC emacs-lisp :tangle yes
-(defun switch-theme (theme)
-  "Disables any currently active themes and loads THEME."
-  ;; This interactive call is taken from 'load-theme'
-  (interactive
-   (list
-    (intern (completing-read "Load custom theme: "
-                             (mapcar 'symbol-name
-                                     (custom-available-themes))))))
-  (let ((enabled-themes custom-enabled-themes))
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme theme t)))
+   The manual defines [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Custom-Themes.html][Custom Themes]] as a collections of settings that can
+   be enabled or disabled as a unit. However, for this section the term
+   `theme' refers to a `color theme'.
+*** Theme switching function
+    Themes are loaded using the `load-theme' function. Yet, when this function is
+    called multiple times within the same emacs session, it's possible for themes
+    to inadvertently inherit settings from previously themes.
 
-;;bind keys
+    The desired behavior is for any currently active custom theme to be disabled
+    prior to loading a new theme.
+
+    The following function, taken almost verbatim from [[https://github.com/danielmai/.emacs.d/blob/master/config.org][Daniel Mai's configuration]],
+    first asks the user to select a theme from a list of currently available themes,
+    then it disables all curently enabled custom themes before finally loading the
+    chosen theme.
+    #+begin_src emacs-lisp :tangle yes
+(defun switch-theme (theme)
+  "Load THEME after disabling all curently loaded themes."
+  (interactive
+   (list (intern (completing-read
+                  "Load custom theme: "
+                  ;; we pass a list of available themes as strings
+                  (mapcar 'symbol-name (custom-available-themes))))))
+  (dolist (enabled-theme custom-enabled-themes)
+    (disable-theme enabled-theme))
+  (load-theme theme 'no-confirm))
+;; The `bind-key' macro is part of use-package which is loaded as part
+;; of init.el
 (bind-key "s-<f12>" 'switch-theme)
-    #+END_SRC
+    #+end_src
+*** Nord
+The [[https://www.nordtheme.com][Nord]] color theme is a dark bluish palette great for readibility.
+    #+begin_src emacs-lisp :tangle yes
+(use-package nord-theme
+  :if jr/display-p)
+    #+end_src
 *** Zenburn
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package zenburn-theme
-  :if (window-system)
-  :defer t)
-    #+END_SRC
+  :if jr/display-p)
+    #+end_src
 *** Solarized theme
     The [[https://github.com/bbatsov/solarized-emacs][Solarized colour theme]] is a port by [[https://github.com/bbatsov][Bozhidar Batsov (bbatsov)]] from
     the original [[http://ethanschoonover.com/solarized][Solarized theme by Ethan Schoonover]].
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package solarized-theme
-  :if (window-system)
-  :defer t
-  :config (progn
-            (setq solarized-distinct-fringe-background t)
-            (setq x-underline-at-descent-line t)))
-    #+END_SRC
+  :if jr/display-p
+  :config
+  (setq solarized-distinct-fringe-background t)
+  (setq x-underline-at-descent-line t))
+    #+end_src
 *** Monokai theme
     The [[https://github.com/oneKelvinSmith/monokai-emacs][Monokai theme]] is a port by [[https://github.com/oneKelvinSmith][Kelvin Smith (oneKelvinSmith)]] from the
     original [[https://www.monokai.pro/][TextMate theme Monokai by Wimer Hazenberg]].
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package monokai-theme
-  :if (window-system)
-  :defer t
+  :if jr/display-p
   :config
   (setq monokai-use-variable-pitch nil))
-    #+END_SRC
+    #+end_src
 *** E-Ink
     [[https://github.com/maio/eink-emacs][Low distraction, minimalistic color theme]] for Emacs emulating reading
     on E Ink devices by [[https://github.com/maio][Marian Schubert maio]].
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package eink-theme
-  :if (window-system)
-  :defer t)
-    #+END_SRC
+  :if jr/display-p)
+    #+end_src
 *** Material theme
     The [[https://github.com/cpaulik/emacs-material-theme][Material theme]] is based on the colors proposed by the [[http://www.google.com/design/spec/style/color.html#color-color-palette][Google
     Maerial Design]] put together by [[https://github.com/cpaulik/][Christoph Paulik cpaulik]]
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package material-theme
-  :if (window-system)
-  :defer t)
-    #+END_SRC
+  :if jr/display-p)
+    #+end_src
 *** Tango theme
     Implementation of the [[http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines][Tango Desktop project palette]] by [[https://github.com/juba][Julien Barnier juba]]
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package tangotango-theme
-  :if (window-system)
-  :defer t)
-    #+END_SRC
+  :if jr/display-p)
+    #+end_src
 *** Waher
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package waher-theme
-  :defer t)
-    #+END_SRC
+  :if jr/display-p)
+    #+end_src
 *** Theme of choice
     #+begin_src emacs-lisp :tangle yes
-(defvar jr/default-theme 'zenburn
+(defvar jr/default-theme 'nord
   "Default theme to be loaded as part of the initial
-    configuration.")
+configuration.")
 
-(when (and (window-system) (member jr/default-theme
-		                   (custom-available-themes)))
+(when (and jr/display-p
+           (member jr/default-theme (custom-available-themes)))
   (switch-theme jr/default-theme))
     #+end_src
 ** Fonts
    Current fonts of choice:
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (let ((available-fonts (font-family-list)))
   (cond
    ((member "Inconsolata" available-fonts)
@@ -111,7 +135,7 @@
     (set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 140))))
 
 (global-prettify-symbols-mode 1)
-   #+END_SRC
+   #+end_src
 * Sane Defaults
   These come largely from configurations by [[https://github.com/magnars/.emacs.d][Magnars Sveen]] and [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha
   Chua]].
