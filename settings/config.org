@@ -154,128 +154,81 @@ configuration.")
 
 (global-prettify-symbols-mode 1)
    #+end_src
-* Sane Defaults
-  These come largely from configurations by [[https://github.com/magnars/.emacs.d][Magnars Sveen]] and [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha
-  Chua]].
-
+* Application-wide
+Configure application-wide settings.
   #+begin_src emacs-lisp :tangle yes
-;; Enable some disabled functions
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-(put 'dired-find-alternative-file 'disabled nil)
-
-;; Blink cursor
-(blink-cursor-mode 1)
-(setq blink-cursor-blinks 0)
-
-;; UTF-8 settings
+;; Default to UTF-8
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;; Line numbers
-(setq line-number-mode t
-      line-number-display-limit nil
-      line-number-display-limit-width 30)
+;; Auto-save/backup settings
+(setq auto-save-default t
+      auto-save-timeout 2
+      auto-save-interval 64
+      auto-save-list-file-prefix
+      (expand-file-name "auto-save-list/.saves-" user-emacs-directory)
+      backup-by-copying t
+      backup-directory-alist
+      `((".*" . ,(expand-file-name "backups" user-emacs-directory)))
+      make-backup-files t
+      version-control t
+      delete-old-versions t
+      delete-by-moving-to-trash t
+      kept-old-versions 12
+      kept-new-versions 12)
 
-;; Column settings
+;; Garbage collection
+(setq gc-cons-threshold 80000
+      gc-cons-percentage 0.5)
+
+;; Message log limit
+(setq message-log-max 16384)
+
+;; Columns
 (setq column-number-mode t
-      fill-column 80)
+      fill-column 78)
 
-;; Windows resizing
-(bind-key "s-C-<left>" 'shrink-window-horizontally global-map)
-(bind-key "s-C-<right>" 'enlarge-window-horizontally global-map)
-(bind-key "s-C-<down>" 'shrink-window global-map)
-(bind-key "s-C-<up>" 'enlarge-window global-map)
+;; Clipboard
+(setq select-enable-clipboard t)
 
-;; Next, I find that every once in a while I hit "C-z", `suspend-frame'
-;; by accident and it takes me a couple of seconds to realize what
-;; happened. I think this is rather annoying so let's unbind it here:
-(define-key global-map (kbd "C-z") nil)
-
-(if (>= emacs-major-version 24)
-    (setq select-enable-clipboard t)
-  (setq x-select-enable-clipboard t))
-
-(setq echo-keystrokes 0.2
-      shift-select-mode nil
-      jump-char-lazy-highlight-face nil
-      eval-expression-print-level nil
-      visible-bell nil
-      enable-recursive-minibuffers t
-      gc-cons-threshold 20000000)
-
-(setq-default indent-tabs-mode nil
-	      indicate-empty-lines t
-	      truncate-lines t
-	      sentence-end-double-space nil)
-
-(transient-mark-mode 1)
-(make-variable-buffer-local 'transient-mark-mode)
-(auto-compression-mode t)
-
+;; Aliases
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(use-package uniquify
-  :ensure nil
-  :config
-  (setq uniquify-buffer-name-style 'forward))
+;; Disabled functions
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternative-file 'disabled nil)
 
-(use-package savehist
-  :ensure nil
-  :config
-  (progn
-    (savehist-mode 1)
-    (setq history-length 1000)))
+;; Mark/region
+(transient-mark-mode +1)
+(setq shift-select-mode nil
+      set-mark-command-repeat-pop t)
 
-(use-package font-lock
-  :ensure nil
-  :config
-  (global-font-lock-mode t))
+;; Minibuffer
+(setq echo-keystrokes 0.5
+      enable-recursive-minibuffers t)
 
-;; When popping the mark, continue popping until the cursor actually moves
-;; Also, if the last command was a copy - skip past all the expand-region cruft.
-(defadvice pop-to-mark-command (around ensure-new-position activate)
-  (let ((p (point)))
-    (when (eq last-command 'save-region-or-current-line)
-      ad-do-it
-      ad-do-it
-      ad-do-it)
-    (dotimes (i 10)
-      (when (= p (point)) ad-do-it))))
-(setq set-mark-command-repeat-pop t)
+;; Frames
+(global-font-lock-mode t)
+(setq visible-bell t)
 
-;; Offer to create parent directories if they do not exist
-;; http://iqbalansari.github.io/blog/2014/12/07/automatically-create-parent-directories-on-visiting-a-new-file-in-emacs/
-(defun jr/create-non-existent-directory ()
-  (let ((parent-directory (file-name-directory buffer-file-name)))
-    (when (and (not (file-exists-p parent-directory))
-	       (y-or-n-p (format "Directory `%s' does not exist! Create it recursively?" parent-directory)))
-      (make-directory parent-directory t))))
+;; Printing
+(setq eval-expression-print-level nil)
 
-(add-to-list 'find-file-not-found-functions 'jr/create-non-existent-directory)
+;; Navigation/editing
+(setq-default
+ indent-tabs-mode nil
+ indicate-empty-lines t
+ truncate-lines t
+ sentence-end-double-space nil)
 
-;; autosave
-(let ((backups (expand-file-name "backups" user-emacs-directory))
-      (auto-save-list (expand-file-name "auto-save-list/" user-emacs-directory)))
-  (setq backup-directory-alist `(("." . ,backups))
-	auto-save-file-name-transforms `((".*" ,auto-save-list t))
-	make-backup-files t
-	backup-by-copying t
-	version-control t
-	delete-old-versions t
-	delete-by-moving-to-trash t
-	kept-old-versions 12
-	kept-new-versions 12
-	auto-save-default t
-	auto-save-timeout 10
-	auto-save-interval 100))
-(if (>= emacs-major-version 24)
-    (setq select-enable-clipboard t)
-  (setq x-select-enable-clipboard t))
+;; Buffers
+(setq uniquify-buffer-name-style 'forward)
+(auto-compression-mode t)
   #+end_src
 
   From [[info:eintr#Loops%20&%20Recursion][info:eintr#Loops & Recursion]]
