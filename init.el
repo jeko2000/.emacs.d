@@ -1,5 +1,5 @@
 ;;;Emacs init file
-(message "Emacs init.el start")
+(message "Emacs init.el started at %s" (current-time-string))
 
 ;; Load private.el, if it exists.
 ;; This file contains any user-specific information to keep outside of
@@ -37,6 +37,10 @@
 (require 'bind-key)
 (setq use-package-verbose t)
 
+;; Set use-package to always `ensure' packages. This means that
+;; packages will be downloaded from the packages by default.
+(setq use-package-always-ensure t)
+
 ;; Load custom.el, if it exits.
 (load (expand-file-name "custom.el" user-emacs-directory) 'noerror)
 
@@ -50,4 +54,4 @@
   (when (file-exists-p org-config)
     (org-babel-load-file org-config)))
 
-(message "Emacs ready")
+(message "Emacs ready at %s" (current-time-string))
