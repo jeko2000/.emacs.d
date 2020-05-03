@@ -1,5 +1,8 @@
 #+TITLE: Emacs Configuration
 #+AUTHOR: Johnny Ruiz
+#+EMAIL: jeko2000@yandex.com
+#+LANGUAGE: en
+
 * Header
   #+begin_src emacs-lisp :tangle yes
 (message "Emacs config.el started at %s" (current-time-string))
@@ -31,20 +34,19 @@
 ** Themes
    The manual defines [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Custom-Themes.html][Custom Themes]] as a collections of settings that can
    be enabled or disabled as a unit. However, for this section the term
-   `theme' refers to a `color theme'.
-*** Theme switching function
-    Themes are loaded using the `load-theme' function. Yet, when this function is
-    called multiple times within the same emacs session, it's possible for themes
-    to inadvertently inherit settings from previously themes.
+   =theme= refers to a =color theme=.
+   Themes are loaded using the `load-theme' function. Yet, when this function is
+   called multiple times within the same emacs session, it's possible for themes
+   to inadvertently inherit settings from previously themes.
 
-    The desired behavior is for any currently active custom theme to be disabled
-    prior to loading a new theme.
+   The desired behavior is for any currently active custom theme to be disabled
+   prior to loading a new theme.
 
-    The following function, taken almost verbatim from [[https://github.com/danielmai/.emacs.d/blob/master/config.org][Daniel Mai's configuration]],
-    first asks the user to select a theme from a list of currently available themes,
-    then it disables all curently enabled custom themes before finally loading the
-    chosen theme.
-    #+begin_src emacs-lisp :tangle yes
+   The following function, taken almost verbatim from [[https://github.com/danielmai/.emacs.d/blob/master/config.org][Daniel Mai's configuration]],
+   first asks the user to select a theme from a list of currently available themes,
+   then it disables all curently enabled custom themes before finally loading the
+   chosen theme.
+   #+begin_src emacs-lisp :tangle yes
 (defun switch-theme (theme)
   "Load THEME after disabling all curently loaded themes."
   (interactive
@@ -58,21 +60,27 @@
 ;; The `bind-key' macro is part of use-package which is loaded as part
 ;; of init.el
 (bind-key "s-<f12>" 'switch-theme)
-    #+end_src
+   #+end_src
 *** Nord
-The [[https://www.nordtheme.com][Nord]] color theme is a dark bluish palette great for readibility.
+    The [[https://www.nordtheme.com][Nord]] color theme is a dark bluish palette great for readibility.
+    #+html: <p align="center"><a href="https://www.nordtheme.com/ports/emacs" target="_blank"><img src="https://raw.githubusercontent.com/arcticicestudio/nord-docs/develop/assets/images/ports/emacs/overview-go.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package nord-theme
   :if jr/display-p)
     #+end_src
+    -----
 *** Zenburn
+    [[http://kippura.org/zenburnpage/][Zenburn]] is a low contrast theme originally written for Vim.
+    #+html: <p align="center"><a href="http://kippura.org/zenburnpage/" target="_blank"><img src="http://kippura.org/i/zenburn.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package zenburn-theme
   :if jr/display-p)
     #+end_src
+    -----
 *** Solarized theme
     The [[https://github.com/bbatsov/solarized-emacs][Solarized colour theme]] is a port by [[https://github.com/bbatsov][Bozhidar Batsov (bbatsov)]] from
     the original [[http://ethanschoonover.com/solarized][Solarized theme by Ethan Schoonover]].
+    #+html: <p align="center"><a href="http://ethanschoonover.com/solarized" target="_blank"><img src="https://raw.githubusercontent.com/altercation/solarized/master/img/solarized-vim.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package solarized-theme
   :if jr/display-p
@@ -80,36 +88,46 @@ The [[https://www.nordtheme.com][Nord]] color theme is a dark bluish palette gre
   (setq solarized-distinct-fringe-background t)
   (setq x-underline-at-descent-line t))
     #+end_src
+    -----
 *** Monokai theme
     The [[https://github.com/oneKelvinSmith/monokai-emacs][Monokai theme]] is a port by [[https://github.com/oneKelvinSmith][Kelvin Smith (oneKelvinSmith)]] from the
     original [[https://www.monokai.pro/][TextMate theme Monokai by Wimer Hazenberg]].
+    #+html: <p align="center"><a href="https://monokai.pro" target="_blank"><img src="https://raw.githubusercontent.com/oneKelvinSmith/monokai-emacs/master/assets/monokai_0.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package monokai-theme
   :if jr/display-p
   :config
   (setq monokai-use-variable-pitch nil))
     #+end_src
+    -----
 *** E-Ink
     [[https://github.com/maio/eink-emacs][Low distraction, minimalistic color theme]] for Emacs emulating reading
     on E Ink devices by [[https://github.com/maio][Marian Schubert maio]].
+    #+html: <p align="center"><a href="https://github.com/maio/eink-emacs" target="_blank"><img src="https://raw.githubusercontent.com/maio/eink-emacs/master/images/example.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package eink-theme
   :if jr/display-p)
     #+end_src
+    -----
 *** Material theme
     The [[https://github.com/cpaulik/emacs-material-theme][Material theme]] is based on the colors proposed by the [[http://www.google.com/design/spec/style/color.html#color-color-palette][Google
     Maerial Design]] put together by [[https://github.com/cpaulik/][Christoph Paulik cpaulik]]
+    #+html: <p align="center"><a href="http://www.google.com/design/spec/style/color.html#color-color-palette" target="_blank"><img src="https://github.com/cpaulik/emacs-material-theme/blob/master/material-theme.png?raw=true"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package material-theme
   :if jr/display-p)
     #+end_src
+    -----
 *** Tango theme
     Implementation of the [[http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines][Tango Desktop project palette]] by [[https://github.com/juba][Julien Barnier juba]]
+    #+html: <p align="center"><a href="https://github.com/juba" target="_blank"><img src="https://raw.githubusercontent.com/juba/color-theme-tangotango/master/screenshots/tangotango_elisp.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package tangotango-theme
   :if jr/display-p)
     #+end_src
+    -----
 *** Waher
+    #+html: <p align="center"><a href="https://github.com/emacsfodder/emacs-waher-theme" target="_blank"><img src="https://camo.githubusercontent.com/b3d3d57f542d19104c0c20495bdf7864292920ec/68747470733a2f2f7261772e6769746875622e636f6d2f6a61736f6e6d32332f656d6163732d77616865722d7468656d652f6d61737465722f77616865722d7468656d652e706e67"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package waher-theme
   :if jr/display-p)
@@ -140,7 +158,7 @@ configuration.")
   These come largely from configurations by [[https://github.com/magnars/.emacs.d][Magnars Sveen]] and [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha
   Chua]].
 
-  #+BEGIN_SRC emacs-lisp :tangle yes
+  #+begin_src emacs-lisp :tangle yes
 ;; Enable some disabled functions
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
@@ -258,18 +276,18 @@ configuration.")
 (if (>= emacs-major-version 24)
     (setq select-enable-clipboard t)
   (setq x-select-enable-clipboard t))
-  #+END_SRC
+  #+end_src
 
   From [[info:eintr#Loops%20&%20Recursion][info:eintr#Loops & Recursion]]
 
-  #+BEGIN_SRC emacs-lisp :tangle yes
+  #+begin_src emacs-lisp :tangle yes
 (setq max-specpdl-size 20000
       max-lisp-eval-depth 30000)
-  #+END_SRC
+  #+end_src
 
   Let's update auth-sources for our configuration. In particular, let's
   test if a [[https://github.com/syncthing/syncthing][Syncthing]] folder exists in the file system and if so, add 
-  #+BEGIN_SRC emacs-lisp :tangle yes
+  #+begin_src emacs-lisp :tangle yes
 (setq auth-sources '( "~/.authinfo.gpg"
                       "~/.authinfo"
                       "~/.netrc"))
@@ -277,7 +295,7 @@ configuration.")
 (let ((syncthing-auth-source "~/Sync/all/.authinfo.gpg"))
   (when (file-exists-p syncthing-auth-source)
     (add-to-list 'auth-sources syncthing-auth-source)))
-  #+END_SRC
+  #+end_src
 
   As pointed out in [[http://puntoblogspot.blogspot.com/2018/10/kill-ring-max-is-thing.html][here]], we can increase the value of kill-ring-max to
   allow for a larger kill-ring
@@ -396,72 +414,72 @@ configuration.")
    Say you have 5 windows open carefully positioned and then you focus on
    just one via 'C-x 1' or equivalent. How do you get back to the
    original configuration? Well... with winner-undo.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package winner
   :ensure nil
   :bind (("C-c <left>" . winner-undo)
          ("C-c <right>" . winner-redo))
   :config
   (winner-mode 1))
-   #+END_SRC
+   #+end_src
 
    The following allows for a quick transposition if you have multiple frames.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package transpose-frame
   :bind ("C-s-t" . transpose-frame))
-   #+END_SRC
+   #+end_src
    [[https://github.com/winterTTr/ace-jump-mode][ace-jump-mode]] allows you to navigate around a window or frame by
    prompting you for a character and then showing keys to navigate
    directly to it.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package ace-jump-mode
   :commands ace-jump-mode
   :bind (("C-S-s" . ace-jump-mode)
          ("s-s" . ace-jump-mode)))
-   #+END_SRC
+   #+end_src
 ** Password store
    Password store allows to you to interface with the [[https://www.passwordstore.org/][pass]] password
    manager.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package password-store
   :if (file-exists-p "~/.password-store")
   :bind ("C-c s c" . password-store-copy))
-   #+END_SRC
+   #+end_src
 
 ** Recentf
    I visit the sames files often. [[https://www.emacswiki.org/emacs/RecentFiles][Recent Files]] allows one to build a list
    of such files for easy access
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package recentf
   :ensure nil
   :config
   (progn
     (recentf-mode 1)
     (setq recentf-max-saved-items 100)))
-   #+END_SRC
+   #+end_src
 
 ** Tramp
    Of course! We need [[https://www.gnu.org/software/tramp/][remote file editing!]]
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package tramp
   :ensure nil
   :defer 10)
-   #+END_SRC
+   #+end_src
 
 ** PDF-Tools
    [[https://github.com/politza/pdf-tools][Alternative to DocView for PDF files]]. Requires initial setup though.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package pdf-tools
   :init
   (when (condition-case nil
             (progn (pdf-info-check-epdfinfo) t)
           (error nil))
     (add-to-list 'auto-mode-alist '("\\.[pP][dD][fF]\\'" . pdf-view-mode))))
-   #+END_SRC
+   #+end_src
 ** Undo Tree
    [[https://www.emacswiki.org/emacs/UndoTree][Undo Tree]] tries to improve on emacs undo system by helping you
    visualize actions.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package undo-tree
   :bind
   ("C-x u" . undo-tree-visualize)
@@ -471,21 +489,21 @@ configuration.")
           undo-tree-visualizer-diff t
           undo-tree-visualizer-timestamps t)
     (global-undo-tree-mode)))
-   #+END_SRC
+   #+end_src
 
 ** Display Battery & Clock modes
    I like to run all my emacs frames at full-screen. The problem comes
    when my laptop dies because I didn't bother to check the status of its
    battery. [[https://www.emacswiki.org/emacs/DisplayBatteryMode][Display Battery Mode]] can show the status of the system
    battery right on the mode line.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (when (functionp 'display-battery-mode)
   (setq battery-mode-line-format "[%b%p%% %t]")
   (display-battery-mode 1))
-   #+END_SRC
+   #+end_src
    Along the same lines, I like to be able to check the time from within a
    full-screen frame.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (when (functionp 'display-time-mode)
   (setq display-time-format " h:%H:%M"
         display-time-day-and-date nil
@@ -493,7 +511,7 @@ configuration.")
         display-time-interval 60
         display-time-mail-string "")
   (display-time-mode 1))
-   #+END_SRC
+   #+end_src
 ** Zoom-frm
    My main machine has a very high resolution which makes font size
    appear very small for my rather weak eyes. The [[https://www.emacswiki.org/emacs/zoom-frm.el][zoom-frm]] packages from
@@ -502,7 +520,7 @@ configuration.")
 
    I add an advice to the switch-theme function to zoom in to my desired
    zoom. Similarly, I add a hook to do the same when I create new frames.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (unless (package-installed-p 'zoom-frm)
   (let ((site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)))
     (with-temp-buffer
@@ -539,12 +557,12 @@ configuration.")
     (advice-add 'switch-theme :after (lambda (theme)
                                        (jr/zoom-in-on-all-frames)))
     (add-hook 'after-make-frame-functions #'jr/zoom-in-on-frame)))
-   #+END_SRC
+   #+end_src
 
 ** BBDB
    [[https://www.emacswiki.org/emacs/CategoryBbdb][The Insidious Big Brother Database]] provides an address book that hooks
    to [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]].
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 ;;TODO: Groom BBDB
 (use-package bbdb
   :config
@@ -576,19 +594,19 @@ configuration.")
     (add-hook 'bbdb-initialize-hook
               '(lambda ()
                  (setq compose-mail-user-agent-warnings nil)))))
-   #+END_SRC
+   #+end_src
 ** Epub - Nov
    [[https://github.com/wasamasa/nov.el][Nov]] mode provides a major mode for reading [[https://en.wikipedia.org/wiki/EPUB][EPUB]] documents.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
-   #+END_SRC
+   #+end_src
 ** w3m
    [[http://w3m.sourceforge.net/][W3m]] is a text-based browser whose engine is used by emacs to serve
    HTML pages. [[http://emacs-w3m.namazu.org][Ensure you have w3m installed]].
    We also add a couple of bindings to open urls externally through
    Firefox.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package w3m
   :if (executable-find "w3m")
   :bind ("C-x w" . 'w3m)
@@ -608,15 +626,15 @@ configuration.")
       (browse-url-firefox w3m-current-url))
     (define-key w3m-mode-map "X" 'jr/w3m-open-link-at-point-in-firefox)
     (define-key w3m-mode-map "x" 'jr/w3m-open-current-url-in-firefox)))
-   #+END_SRC
+   #+end_src
 ** Olivetti
    [[https://github.com/rnkn/olivetti][Olivetti]] mode provides a nice environment to write distraction-free.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package olivetti
   :defer t
   :config
   (setq olivetti-body-width 120))
-   #+END_SRC
+   #+end_src
 ** Synosaurus
    When writing papers or long emails, it's convenient to have a
    thesaurus right in emacs. The package [[https://github.com/hpdeifel/synosaurus][synosaurus]] wraps around the
@@ -630,7 +648,7 @@ configuration.")
    default binding for org-schedule. Before we load the package, we set
    the prefix to "C-c s" instead.
 
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package synosaurus
   :if (executable-find "wn")
   :delight
@@ -640,20 +658,20 @@ configuration.")
   :config
   (setq synosaurus-backend 'synosaurus-backend-wordnet
         synosaurus-choose-method 'default))
-   #+END_SRC
+   #+end_src
 
 ** Diminish
    Update: I no longer use [[https://github.com/myrjola/diminish.el][diminish]] and have switched to [[https://www.emacswiki.org/emacs/DelightedModes][delight]] instead.
-   #+BEGIN_SRC emacs-lisp :tangle no
+   #+begin_src emacs-lisp :tangle no
 (eval-after-load "subword" '(diminish 'subword-mode))
-   #+END_SRC
+   #+end_src
 ** Neotree
    The [[https://github.com/jaypei/emacs-neotree][neotree]] package provides a file system tree similar to NerdTree
    for Vim.
 
    Per the neotree [[https://github.com/jaypei/emacs-neotree/blob/dev/README.md][README]] file, we must install the [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] package
    and its fonts before the icons theme works properly.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package neotree
   :commands neotree-toggle
   :config
@@ -663,20 +681,20 @@ configuration.")
     (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
           neo-smart-open t
           projectile-switch-project-action 'neotree-projectile-action)))
-   #+END_SRC
+   #+end_src
 ** ace-window
    The [[https://github.com/abo-abo/ace-window][ace-window]] by [[ace-window][abo-abo]] offers an improved way of navigating through
    multiple windows. As part of its configuration, let's have it use the
    keys from the home row instead of the numbers 1-9.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package ace-window
   :bind ("M-o" . 'ace-window)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
         aw-background nil))
-   #+END_SRC
+   #+end_src
 ** erc
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 ;; This causes ERC to connect to the Freenode network upon hitting
 ;; C-c e f.  Replace MYNICK with your IRC nick.
 (use-package erc
@@ -710,11 +728,11 @@ configuration.")
                                     "324" "329" "332" "333" "353" "477"))
     (use-package erc-hl-nicks)
     (use-package erc-image)))
-   #+END_SRC
+   #+end_src
 ** elfeed
    [[https://github.com/skeeto][Skeeto]]'s excellent [[https://github.com/skeeto/elfeed][elfeed]] package provides an excellent RSS and Atom
    feed client for emacs.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package elfeed
   :bind ("C-x F" . 'elfeed)
   :defer 10
@@ -777,17 +795,17 @@ configuration.")
                         '((t :foreground "#BFF"))
                         "Marks webcomics in Elfeed."
                         :group 'elfeed)))
-   #+END_SRC
+   #+end_src
 ** emacs-server
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package server
   :ensure nil
   :config (progn
             (server-start)
             (require 'org-protocol)))
-   #+END_SRC
+   #+end_src
 ** appt
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package appt
   :ensure nil
   :config
@@ -798,12 +816,12 @@ configuration.")
           appt-display-format 'window
           appt-display-mode-line t
           appt-message-warning-time 12)))
-   #+END_SRC
+   #+end_src
 ** po-edit
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package po-mode
   :mode ("\\.pot?\\'" . po-mode))
-   #+END_SRC
+   #+end_src
 ** gnuplot
    [[http://www.gnuplot.info/][Gnuplot]] is a portable command-line driven graphing utility supported
    by org mode through Bruce Rave's [[https://github.com/bruceravel/gnuplot-mode][gnuplot-mode]]
@@ -1119,44 +1137,44 @@ specified by `jr/bongo-volumn-lower-cmd'."
 **** Dired-details
      [[https://www.emacswiki.org/emacs/DiredDetails][Dired-details]] lets you hide or show the file and directory details in
      a Dired listing, to save space and clutter
-     #+BEGIN_SRC emacs-lisp :tangle yes
+     #+begin_src emacs-lisp :tangle yes
 (require 'dired-details)
 (dired-details-install)
 (setq dired-details-hidden-string "[...] ")
-     #+END_SRC
+     #+end_src
      See [[http://emacsrocks.com/e16.html][Emacs Rocks! Episode 16]] to see the great use of dired-dwim-target
-     #+BEGIN_SRC emacs-lisp :tangle yes
+     #+begin_src emacs-lisp :tangle yes
 (setq dired-dwim-target t)
-     #+END_SRC
+     #+end_src
 *** Flyspell
     First, we bootstrap [[http://aspell.net/][GNU Aspell]]
-    #+BEGIN_SRC emacs-lisp :tangle yes
-(setq ispell-program-name "aspell"
+    #+begin_src emacs-lisp :tangle yes
+(setq ispell-program-name "hunspell"
       ispell-local-dictionary "en_US"
       flyspell-issue-message-flag nil
       ispell-list-command "--list") ; See https://www.emacswiki.org/emacs/FlySpell#tic5
-    #+END_SRC
+    #+end_src
 
     Next, let's enable spell check for plain text and org-mode files when
     the aspell executable is present in the exec-path.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (when (executable-find "aspell")
   (add-hook 'text-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook  'flyspell-mode))
-    #+END_SRC
+    #+end_src
 
 *** Disable-mouse-mode
     [[https://github.com/purcell][Steve Purcell]] comes to the rescue to create a minor mode that disables
     mouse events
-    #+BEGIN_SRC emacs-lisp :tangle no
+    #+begin_src emacs-lisp :tangle no
 (use-package disable-mouse
   :delight disable-mouse-global-mode
   :config (global-disable-mouse-mode))
-    #+END_SRC
+    #+end_src
 *** Ediff
     [[https://www.gnu.org/software/emacs/manual/html_node/ediff/][Ediff]] allows simultaneous browsing through the differences between
     files or buffers. Very handy for comparing commits.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package ediff
   :ensure nil
   :init
@@ -1179,29 +1197,29 @@ specified by `jr/bongo-volumn-lower-cmd'."
   (setq ediff-diff-options "-w"
         ediff-split-window-function 'split-window-horizontally
         ediff-window-setup-function 'ediff-setup-windows-plain))
-    #+END_SRC
+    #+end_src
 *** Sexp highlighting
     [[https://www.emacswiki.org/emacs/ShowParenMode][show-paren-mode]] allows to see matching pairs of parentheses and other characters.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
-    #+END_SRC
+    #+end_src
 *** Utilities
     [[https://github.com/magnars/s.el][Magnar Sveen (magnars)'s String manipulation]] routines for emacs lisp
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package s)
-    #+END_SRC
+    #+end_src
 *** Highlight
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package highlight-symbol
   :diminish highlight-symbol-mode
   :commands highlight-symbol
   :bind ("C-x H" . highlight-symbol))
 
-    #+END_SRC
+    #+end_src
 *** Indentation
     I like to automatically indent when press RET
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (global-set-key (kbd "RET") 'newline-and-indent)
 (use-package aggressive-indent
   :defer 2
@@ -1210,10 +1228,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
          (js-mode         . aggressive-indent-mode)
          (lisp-mode       . aggressive-indent-mode))
   :custom (aggressive-indent-comments-too))
-    #+END_SRC
+    #+end_src
 *** Company
     [[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package company
   :delight t
   :demand t
@@ -1255,10 +1273,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (define-key company-active-map [tab] nil)
     (define-key company-active-map (kbd "TAB") nil)))
 
-    #+END_SRC
+    #+end_src
 *** Code Folding
     The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one to hide and show blocks of text.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package hideshow
   :ensure nil
   :delight
@@ -1271,13 +1289,13 @@ specified by `jr/bongo-volumn-lower-cmd'."
     ;; where x is code, comments, t (both), or nil (neither)
     (setq hs-isearch-open 't)
     (add-hook 'prog-mode-hook (lambda () (hs-minor-mode 1)))))
-    #+END_SRC
+    #+end_src
 *** Snippets
     The all great [[https://github.com/joaotavora/yasnippet][yasnippet]] package provides an extensible template system
     for Emacs. To get the actual snippets, we can use the great collection
     maintained by [[https://github.com/AndreaCrotti][AndreaCrotti]] named yasnippet-snippets.
     We also download [[https://github.com/mkcms/ivy-yasnippet][ivy-yasnippet]] by [[https://github.com/mkcms][mkcms]] to allow snippet previews through [[https://github.com/abo-abo/swiper][ivy]].
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package yasnippet
   :demand t
   :delight yas-minor-mode
@@ -1292,14 +1310,14 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (use-package ivy-yasnippet
       :bind ("C-c y y" . ivy-yasnippet))))
 
-    #+END_SRC
+    #+end_src
 
 *** Completion
 **** Ivy
      [[https://github.com/abo-abo/swiper][Ivy]] provides a completion mechanism for Emacs.
      It is my preferred completion method at the moment for its simplicity.
      Bundled, we find swiper and counsel which extend ivy.
-     #+BEGIN_SRC emacs-lisp :tangle yes
+     #+begin_src emacs-lisp :tangle yes
 (use-package ivy
   :delight
   :demand t
@@ -1333,11 +1351,11 @@ specified by `jr/bongo-volumn-lower-cmd'."
        ("M-x" . counsel-M-x)
        ("M-y" . counsel-yank-pop)
        ("C-s" . counsel-grep-or-swiper)))))
-     #+END_SRC
+     #+end_src
 **** Ido mode
      [[https://www.emacswiki.org/emacs/InteractivelyDoThings][Interactively do things]] used to my completion framework at the
      beginning. I've now switched to [[https://github.com/abo-abo/swiper][Ivy]].
-     #+BEGIN_SRC emacs-lisp :tangle no
+     #+begin_src emacs-lisp :tangle no
 (use-package ido
   :disabled t                           ; I am using other completion instead
   :demand t
@@ -1363,14 +1381,14 @@ specified by `jr/bongo-volumn-lower-cmd'."
               #'(lambda ()
                   (bind-key "<return>" #'ido-smart-select-text
                             ido-file-completion-map)))))
-     #+END_SRC
+     #+end_src
 
 *** Version Control
     Version control is of incredibly importance for most projects and
     [[https://magit.vc][magit]] provides a great interface for [[https://git-scm.com/][git]]. [[https://github.com/magit/orgit][Orgit]] provides new [[https://orgmode.org/manual/External-links.html][org-link]]
     types for Magit buffers.
 
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package magit
   :bind ("C-c g" . magit-status)
   :init
@@ -1385,21 +1403,21 @@ specified by `jr/bongo-volumn-lower-cmd'."
       :config
       (global-git-gutter-mode +1))
     (use-package git-timemachine)))
-    #+END_SRC
+    #+end_src
 *** REST support
     See [[http://emacsrocks.com/e15.html][Emacs Rocks! Episode 15]] to learn how [[https://github.com/pashky/restclient.el][restclient]] can help out with
     testing APIs from within Emacs. The HTTP calls you make in the buffer
     aren't constrainted within Emacs; there’s the
     restclient-copy-curl-command to get the equivalent curl call string to
     keep things portable.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package restclient
   :mode ("\\.rest\\'" . restclient-mode))
-    #+END_SRC
+    #+end_src
 *** Multiple cursors
     See [[http://emacsrocks.com/e13.html][Emacs Rocks! Episode 13]] to learn about [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]], written
     by [[https://github.com/magnars/.emacs.d][Magnars Sveen]].
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C-+"         . mc/mark-next-like-this)
@@ -1407,34 +1425,34 @@ specified by `jr/bongo-volumn-lower-cmd'."
          ("C-c C-+"     . mc/mark-all-like-this)
          ("C-!"         . mc/mark-next-symbol-like-this)
          ("s-d"         . mc/mark-all-dwim)))
-    #+END_SRC
+    #+end_src
 *** Expand Region
     See [[http://emacsrocks.com/e09.html][Emacs Rocks! Episode 9]] to learn about [[https://github.com/magnars/.emacs.d][Magnars Sveen]]'s excellent
     expand-region.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package expand-region
   :defer 2
   :bind ("C-=" . er/expand-region))
-    #+END_SRC
+    #+end_src
 *** iy-go-to-char
     See [[http://emacsrocks.com/e04.html][Emacs Rocks! Episode 4]] to learn about [[https://github.com/doitian/iy-go-to-char][iy-go-to-char]].
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package iy-go-to-char
   :bind (("M-m" . iy-go-to-char)
          ("M-i" . back-to-indentation)))
-    #+END_SRC
+    #+end_src
 *** Autofill mode
     I find myself using M-q often to [[https://www.emacswiki.org/emacs/FillParagraph][refill paragraphs]]. [[https://www.emacswiki.org/emacs/AutoFillMode][AutoFillMode]] mostly
     automates this for me.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (global-set-key (kbd "C-c q") 'auto-fill-mode)
 (setq comment-auto-fill-only-comments t)
-    #+END_SRC
+    #+end_src
 *** Nlinum
     Showing Line numbers in a buffer can be fairly useful when working
     with code. [[http://elpa.gnu.org/packages/nlinum.html][NLinum]] mode replaces the in-built linum-mode.
-    #+BEGIN_SRC emacs-lisp :tangle no
+    #+begin_src emacs-lisp :tangle no
 (use-package nlinum
   :init
   (defun my-nlinum-mode-hook ()
@@ -1450,20 +1468,20 @@ specified by `jr/bongo-volumn-lower-cmd'."
     (add-hook 'prog-mode-hook 'nlinum-mode)
     (add-hook 'nlinum-mode-hook #'my-nlinum-mode-hook)))
 
-    #+END_SRC
+    #+end_src
 
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-    #+END_SRC
+    #+end_src
 *** Whitespace-cleanup-mode
     [[https://github.com/purcell/whitespace-cleanup-mode][whitespace-cleanup-mode]] is a better solution than just having
     the whitespace-cleanup function running as part of the before-save-hook.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package whitespace-cleanup-mode
   :delight
   :config
   (global-whitespace-cleanup-mode 1))
-    #+END_SRC
+    #+end_src
 *** Smartparens
     #+begin_src emacs-lisp :tangle yes
 (use-package smartparens
@@ -1562,7 +1580,7 @@ specified by `jr/bongo-volumn-lower-cmd'."
 (use-package flycheck-color-mode-line
   :after flycheck
   :commands flycheck-color-mode-line-mode
-mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
+  mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     #+end_src
 *** GGTags
     #+begin_src emacs-lisp :tangle false
@@ -1604,7 +1622,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
 *** Eshell
     [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] is a shell-like command interpreter implemented in Emacs Lisp and written
     by the great [[https://www.google.com/search?q=eshell+jwiegleyt&ie=utf-8&oe=utf-8][John Wiegley]].
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package eshell
   :ensure nil
   :bind ("C-x t" . eshell)
@@ -1615,12 +1633,12 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     (add-hook 'eshell-mode-hook (lambda ()
                                   (company-mode -1)
                                   (display-line-numbers-mode -1)))))
-    #+END_SRC
+    #+end_src
 
 *** Clojure
     [[https://www.google.com/search?q=clojure&ie=utf-8&oe=utf-8][Clojure]] is a dynamic programming language that compiles to Java
     Unicode. It's one of my main languages right now.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package clojure-mode
   :mode "\\.cljs?\\'"
   :config
@@ -1640,12 +1658,12 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
                                             (eq major-mode 'lisp-mode))
                                     (whitespace-cleanup)
                                     (indent-region (point-min) (point-max)))))))
-    #+END_SRC
+    #+end_src
 *** Common Lisp
     [[https://common-lisp.net/][Common Lisp]], the programmable programming language.
     The following sets up [[https://www.emacswiki.org/emacs/SlimeMode][slime]] to use [[http://www.sbcl.org/][SBCL]] so ensure you have SBCL
     installed first.
-    #+BEGIN_SRC emacs-lisp :tangle no
+    #+begin_src emacs-lisp :tangle no
 (use-package slime
   :disabled t
   :init
@@ -1682,8 +1700,8 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     (add-to-list 'company-backends '(company-slime :with company-dabbrev))
     (use-package common-lisp-snippets
       :defer t)))
-    #+END_SRC
-#+BEGIN_SRC emacs-lisp :tangle yes
+    #+end_src
+    #+begin_src emacs-lisp :tangle yes
 ;; sly
 (use-package sly
   :init
@@ -1702,12 +1720,12 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
 
 (use-package common-lisp-snippets
   :after sly)
-#+END_SRC
+    #+end_src
 *** Scheme
     [[https://en.wikipedia.org/wiki/Scheme_%2528programming_language%2529][Scheme]] is a dialect of Lisp developed by Gerald Sussman and Guy
     Steele.
     [[https://github.com/jaor/geiser][Geiser]] provides an improved development environment in emacs.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package geiser
   :defer t
   :config
@@ -1715,9 +1733,9 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     (setq geiser-active-implementations '(mit)
           geiser-mit-binary "/usr/bin/mit-scheme")
     (setq scheme-program-name "/usr/bin/mit-scheme")))
-    #+END_SRC
+    #+end_src
 *** Emacs Lisp
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value.
     Source: http://emacsredux.com/blog/2013/06/21/eval-and-replace/"
@@ -1797,14 +1815,14 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
   :diminish eldoc-mode
   :commands eldoc-mode)
 
-    #+END_SRC
+    #+end_src
 *** Markdown
     I like to edit README and other files written in Markdown so having
     [[https://jblevins.org/projects/markdown-mode/][markdown-mode]] is very convenient.
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package markdown-mode
   :mode "\\.md\\'")
-    #+END_SRC
+    #+end_src
 *** TeX/LaTeX
     #+begin_src emacs-lisp :tangle yes
 (use-package tex
@@ -1829,7 +1847,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     natively understands embedded CSS and JavaScript code blocks.
 
     We also install [[https://github.com/emacsmirror/rainbow-mode][rainbow-mode]] to colorize color names in web and CSS buffers.
-    #+BEGIN_SRC emacs-lisp :tangle no
+    #+begin_src emacs-lisp :tangle no
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
          ("\\.jsx?\\'" . web-mode)
@@ -1884,7 +1902,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     (use-package company-web
       :config
       (define-key web-mode-map (kbd "C-'") 'company-web-html))))
-    #+END_SRC
+    #+end_src
 
     [[https://github.com/skeeto/impatient-mode][Impatient mode]] allows one to see changes to HTML buffers _instantly_
     as you type which is very cool. There's even this [[http://youtu.be/QV6XVyXjBO8][YouTube video]] that
@@ -1892,7 +1910,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
 
     Oh, and remember that [[https://github.com/rg3/youtube-dl][youtube-dl]] is a great way to download/watch
     YouTube videos!
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package simple-httpd
   :defer t
   :config
@@ -1902,10 +1920,10 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
       :hook ((web-mode . httpd-start)
              (web-mode . impatient-mode)
              (css-mode . httpd-start)))))
-    #+END_SRC
+    #+end_src
 *** Java/JDEE
     And, of course, Java. The programming language that many people love to hate.
-#+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package lsp-java
   :requires lsp
   :init
@@ -1930,8 +1948,8 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
   :after yasnippet
   :config
   (java-snippets-initialize))
-#+END_SRC
-    #+BEGIN_SRC emacs-lisp :tangle no
+    #+end_src
+    #+begin_src emacs-lisp :tangle no
 (use-package jdee
   :disabled t
   :defer t
@@ -1978,7 +1996,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
              (let ((pair (s-split "|" arg)))
                (seq-map (lambda (p) (concat (car pair) "." (cdr p))) (jdee-complete-find-completion-for-pair pair)))))))
     (add-to-list 'company-backends 'jr/company-jdee-backend)))
-    #+END_SRC
+    #+end_src
 **** Gradle
      #+begin_src emacs-lisp :tangle yes
 (use-package gradle-mode
@@ -2112,7 +2130,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     (add-to-list 'sqlup-blacklist "user")))
     #+end_src
 *** JavaScript
-#+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package js
   :ensure nil
   :after (flycheck smartparens)
@@ -2163,7 +2181,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
   ;; configure javascript-tide checker to run after your default javascript checker
   ;;(flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
   )
-#+END_SRC
+    #+end_src
     #+begin_src emacs-lisp :tangle no
 (use-package js2-mode
   :mode ("\\.js\\'")
@@ -2315,7 +2333,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
                   'comint-next-input)))))
     #+end_src
 *** Scala
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes
 (use-package ensime
   :defer t
   :pin melpa-stable
@@ -2388,12 +2406,12 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
                                (prettify-symbols-mode)
                                (smartparens-strict-mode +1)
                                (scala-mode:goto-start-of-code))))
-    #+END_SRC
+    #+end_src
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
   actually) but it more than pays off at the end. Here's [[http://www.gnus.org/manual.html][the manual]].
-  #+BEGIN_SRC emacs-lisp :tangle yes
+  #+begin_src emacs-lisp :tangle yes
 ;; (let ((gnus-config-file (expand-file-name "settings/gnus-init.el" user-emacs-directory)))
 ;;   (when (file-exists-p gnus-config-file)
 ;;     (setq gnus-init-file gnus-config-file)))
@@ -2401,16 +2419,16 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
 
 (when (file-exists-p jr/gnus-config-file)
   (setq gnus-init-file (car (org-babel-tangle-file jr/gnus-config-file))))
-  #+END_SRC
+  #+end_src
 
   Let's set gnus as our mail handler
-  #+BEGIN_SRC emacs-lisp :tangle yes
+  #+begin_src emacs-lisp :tangle yes
 (setq mail-user-agent 'gnus-user-agent)
-  #+END_SRC
+  #+end_src
 
   In the rare occasion that I create a new mail via C-x m and gnus
   isn't open, I want to start gnus up first:
-  #+BEGIN_SRC emacs-lisp :tangle yes
+  #+begin_src emacs-lisp :tangle yes
 (defun jr/start-gnus-maybe (&rest args)
   "Start gnus if it isn't currently running."
   (unless (gnus-alive-p)
@@ -2420,11 +2438,11 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
         (gnus)))))
 
 (advice-add 'compose-mail :before #'jr/start-gnus-maybe)
-  #+END_SRC
+  #+end_src
 
-  #+BEGIN_SRC emacs-lisp :tangle yes
+  #+begin_src emacs-lisp :tangle yes
 (global-set-key (kbd "C-x g") 'gnus)
-  #+END_SRC
+  #+end_src
 
 * Org Mode
   When all else fails, [[https://orgmode.org/][org mode]] will work. I use it for almost
@@ -2443,7 +2461,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
 ** Find file as sudo
    Recently, I've had to edit a great deal of root-level files. This
    function will reopen a given file with superuser priviledges.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (defun jr/reopen-as-sudo ()
   "Kill current buffer and open its file with augmented priviledges."
   (interactive)
@@ -2453,10 +2471,10 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     (find-alternate-file (concat "/sudo::" filename))))
 
 (bind-key "C-. s" 'jr/reopen-as-sudo)
-   #+END_SRC
+   #+end_src
 ** Window splitting
    The following functions allow you to split and switch to a window at once.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (defun vsplit-other-window ()
   "Splits the window vertically and switches to that window."
   (interactive)
@@ -2470,7 +2488,7 @@ mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
 
 (bind-key "C-x 2" 'vsplit-other-window)
 (bind-key "C-x 3" 'hsplit-other-window)
-   #+END_SRC
+   #+end_src
 ** Less intrusive visible bell
    #+begin_src emacs-lisp :tangle yes
 (defun jr/flash-mode-line ()
@@ -2488,7 +2506,7 @@ Source: EmacsWiki"
 (add-to-list 'auto-mode-alist '("PKGBUILD" . shell-script-mode))
    #+end_src
 ** Hungry delete
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (defun contextual-backspace ()
   "Hungry whitespace or delete word depending on context."
   (interactive)
@@ -2506,9 +2524,9 @@ Source: EmacsWiki"
       (backward-kill-word 1)))))
 
 (global-set-key (kbd "C-<backspace>") 'contextual-backspace)
-   #+END_SRC
+   #+end_src
 ** Regex helpers
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (use-package re-builder
   :ensure nil
   ;; C-c C-u errors, C-c C-w copy, C-c C-q exit
@@ -2518,9 +2536,9 @@ Source: EmacsWiki"
   :commands rxt-toggle-elisp-rx
   :init (bind-key "C-c / t" 'rxt-toggle-elisp-rx emacs-lisp-mode-map))
 
-   #+END_SRC
+   #+end_src
 ** Indentation
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (defun indent-buffer ()
   "Indent the entire buffer."
   (interactive)
@@ -2528,8 +2546,8 @@ Source: EmacsWiki"
     (delete-trailing-whitespace)
     (indent-region (point-min) (point-max) nil)
     (untabify (point-min) (point-max))))
-   #+END_SRC
+   #+end_src
 * Footer
-#+BEGIN_SRC emacs-lisp :tangle yes
+  #+begin_src emacs-lisp :tangle yes
 (message "Emacs config.el end")
-#+END_SRC
+  #+end_src
