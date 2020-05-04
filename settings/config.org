@@ -155,7 +155,7 @@ configuration.")
 (global-prettify-symbols-mode 1)
    #+end_src
 * Application-wide
-Configure application-wide settings.
+  Configure application-wide settings.
   #+begin_src emacs-lisp :tangle yes
 ;; Default to UTF-8
 (setq locale-coding-system 'utf-8)
@@ -208,7 +208,7 @@ Configure application-wide settings.
 (setq shift-select-mode nil
       set-mark-command-repeat-pop t)
 
-;; Minibuffer
+;; Minibuffer/Mode line
 (setq echo-keystrokes 0.5
       enable-recursive-minibuffers t)
 
@@ -262,131 +262,59 @@ Configure application-wide settings.
 (global-set-key (kbd "C-x r q") 'save-buffers-kill-terminal)
   #+end_src
 * Non-programming packages
-** LSP
-   #+begin_src emacs-lisp :tangle yes
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :config
-  (progn
-    (setq lsp-log-io nil
-          lsp-auto-guess-root nil
-          lsp-eldoc-enable-hover t
-          lsp-eldoc-render-all t
-          lsp-enable-file-watchers t
-          lsp-enable-folding nil
-          lsp-enable-indentation t
-          lsp-enable-xref t
-          lsp-prefer-flymake nil)))
-
-(use-package lsp-ui
-  :after lsp-mode
-  :init (defun jr/lsp-ui-mode-hook ()
-          (lsp-ui-flycheck-enable t))
-  :hook ((lsp-mode . lsp-ui-mode)
-         (lsp-ui-mode . jr/lsp-ui-mode-hook))
-  :config
-  (setq lsp-ui-doc-enable t
-        lsp-ui-doc-alignment 'window
-        lsp-ui-doc-delay 0.5
-        lsp-ui-doc-header nil
-        lsp-ui-doc-include-signature t
-        lsp-ui-doc-position 'at-point
-        lsp-ui-doc-use-childframe nil
-        lsp-ui-flycheck-enable t
-        lsp-ui-flycheck-list-position 'right
-        lsp-ui-flycheck-live-reporting t
-        lsp-ui-peek-enable t
-        lsp-ui-peek-always-show nil
-        lsp-ui-peek-fontify t
-        lsp-ui-peek-show-directory t
-        lsp-ui-imenu-enable nil
-        lsp-ui-sideline-enable t
-        lsp-ui-sideline-delay 1
-        lsp-ui-sideline-ignore-duplicate t
-        lsp-ui-sideline-show-symbol t
-        lsp-ui-sideline-show-hover t
-        lsp-ui-sideline-showcode-actions t
-        lsp-ui-sideline-update-mode 'point))
-
-(use-package company-lsp
-  :after company
-  :init
-  (defun jr/company-lsp-hook ()
-    (setq company-idle-delay 0.3))
-  :config
-  (progn
-    (add-hook 'lsp-mode-hook #'jr/company-lsp-hook)
-    (push 'company-lsp company-backends)
-    (setq company-lsp-cache-candidates 'auto
-          company-lsp-async t
-          company-lsp-enable-snippet t
-          company-lsp-enable-recompletion t)))
-   #+end_src
 ** exec-path-from-shell
+   [[https://github.com/purcell/exec-path-from-shell][exec-path-from-shell]] ensures environment variables in Emacs match
+   those in the shell.
+
+   This is particulayl useful in macOS, where the a graphical Emacs
+   instance only inherits the default environment variables.
    #+begin_src emacs-lisp :tangle yes
 (use-package exec-path-from-shell
-  :if (memq window-system '(mac ns x))
+  :when jr/macos-p
+  :demand t
   :config
-  (progn
-    (exec-path-from-shell-copy-env "JAVA_HOME")
-    (exec-path-from-shell-initialize)))
+  (setq exec-path-from-shell-variables '("PATH" "MANPATH" "JAVA_HOME"))
+  (exec-path-from-shell-initialize))
    #+end_src
-
 ** delight
-   Quoting directly from the [[https://www.emacswiki.org/emacs/DelightedModes][wiki]], Delight enables you to easily
-   customize how major and minor modes appear in the ModeLine.
+   [[https://www.emacswiki.org/emacs/DelightedModes][Delight]] customizes how major and minor modes appear in the
+   ModeLine. Furthermoore, =use-package= supports [[https://github.com/jwiegley/use-package#diminishing-and-delighting-minor-modes][diminishing modes]]
+   via the =:delight= keyword.
+
    #+begin_src emacs-lisp :tangle yes
 (use-package delight
+  :demand t
   :config
   (delight '((abbrev-mode " Abv" abbrev)
              (auto-fill-function nil t)
              (auto-fill-mode nil t)
-             (eldoc-mode nil eldoc)
+             (eldoc-mode "eldoc" eldoc)
              (emacs-lisp-mode "Elisp" :major)
-             (erc-mode "i" :major)
-             (org-mode "O" :major)
-             (org-agenda-mode "Agenda" :major)))
-  (if (window-system)
-      (delight '((erc-mode "ι" :major)
-                 (org-mode "Ω" :major)
-                 (emacs-lisp-mode "ξ" :major)))))
+             (org-agenda-mode "Agenda" :major))))
    #+end_src
 ** subword
    [[http://wikemacs.org/wiki/Subword-mode][Subword]] mode allows navigation commands to be aware of words in
    [[https://en.wikipedia.org/wiki/Camel_case][camelCase]].
    #+begin_src emacs-lisp :tangle yes
 (use-package subword
-  :ensure nil
   :delight
   :config
   (global-subword-mode 1))
    #+end_src
-
 ** Winner mode
    [[https://www.emacswiki.org/emacs/WinnerMode][Winner mode]] allows to 'undo' and 'redo' on window configurations.
-   Say you have 5 windows open carefully positioned and then you focus on
-   just one via 'C-x 1' or equivalent. How do you get back to the
-   original configuration? Well... with winner-undo.
    #+begin_src emacs-lisp :tangle yes
 (use-package winner
-  :ensure nil
+  :defer 10
   :bind (("C-c <left>" . winner-undo)
          ("C-c <right>" . winner-redo))
   :config
   (winner-mode 1))
    #+end_src
-
-   The following allows for a quick transposition if you have multiple frames.
-   #+begin_src emacs-lisp :tangle yes
-(use-package transpose-frame
-  :bind ("C-s-t" . transpose-frame))
-   #+end_src
-   [[https://github.com/winterTTr/ace-jump-mode][ace-jump-mode]] allows you to navigate around a window or frame by
-   prompting you for a character and then showing keys to navigate
-   directly to it.
+** Ace jump mode
+   [[https://github.com/winterTTr/ace-jump-mode][ace-jump-mode]] exposes functionality to quickly move the cursor.
    #+begin_src emacs-lisp :tangle yes
 (use-package ace-jump-mode
-  :commands ace-jump-mode
   :bind (("C-S-s" . ace-jump-mode)
          ("s-s" . ace-jump-mode)))
    #+end_src
@@ -400,34 +328,38 @@ Configure application-wide settings.
    #+end_src
 
 ** Recentf
-   I visit the sames files often. [[https://www.emacswiki.org/emacs/RecentFiles][Recent Files]] allows one to build a list
-   of such files for easy access
+   [[https://www.emacswiki.org/emacs/RecentFiles][Recent Files]] builds a list of recent files for easy access.
    #+begin_src emacs-lisp :tangle yes
 (use-package recentf
-  :ensure nil
+  :defer 10
   :config
-  (progn
-    (recentf-mode 1)
-    (setq recentf-max-saved-items 100)))
+  (recentf-mode 1)
+  (setq recentf-max-saved-items 100))
    #+end_src
 
 ** Tramp
-   Of course! We need [[https://www.gnu.org/software/tramp/][remote file editing!]]
+   [[https://www.emacswiki.org/emacs/TrampMode][TRAMP]] stands for Transparent Remote Access, Multiple Protocols. It
+   allows access to remote files.
    #+begin_src emacs-lisp :tangle yes
 (use-package tramp
-  :ensure nil
-  :defer 10)
+  :defer 10
+  :config
+  ;; Prevents tramp from asking the remote what the temp directory is
+  (put 'temporary-file-directory 'standard-value '("/tmp")))
    #+end_src
 
 ** PDF-Tools
    [[https://github.com/politza/pdf-tools][Alternative to DocView for PDF files]]. Requires initial setup though.
    #+begin_src emacs-lisp :tangle yes
 (use-package pdf-tools
+  :magic ("%PDF" . pdf-view-mode)
   :init
   (when (condition-case nil
             (progn (pdf-info-check-epdfinfo) t)
           (error nil))
-    (add-to-list 'auto-mode-alist '("\\.[pP][dD][fF]\\'" . pdf-view-mode))))
+    (add-to-list 'auto-mode-alist '("\\.[pP][dD][fF]\\'" . pdf-view-mode)))
+  :config
+  (pdf-tools-install :no-query nil t))
    #+end_src
 ** Undo Tree
    [[https://www.emacswiki.org/emacs/UndoTree][Undo Tree]] tries to improve on emacs undo system by helping you
@@ -437,21 +369,17 @@ Configure application-wide settings.
   :bind
   ("C-x u" . undo-tree-visualize)
   :config
-  (progn
-    (setq undo-tree-mode-lighter ""
-          undo-tree-visualizer-diff t
-          undo-tree-visualizer-timestamps t)
-    (global-undo-tree-mode)))
+  (setq undo-tree-mode-lighter ""
+        undo-tree-visualizer-diff t
+        undo-tree-visualizer-timestamps t)
+  (global-undo-tree-mode 1))
    #+end_src
 
 ** Display Battery & Clock modes
-   I like to run all my emacs frames at full-screen. The problem comes
-   when my laptop dies because I didn't bother to check the status of its
-   battery. [[https://www.emacswiki.org/emacs/DisplayBatteryMode][Display Battery Mode]] can show the status of the system
+   [[https://www.emacswiki.org/emacs/DisplayBatteryMode][Display Battery Mode]] can show the status of the system
    battery right on the mode line.
    #+begin_src emacs-lisp :tangle yes
 (when (functionp 'display-battery-mode)
-  (setq battery-mode-line-format "[%b%p%% %t]")
   (display-battery-mode 1))
    #+end_src
    Along the same lines, I like to be able to check the time from within a
@@ -466,87 +394,13 @@ Configure application-wide settings.
   (display-time-mode 1))
    #+end_src
 ** Zoom-frm
-   My main machine has a very high resolution which makes font size
-   appear very small for my rather weak eyes. The [[https://www.emacswiki.org/emacs/zoom-frm.el][zoom-frm]] packages from
-   the [[https://www.emacswiki.org/][EmacsWiki]] provides a way to increase font size evenly across the
-   frame.
-
-   I add an advice to the switch-theme function to zoom in to my desired
-   zoom. Similarly, I add a hook to do the same when I create new frames.
+   The [[https://www.emacswiki.org/emacs/zoom-frm.el][zoom-frm]] packages from the [[https://www.emacswiki.org/][EmacsWiki]] provides a way to increase
+   font size evenly across the frame.
    #+begin_src emacs-lisp :tangle yes
-(unless (package-installed-p 'zoom-frm)
-  (let ((site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)))
-    (with-temp-buffer
-      (insert-file-contents (expand-file-name "frame-fns.el" site-lisp-dir))
-      (package-install-from-buffer))
-    (with-temp-buffer
-      (insert-file-contents (expand-file-name "frame-cmds.el" site-lisp-dir))
-      (package-install-from-buffer))
-    (with-temp-buffer
-      (insert-file-contents (expand-file-name "zoom-frm.el" site-lisp-dir))
-      (package-install-from-buffer))))
-
 (use-package zoom-frm
-  :demand t
-  :if (and window-system
+  :if (and jr/display-p
            (package-installed-p 'zoom-frm))
-  :bind (("C-M-=" . zoom-in/out)
-         ("H-z"   . toggle-zoom-frame)
-         ("s-<f1>" . toggle-zoom-frame))
-  :init
-  (setq jr/zoom-frm-zoom
-        (or (and (boundp 'jr/zoom-frm-desired-zoom)
-                 jr/zoom-frm-desired-zoom)
-            1))
-  (defun jr/zoom-in-on-frame (frame)
-    (with-selected-frame frame
-      (zoom-in/out jr/zoom-frm-zoom)))
-  (defun jr/zoom-in-on-all-frames ()
-    (mapc #'jr/zoom-in-on-frame (frame-list)))
-  :config
-  (progn
-    (jr/zoom-in-on-all-frames)
-    (setq frame-zoom-font-difference 10)
-    (advice-add 'switch-theme :after (lambda (theme)
-                                       (jr/zoom-in-on-all-frames)))
-    (add-hook 'after-make-frame-functions #'jr/zoom-in-on-frame)))
-   #+end_src
-
-** BBDB
-   [[https://www.emacswiki.org/emacs/CategoryBbdb][The Insidious Big Brother Database]] provides an address book that hooks
-   to [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]].
-   #+begin_src emacs-lisp :tangle yes
-;;TODO: Groom BBDB
-(use-package bbdb
-  :config
-  (progn
-    (setq bbdb-complete-name-full-completion t
-          bbdb-completion-type 'primary-or-name
-          bbdb-complete-name-allow-cycling t)
-    (setq
-     bbdb-offer-save 1                        ;; 1 means save-without-asking
-
-     bbdb-use-pop-up t                        ;; allow popups for addresses
-     bbdb-electric-p t                        ;; be disposable with SPC
-     bbdb-popup-target-lines  1               ;; very small
-     bbdb-dwim-net-address-allow-redundancy t ;; always use full name
-     bbdb-quiet-about-name-mismatches 2       ;; show name-mismatches 2 secs
-     bbdb-always-add-address t                ;; add new addresses to existing...
-     ;; ...contacts automatically
-     bbdb-canonicalize-redundant-nets-p t     ;; x@foo.bar.cx => x@bar.cx
-     bbdb-completion-type nil                 ;; complete on anything
-     bbdb-complete-name-allow-cycling t       ;; cycle through matches
-     bbbd-message-caching-enabled t           ;; be fast
-     bbdb-use-alternate-names t               ;; use AKA
-     bbdb-elided-display t                    ;; single-line addresses
-     )
-    (add-hook 'message-mode-hook
-              '(lambda ()
-                 (bbdb-initialize 'gnus 'message)
-                 (local-set-key "<TAB>" 'bbdb-complete-name)))
-    (add-hook 'bbdb-initialize-hook
-              '(lambda ()
-                 (setq compose-mail-user-agent-warnings nil)))))
+  :bind ("C-M-=" . zoom-in/out))
    #+end_src
 ** Epub - Nov
    [[https://github.com/wasamasa/nov.el][Nov]] mode provides a major mode for reading [[https://en.wikipedia.org/wiki/EPUB][EPUB]] documents.
@@ -561,32 +415,20 @@ Configure application-wide settings.
    Firefox.
    #+begin_src emacs-lisp :tangle yes
 (use-package w3m
-  :if (executable-find "w3m")
-  :bind ("C-x w" . 'w3m)
-  :defer t
+  :bind ("C-x w" . w3m)
   :config
-  (progn
-    ;;    (setq w3m-user-agent "Mozilla/5.0 (Linux; U; Android 2.3.3; zh-tw; HTC_Pyramid Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.")
-    (setq browse-url-browser-function 'w3m-goto-url-new-session)
-    (setq w3m-home-page "https://duckduckgo.com/lite/")
-    (defun jr/w3m-open-link-at-point-in-firefox ()
-      "Open the w3m anchor at point in Firefox."
-      (interactive)
-      (browse-url-firefox (w3m-anchor)))
-    (defun jr/w3m-open-current-url-in-firefox ()
-      "Open the `w3m-current-url' in Firefox"
-      (interactive)
-      (browse-url-firefox w3m-current-url))
-    (define-key w3m-mode-map "X" 'jr/w3m-open-link-at-point-in-firefox)
-    (define-key w3m-mode-map "x" 'jr/w3m-open-current-url-in-firefox)))
-   #+end_src
-** Olivetti
-   [[https://github.com/rnkn/olivetti][Olivetti]] mode provides a nice environment to write distraction-free.
-   #+begin_src emacs-lisp :tangle yes
-(use-package olivetti
-  :defer t
-  :config
-  (setq olivetti-body-width 120))
+  (setq browse-url-browser-function 'w3m-goto-url-new-session)
+  (setq w3m-home-page "https://duckduckgo.com/lite/")
+  (defun jr/w3m-open-link-at-point-in-firefox ()
+    "Open the w3m anchor at point in Firefox."
+    (interactive)
+    (browse-url-firefox (w3m-anchor)))
+  (defun jr/w3m-open-current-url-in-firefox ()
+    "Open the `w3m-current-url' in Firefox"
+    (interactive)
+    (browse-url-firefox w3m-current-url))
+  (define-key w3m-mode-map "X" 'jr/w3m-open-link-at-point-in-firefox)
+  (define-key w3m-mode-map "x" 'jr/w3m-open-current-url-in-firefox))
    #+end_src
 ** Synosaurus
    When writing papers or long emails, it's convenient to have a
@@ -612,12 +454,6 @@ Configure application-wide settings.
   (setq synosaurus-backend 'synosaurus-backend-wordnet
         synosaurus-choose-method 'default))
    #+end_src
-
-** Diminish
-   Update: I no longer use [[https://github.com/myrjola/diminish.el][diminish]] and have switched to [[https://www.emacswiki.org/emacs/DelightedModes][delight]] instead.
-   #+begin_src emacs-lisp :tangle no
-(eval-after-load "subword" '(diminish 'subword-mode))
-   #+end_src
 ** Neotree
    The [[https://github.com/jaypei/emacs-neotree][neotree]] package provides a file system tree similar to NerdTree
    for Vim.
@@ -626,14 +462,11 @@ Configure application-wide settings.
    and its fonts before the icons theme works properly.
    #+begin_src emacs-lisp :tangle yes
 (use-package neotree
-  :commands neotree-toggle
+  :bind ("<f8>" . neotree-toggle)
   :config
-  (progn
-    (global-set-key [f8] 'neotree-toggle)
-    (use-package all-the-icons)
-    (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
-          neo-smart-open t
-          projectile-switch-project-action 'neotree-projectile-action)))
+  (use-package all-the-icons)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
+        neo-smart-open t))
    #+end_src
 ** ace-window
    The [[https://github.com/abo-abo/ace-window][ace-window]] by [[ace-window][abo-abo]] offers an improved way of navigating through
@@ -651,36 +484,85 @@ Configure application-wide settings.
 ;; This causes ERC to connect to the Freenode network upon hitting
 ;; C-c e f.  Replace MYNICK with your IRC nick.
 (use-package erc
-  :ensure nil
   :delight erc-mode "ε"
-  :defer t
+  :preface
+  (defun jr/connect-to-irc ()
+    (interactive)
+    (erc :server "irc.freenode.net"
+         :port 6667
+         :nick "jruiz"))
+  :bind ("C-c e f" . 'jr/connect-to-irc)
+  :defer 5
   :config
-  (progn
-    (add-to-list 'erc-modules 'notifications)
-    (add-to-list 'erc-modules 'spelling)
-    (erc-services-mode 1)
-    (erc-update-modules)
-    (setq erc-autojoin-channels-alist '(("freenode.net" "#emacs" "#erc"
-                                         "#gnus" "#org-mode #i3" "#archlinux"))
-          erc-autojoin-timing 'ident
-          erc-autojoin-delay 10
-          erc-fill-function 'erc-fill-static
-          erc-fill-static-center 22
-          erc-fill-function 'erc-fill-variable
-          erc-hide-list '("JOIN" "PART" "QUIT")
-          erc-lurker-hide-list '("JOIN" "PART" "QUIT")
-          erc-lurker-threshold-time 43200
-          erc-fill-column 78
-          erc-rename-buffers t
-          erc-insert-timestamp-function 'erc-insert-timestamp-left
-          erc-kill-buffer-on-part t
-          erc-prompt-for-nickserv-password nil
-          erc-server-reconnect-attempts 5
-          erc-server-reconnect-timeout 3
-          erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
-                                    "324" "329" "332" "333" "353" "477"))
-    (use-package erc-hl-nicks)
-    (use-package erc-image)))
+  (define-key erc-mode-map (kbd "RET") nil)
+  (define-key erc-mode-map (kbd "C-c RET") 'erc-send-current-line)
+  (define-key erc-mode-map (kbd "C-c C-RET") 'erc-send-current-line)
+  (add-to-list 'erc-modules 'autoaway)
+  (add-to-list 'erc-modules 'autojoin)
+  (add-to-list 'erc-modules 'fill)
+  (add-to-list 'erc-modules 'log)
+  (add-to-list 'erc-modules 'match)
+  (add-to-list 'erc-modules 'notifications)
+  (add-to-list 'erc-modules 'spelling)
+  (add-to-list 'erc-modules 'track)
+  (erc-update-modules)
+  
+  ;; Top level settings
+  (setq erc-nick-uniquifier "_"
+        erc-send-whitespace-lines nil
+        erc-user-full-name "Johnny Ruiz (jeko2000)"
+        erc-rename-buffers t
+        erc-interpret-mirc-color t
+        erc-save-buffer-on-part t
+        erc-kill-buffer-on-part t
+        erc-kill-queries-on-quit t
+        erc-query-display 'buffer
+        erc-kill-server-buffer-on-quit t
+        erc-hide-list '("JOIN" "PART" "QUIT")
+        erc-lurker-hide-list '("JOIN" "PART" "QUIT")
+        erc-timestamp-only-if-changed-flag nil
+        erc-timestamp-format "%H:%M "
+        erc-insert-timestamp-function 'erc-insert-timestamp-left)
+
+  ;; Module specific settings
+  (setq erc-auto-set-away nil;;t
+        erc-auto-discard-away t
+        erc-autoaway-idle-seconds 1800
+        erc-autoaway-idle-method 'user
+        erc-autojoin-delay 2
+        erc-autojoin-timing 'ident
+        erc-autojoin-channels-alist
+        '(("freenode.net"
+           "#emacs"
+           "#erc"
+           "#org-mode"
+           "#gnus"
+           ;; lisp
+           "#lisp"
+           "#lisp-es"
+           "#sbcl"
+           "#lispcafe"
+           ;; others
+           "#vertx"
+           ))
+        erc-fill-prefix "          "
+        erc-fill-column 78
+        erc-fill-function 'erc-fill-static
+        erc-fill-static-center 22
+        erc-log-channels-directory "~/.erc/log"
+        erc-keywords '("fix" "resolve" "release" "jruiz" "jeko")
+        erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
+                                  "324" "329" "332" "333" "353" "477"))
+  (unless (file-exists-p erc-log-channels-directory)
+    (mkdir erc-log-channels-directory t))
+  (let ((notifier (concat (getenv "HOME") "/bin/erc-notifier")))
+    (when (file-exists-p notifier)
+      (setq jr/erc-notifier notifier)
+      (defun jr/erc-notify-on-private-msg (proc parsed)
+        (let ((nick (car (erc-parse-user (erc-response.sender parsed))))
+              (msg (erc-response.contents parsed)))
+          (start-process "erc-notifier" nil jr/erc-notifier nick msg)))
+      (add-hook 'erc-server-PRIVMSG-functions 'jr/erc-notify-on-private-msg))))
    #+end_src
 ** elfeed
    [[https://github.com/skeeto][Skeeto]]'s excellent [[https://github.com/skeeto/elfeed][elfeed]] package provides an excellent RSS and Atom
@@ -688,8 +570,7 @@ Configure application-wide settings.
    #+begin_src emacs-lisp :tangle yes
 (use-package elfeed
   :bind ("C-x F" . 'elfeed)
-  :defer 10
-  :init
+  :config
   (defmacro jr/elfeed-add-face (face spec doc &rest args)
     "Create a new face elfeed-FACE and push it to the
 `elfeed-search-face-alist'."
@@ -703,72 +584,68 @@ Configure application-wide settings.
            ,@ args)
          (push '(,face ,elfeed-face-symbol)
                elfeed-search-face-alist))))
-  :config
-  (progn
-    (setq elfeed-feeds
-          '(("https://estamosaquitravel.com/feed.atom" travel estamosaqui)
-            ("http://endlessparentheses.com/atom.xml" tech emacs)
-            ("http://planet.emacsen.org/atom.xml" tech emacs)
-            ("http://nullprogram.com/feed/" tech)
-            ("https://felixcrux.com/blog/rss.xml" tech)
-            ("https://www.xkcd.com/atom.xml" webcomic)
-            ("http://nedroid.com/feed/" webcomic)
-            ("https://pthree.org/feed" blog)
-            ("http://esr.ibiblio.org/?feed=rss2" blog)
-            ("http://blog.cryptographyengineering.com/feeds/posts/default" blog)
-            ("http://accidental-art.tumblr.com/rss" image math)
-            ("https://www.npr.org/rss/podcast.php?id=510299" audio)
-            ("http://english.bouletcorp.com/feed/" comic)
-            ("http://bit-player.org/feed" blog math)
-            ("http://simblob.blogspot.com/feeds/posts/default" blog dev)
-            ("https://utcc.utoronto.ca/~cks/space/blog/?atom" blog dev)
-            ("http://www.commitstrip.com/en/feed/" comic dev)
-            ("http://feeds.feedburner.com/Buttersafe" comic)
-            ("http://feeds.feedburner.com/CatVersusHuman" comic)
-            ("http://feeds.feedburner.com/channelATE" comic)
-            ("https://lemire.me/blog/feed/" dev blog)
-            ("https://danluu.com/atom.xml" dev blog)
-            ("https://www.blogger.com/feeds/19727420/posts/default" blog)
-            ("https://dendibakh.github.io/feed.xml" blog dev)
-            ("https://drewdevault.com/feed.xml" blog dev)
-            ("http://dvdp.tumblr.com/rss" image)
-            ("https://www.digitalocean.com/blog/feed" blog product)
-            ("http://bay12games.com/dwarves/dev_now.rss" blog gaming product)
-            ("http://danwang.co/feed/" blog philosophy)))
-    (setq url-queue-timeout 20)
-    (add-hook 'elfeed-new-entry-hook
-              (elfeed-make-tagger :before "2 weeks ago"
-                                  :remove 'unread))
-    ;; Faces
-    (jr/elfeed-add-face audio
-                        '((t :foreground "#FA0"))
-                        "Marks podcasts in Elfeed."
-                        :group 'elfeed)
-    (jr/elfeed-add-face webcomic
-                        '((t :foreground "#BFF"))
-                        "Marks webcomics in Elfeed."
-                        :group 'elfeed)))
+  (setq elfeed-feeds
+        '(("https://estamosaquitravel.com/feed.atom" travel estamosaqui)
+          ("http://endlessparentheses.com/atom.xml" tech emacs)
+          ("http://planet.emacsen.org/atom.xml" tech emacs)
+          ("http://nullprogram.com/feed/" tech)
+          ("https://felixcrux.com/blog/rss.xml" tech)
+          ("https://www.xkcd.com/atom.xml" webcomic)
+          ("http://nedroid.com/feed/" webcomic)
+          ("https://pthree.org/feed" blog)
+          ("http://esr.ibiblio.org/?feed=rss2" blog)
+          ("http://blog.cryptographyengineering.com/feeds/posts/default" blog)
+          ("http://accidental-art.tumblr.com/rss" image math)
+          ("https://www.npr.org/rss/podcast.php?id=510299" audio)
+          ("http://english.bouletcorp.com/feed/" comic)
+          ("http://bit-player.org/feed" blog math)
+          ("http://simblob.blogspot.com/feeds/posts/default" blog dev)
+          ("https://utcc.utoronto.ca/~cks/space/blog/?atom" blog dev)
+          ("http://www.commitstrip.com/en/feed/" comic dev)
+          ("http://feeds.feedburner.com/Buttersafe" comic)
+          ("http://feeds.feedburner.com/CatVersusHuman" comic)
+          ("http://feeds.feedburner.com/channelATE" comic)
+          ("https://lemire.me/blog/feed/" dev blog)
+          ("https://danluu.com/atom.xml" dev blog)
+          ("https://www.blogger.com/feeds/19727420/posts/default" blog)
+          ("https://dendibakh.github.io/feed.xml" blog dev)
+          ("https://drewdevault.com/feed.xml" blog dev)
+          ("http://dvdp.tumblr.com/rss" image)
+          ("https://www.digitalocean.com/blog/feed" blog product)
+          ("http://bay12games.com/dwarves/dev_now.rss" blog gaming product)
+          ("http://danwang.co/feed/" blog philosophy)))
+  (setq url-queue-timeout 20)
+  (add-hook 'elfeed-new-entry-hook
+            (elfeed-make-tagger :before "2 weeks ago"
+                                :remove 'unread))
+  ;; Faces
+  (jr/elfeed-add-face audio
+                      '((t :foreground "#FA0"))
+                      "Marks podcasts in Elfeed."
+                      :group 'elfeed)
+  (jr/elfeed-add-face webcomic
+                      '((t :foreground "#BFF"))
+                      "Marks webcomics in Elfeed."
+                      :group 'elfeed))
    #+end_src
 ** emacs-server
    #+begin_src emacs-lisp :tangle yes
 (use-package server
-  :ensure nil
-  :config (progn
-            (server-start)
-            (require 'org-protocol)))
+  :no-require
+  :config
+  :hook (after-init . server-start))
    #+end_src
 ** appt
    #+begin_src emacs-lisp :tangle yes
 (use-package appt
   :ensure nil
   :config
-  (progn
-    (appt-activate 1)
-    (setq appt-audible t
-          appt-display-duration 15
-          appt-display-format 'window
-          appt-display-mode-line t
-          appt-message-warning-time 12)))
+  (appt-activate 1)
+  (setq appt-audible t
+        appt-display-duration 15
+        appt-display-format 'window
+        appt-display-mode-line t
+        appt-message-warning-time 12))
    #+end_src
 ** po-edit
    #+begin_src emacs-lisp :tangle yes
@@ -786,85 +663,6 @@ Configure application-wide settings.
          ("\\.gp\\'" . gnuplot-mode)
          ("\\.gnuplot\\'" . gnuplot-mode)))
    #+end_src
-
-** bongo
-   The [[https://github.com/dbrock/bongo][bongo]] package provides a flexible media player for emacs.
-   #+begin_src emacs-lisp :tangle yes
-(use-package bongo
-  :init
-  (progn
-    (defvar jr/bongo-music-dir
-      (or (and (boundp 'jr/bongo-music-directory)
-               jr/bongo-music-directory)
-          "~")
-      "Location of music directory destined to be inserted into the bongo library.")
-
-    (defvar jr/bongo-volume-raise-cmd
-      (or (and (boundp 'jr/volume-raise-volume-command)
-               jr/volume-raise-volume-command)
-          "pactl set-sink-volume @DEFAULT_SINK@ +5%")
-      "Shell command to raise system volume.")
-
-    (defvar jr/bongo-volumn-lower-cmd
-      (or (and (boundp 'jr/volume-lower-volume-command)
-               jr/volume-lower-volume-command)
-          "pactl set-sink-volume @DEFAULT_SINK@ -5%")
-      "Shell command to lower system volume.")
-    (defun jr/bongo-show-current-track ()
-      "Display current track in the minibuffer."
-      (interactive)
-      (with-current-buffer bongo-default-playlist-buffer-name
-        (when bongo-player
-          (bongo-player-show-infoset bongo-player))))
-    (defun jr/volume-raise-volume ()
-      "Raise default sink's volume through the shell command
-specified by `jr/bongo-volume-raise-cmd'."
-      (interactive)
-      (shell-command jr/bongo-volume-raise-cmd))
-    (defun jr/volume-lower-volume ()
-      "Lower default sink's volume through the shell command
-specified by `jr/bongo-volumn-lower-cmd'."
-      (interactive)
-      (shell-command jr/bongo-volumn-lower-cmd))
-    (defun jr/bongo-mode-init ()
-      (interactive)
-      (let ((bongo-insert-whole-directory-trees t))
-        (when (file-exists-p jr/bongo-music-dir)
-          (bongo-insert-file jr/bongo-music-dir)
-          (with-current-buffer (bongo-playlist-buffer)
-            (bongo-sprinkle-mode 1)
-            (bongo-play))))))
-
-  :bind (("C-c m SPC" . bongo-pause/resume)
-         ("C-c m n" . bongo-play-next)
-         ("C-c m p" . bongo-play-previous)
-         ("C-c m r" . bongo-play-random)
-         ("C-c m s" . jr/bongo-show-current-track)
-         ("C-c m b" . bongo)
-         ("C-c m u" . jr/volume-raise-volume)
-         ("C-c m d" . jr/volume-lower-volume))
-  :config
-  (progn
-    (setq
-     ;; Drag and drop support
-     bongo-dnd-support t
-     bongo-dnd-destination 'end-of-buffer
-     ;; Lastfm support
-     bongo-global-lastfm-mode nil
-     ;; File insertion
-     bongo-insert-whole-directory-trees 'ask
-     bongo-mark-played-tracks t
-     ;;Display
-     bongo-mode-line-indicator-mode nil
-     bongo-header-line-mode nil
-     ;; Misc
-     bongo-next-action 'bongo-play-next-or-stop
-     bongo-display-playlist-after-enqueue nil
-     bongo-seek-electric-mode t
-     bongo-sprinkle-amount 50)
-    (jr/bongo-mode-init)))
-   #+end_src
-
 ** ag
    The [[https://github.com/ggreer/the_silver_searcher][silver searcher]] is an incredibly useful code-searching tool.
    Though it is similar to ack or grep, it is much, much faster. In order
@@ -873,12 +671,11 @@ specified by `jr/bongo-volumn-lower-cmd'."
    #+begin_src emacs-lisp :tangle yes
 (use-package ag
   :if (executable-find "ag")
-  :defer t
+  :defer 10
   :config
-  (progn
-    (setq ag-highlight-search t
-          ag-reuse-buffers t)
-    (use-package wgrep-ag)))
+  (setq ag-highlight-search t
+        ag-reuse-buffers t)
+  (use-package wgrep-ag))
    #+end_src
 ** wgrep
    #+begin_src emacs-lisp :tangle yes
@@ -889,19 +686,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
   ;;https://groups.google.com/forum/#!topic/gnu.emacs.help/uu6ZQZGQ9FA/discussion
   (setq grep-command "grep --color -nH -e "))
    #+end_src
-** smartscan
-   The [[https://github.com/mickeynp/smart-scan][smartscan]] package written by [[https://github.com/mickeynp/][Mickey Petersen]] allows you to jump
-   between words or symbols under point. I found out about it from
-   Mickey's [[http://sachachua.com/blog/2014/09/emacs-chat-mickey-petersen/][chat with Sasha Chua]].
-   #+begin_src emacs-lisp :tangle yes
-(use-package smartscan
-  :config
-  (global-smartscan-mode 1))
-   #+end_src
-
 ** alert
    #+begin_src emacs-lisp :tangle yes
 (use-package alert
+  :defer t
   :config
   (setq alert-fade-time 4
         alert-default-style (if (executable-find "notify-send") 'libnotify 'message)
@@ -914,21 +702,19 @@ specified by `jr/bongo-volumn-lower-cmd'."
    through ssh.
    #+begin_src emacs-lisp :tangle yes
 (use-package pinentry
-  :config
-  (pinentry-start))
+  :hook (after-init . pinentry-start))
    #+end_src
 ** smart-mode-line
    #+begin_src emacs-lisp :tangle yes
 (use-package smart-mode-line
   :config
-  (progn
-    (setq sml/no-confirm-load-theme t)
-    (sml/setup)
-    (setq sml/theme 'respectful
-          sml/shorten-directory t
-          sml/shorten-modes t
-          sml/name-width 40
-          sml/mode-width 'full)))
+  (setq sml/no-confirm-load-theme t)
+  (sml/setup)
+  (setq sml/theme 'respectful
+        sml/shorten-directory t
+        sml/shorten-modes t
+        sml/name-width 40
+        sml/mode-width 'full))
    #+end_src
 ** eval-sexp-fu
    #+begin_src emacs-lisp :tangle yes
@@ -942,34 +728,11 @@ specified by `jr/bongo-volumn-lower-cmd'."
 (use-package csv-mode
   :mode "\\.csv\\'")
    #+end_src
-** Engine mode
-   This is a useful mode that allows quick results from defined search
-   engines.
-   #+begin_src emacs-lisp :tangle yes
-(use-package engine-mode
-  :defer 10
-  :config
-  (progn
-    (defengine duckduckgo
-      "https://duckduckgo.com/?q=%s"
-      :keybinding "d")
-    (defengine github
-      "https://github.com/search?ref=simplesearch&q=%s"
-      :keybinding "g")
-    (defengine stack-overflow
-      "https://stackoverflow.com/search?q=%s"
-      :keybinding "s")
-    (defengine wikipedia
-      "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
-      :keybinding "w"))
-  (engine-mode t))
-   #+end_src
 ** Savehist
    [[https://www.emacswiki.org/emacs/SaveHist][Savehist]] is the quick and dirty way to handle session management in
    emacs.
    #+begin_src emacs-lisp :tangle yes
 (use-package savehist
-  :ensure nil
   :custom
   (history-delete-duplicates t)
   (history-length t)
@@ -981,59 +744,29 @@ specified by `jr/bongo-volumn-lower-cmd'."
   (savehist-save-minibuffer-history 1)
   :config (savehist-mode 1))
    #+end_src
-** Autorevert
+** Auto-revert
    Quick configuration for auto reverting files.
    #+begin_src emacs-lisp :tangle yes
 (use-package autorevert
-  :ensure nil
-  :diminish auto-revert-mode
+  :delight
   :bind ("C-x R" . revert-buffer)
   :config
-  (progn
-    (global-auto-revert-mode 1)
-    (setq global-auto-revert-non-file-buffers t
-	  auto-revert-verbose t)))
+  (global-auto-revert-mode 1)
+  (setq global-auto-revert-non-file-buffers t
+	auto-revert-verbose t))
    #+end_src
 ** Which-key
    Useful package that displays possible keybindings from the currently
    entered incomplete command.
    #+begin_src emacs-lisp :tangle yes
 (use-package which-key
-  :diminish
+  :defer 10
+  :delight
+  :commands which-key-mode
   :config
   (which-key-mode)
-  (setq which-key-idle-delay 1)
-  (setq which-key-max-description-length 30))
-   #+end_src
-** Lorem Ipsum
-   #+begin_src emacs-lisp :tangle yes
-(use-package lorem-ipsum
-  :bind (("C-c C-v l" . lorem-ipsum-insert-list)
-         ("C-c C-v p" . lorem-ipsum-insert-paragraphs)
-         ("C-c C-v s" . lorem-ipsum-insert-sentences)))
-   #+end_src
-
-** LanguageTool
-   [[http://www.languagetool.org/][LanguageTool]] is a spell and grammar checker written in Java.
-   Configuration instructions can be found [[https://github.com/mhayashi1120/Emacs-langtool][here]].
-   #+begin_src emacs-lisp :tangle yes
-(use-package langtool
-  :disabled t
-  :diminish
-  :custom
-  (langtool-language-tool-jar "~/installs/LangueageTool-4.2/languagetool-commandline.jar")
-  (langtool-language-tool-server-jar "~/installs/LanguageTool-4.2/languagetool-server.jar")
-  :config
-  (progn
-    (setq langtool-server-user-arguments '("-p" "8082")
-          langtool-default-language "en-US"
-          langtool-mother-tongue "en"
-          langtool-java-user-arguments '("-Dfile.encoding=UTF-8"))
-    (global-set-key "\C-x4w" 'langtool-check)
-    (global-set-key "\C-x4W" 'langtool-check-done)
-    (global-set-key "\C-x4l" 'langtool-switch-default-language)
-    (global-set-key "\C-x44" 'langtool-show-message-at-point)
-    (global-set-key "\C-x4c" 'langtool-correct-buffer)))
+  (setq which-key-idle-delay 1
+        which-key-max-description-length 30))
    #+end_src
 ** Ledger
    Yet another awesome piece of work from John Wiegley
@@ -1043,13 +776,12 @@ specified by `jr/bongo-volumn-lower-cmd'."
 (use-package ledger-mode
   :mode "\\.ledger\\'"
   :config
-  (progn
-    (setq ledger-clear-whole-transactions t
-          ledger-reconcile-default-commodity "USD"
-          ledger-reconcile-default-date-format "%Y/%m/%d")
-    (use-package flycheck-ledger
-      :init
-      (add-hook 'ledger-mode-hook #'flycheck-mode))))
+  (setq ledger-clear-whole-transactions t
+        ledger-reconcile-default-commodity "USD"
+        ledger-reconcile-default-date-format "%Y/%m/%d")
+  (use-package flycheck-ledger
+    :init
+    (add-hook 'ledger-mode-hook #'flycheck-mode)))
    #+end_src
 ** Super Save
    [[https://github.com/bbatsov/super-save/][Super Save]] replaces the standard auto-save-mode.
@@ -1057,14 +789,10 @@ specified by `jr/bongo-volumn-lower-cmd'."
 (use-package super-save
   :delight
   :config
-  (progn
-    (super-save-mode 1)
-    (setq super-save-auto-save-when-idle t
-          super-save-remote-files nil)
-    (add-to-list 'super-save-triggers 'ace-window)
-    (add-to-list 'super-save-hook-triggers 'counsel-find-file)))
+  (super-save-mode 1)
+  (setq super-save-auto-save-when-idle t
+        super-save-remote-files nil))
    #+end_src
-
 ** EasyPG
    #+begin_src emacs-lisp :tangle yes
 (require 'epg-config)
@@ -1073,16 +801,6 @@ specified by `jr/bongo-volumn-lower-cmd'."
                        ("gpg" . ,epg-gpg-minimum-version)))
 (setq epa-file-cache-passphrase-for-symmetric-encryption t
       epg--configurations nil)
-   #+end_src
-
-** Golden ratio
-   A nice package that helps working with many windows is
-   [[https://github.com/roman/golden-ratio.el][golden-ratio]], which resizes the current buffer to occupy an optimal
-   part of the screen.
-   #+begin_src emacs-lisp :tangle yes
-(use-package golden-ratio
-  :config
-  (setq golden-ratio-auto-scale t))
    #+end_src
 * Programming packages
 ** Generic
