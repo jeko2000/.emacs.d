@@ -14,7 +14,8 @@
 ;; package archives. The 'append keyword allows for the archive to be
 ;; added to be appended to the end of the list, which effectively
 ;; gives it lower priority when searching for packages.
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") 'append)
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") 'append)
 (package-initialize)
 
 ;; Add the site-lisp directory to the load path.
@@ -44,6 +45,21 @@
 ;; Load custom.el, if it exits.
 (load (expand-file-name "custom.el" user-emacs-directory) 'noerror)
 
+;; Evaluate helper method which tangles an org file only when needed
+(require 'org)
+(defun jr/org-babel-tangle-file-if-needed (file)
+  "Tangle contents of FILE, if needed.
+Specifically, FILE is tangled only if no tangled file already
+exists or if FILE was modified after the last tangle.
+Returns the tangled file as a string."
+  (let ((tangled-file (concat (file-name-sans-extension file) ".el")))
+    (when (or (not (file-exists-p tangled-file))
+              (time-less-p (nth 5 (file-attributes tangled-file))
+                           (nth 5 (file-attributes file))))
+      (message "Retangling file %s" file)
+      (org-babel-tangle-file file tangled-file "emacs-lisp"))
+    tangled-file))
+
 ;; Load configuration in config.org, if file exists.
 
 ;; Note that config.org is _not_ an emacs-lisp source file, which
@@ -52,6 +68,7 @@
 (let ((org-config
        (expand-file-name "settings/config.org" user-emacs-directory)))
   (when (file-exists-p org-config)
-    (org-babel-load-file org-config)))
+    (load-file
+     (jr/org-babel-tangle-file-if-needed org-config))))
 
 (message "Emacs ready at %s" (current-time-string))
