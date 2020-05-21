@@ -1313,46 +1313,99 @@ _~_: modified
                   )))))
     #+end_src
 
+*** LSP
+    #+begin_src emacs-lisp :tangle yes
+(use-package lsp-mode
+  :init
+  (defun jr/lsp-mode-hook ()
+    (setq tab-width 4
+          indent-tabs-mode nil
+          company-idle-delay 0.5
+          company-minimum-prefix-length 1))
+  :bind (:map lsp-mode-map
+              ("C-RET" . lsp-execute-code-action)
+              ("C-x C-c" . compile))
+  :hook (lsp-mode . jr/lsp-mode-hook)
+  :config
+  (setq lsp-log-io t
+        lsp-print-performance nil
+        lsp-keep-workspace-alive nil
+        lsp-enable-snippet t
+        lsp-auto-guess-root nil
+        lsp-auto-configure t
+        lsp-auto-execute-action t
+        lsp-eldoc-render-all t
+        lsp-enable-completion-at-point t
+        lsp-enable-xref t
+        lsp-enable-indentation t
+        lsp-enable-on-type-formatting t
+        lsp-before-save-edits t
+        lsp-server-trace nil
+        lsp-semantic-highlighting t
+        lsp-enable-text-document-color t
+        lsp-keymap-prefix "C-c C-l"
+        lsp-diagnostics-modeline-scope :project)
+  (add-hook 'lsp-managed-mode-hook 'lsp-diagnostics-modeline-mode))
+
+(use-package lsp-ui
+  :after lsp-mode
+  :config
+  (setq lsp-ui-sideline-enable nil
+        lsp-ui-peek-enable nil
+        lsp-ui-doc-enable t
+        lsp-ui-doc-delay 2.0))
+
+(use-package lsp-treemacs
+  :after lsp-mode
+  :hook (lsp-mode . lsp-treemacs-sync-mode)
+  :config
+  (setq lsp-treemacs-error-list-severity 3))
+
+(use-package lsp-ivy
+  :after ivy lsp-mode
+  :commands lsp-ivy-workspace-symbol)
+
+(use-package dap-mode
+  :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t))
+    #+end_src
+
 ** Language Specific
 *** Eshell
     [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] is a shell-like command interpreter implemented in Emacs Lisp and written
     by the great [[https://www.google.com/search?q=eshell+jwiegleyt&ie=utf-8&oe=utf-8][John Wiegley]].
     #+begin_src emacs-lisp :tangle yes
 (use-package eshell
-  :ensure nil
   :bind ("C-x t" . eshell)
+  :preface
+  (defun jr/eshell-mode-hook ()
+    (display-line-numbers-mode -1))
   :config
   (progn
     (defalias 'open 'find-file)
     (defalias 'openo 'find-file-other-window)
-    (add-hook 'eshell-mode-hook (lambda ()
-                                  (company-mode -1)
-                                  (display-line-numbers-mode -1)))))
+    (add-hook 'eshell-mode-hook #'jr/eshell-mode-hook)))
     #+end_src
 
 *** Clojure
     [[https://www.google.com/search?q=clojure&ie=utf-8&oe=utf-8][Clojure]] is a dynamic programming language that compiles to Java
     Unicode. It's one of my main languages right now.
     #+begin_src emacs-lisp :tangle yes
-(use-package clojure-mode
+(use-package clojure-mode 
   :mode "\\.cljs?\\'"
   :config
-  (progn
-    (use-package cider)
-    (setq cider-cljs-lein-repl
-          "(do (require 'figwheel-sidecar.repl-api)
+  (setq cider-cljs-lein-repl
+        "(do (require 'figwheel-sidecar.repl-api)
            (figwheel-sidecar.repl-api/start-figwheel!)
            (figwheel-sidecar.repl-api/cljs-repl))"
+        org-babel-clojure-backend 'cider
+        cider-inject-dependencies-at-jack-in nil)
+  (require 'ob-clojure))
 
-          org-babel-clojure-backend 'cider
-          cider-inject-dependencies-at-jack-in nil)
-    (require 'ob-clojure)
-    (define-key cider-repl-mode-map (kbd "C-<return>") 'other-window)
-    (add-hook 'before-save-hook (lambda ()
-                                  (when (or (eq major-mode 'clojure-mode)
-                                            (eq major-mode 'lisp-mode))
-                                    (whitespace-cleanup)
-                                    (indent-region (point-min) (point-max)))))))
+(use-package cider
+  :after clojure-mode)
     #+end_src
 *** Common Lisp
     [[https://common-lisp.net/][Common Lisp]], the programmable programming language.
@@ -1399,19 +1452,17 @@ _~_: modified
     #+begin_src emacs-lisp :tangle yes
 ;; sly
 (use-package sly
-  :init
-  (progn
-    (when (file-exists-p "/home/jeko/build/sly")
-      (add-to-list 'load-path "/home/jeko/build/sly")
-      (require 'sly-autoloads))
-    (setq inferior-lisp-program "sbcl"))
+  :defer 10
   :config
-  (progn
-    (defun jr/sly-hook ()
-      (sly-mode +1)
-      (sly-autodoc-mode +1))
-    (add-hook 'lisp-mode-hook 'jr/sly-hook)
-    (setq sly-complete-symbol-function 'sly-flex-completions)))
+  (when (file-exists-p "/home/jeko/build/sly")
+    (add-to-list 'load-path "/home/jeko/build/sly")
+    (require 'sly-autoloads))
+  (setq inferior-lisp-program "sbcl")
+  (defun jr/sly-hook ()
+    (sly-mode +1)
+    (sly-autodoc-mode +1))
+  (add-hook 'lisp-mode-hook 'jr/sly-hook)
+  (setq sly-complete-symbol-function 'sly-flex-completions))
 
 (use-package common-lisp-snippets
   :after sly)
@@ -1616,81 +1667,31 @@ _~_: modified
              (web-mode . impatient-mode)
              (css-mode . httpd-start)))))
     #+end_src
-*** Java/JDEE
-    And, of course, Java. The programming language that many people love to hate.
+*** Java
     #+begin_src emacs-lisp :tangle yes
 (use-package lsp-java
-  :requires lsp
   :init
   (defun jr/lsp-java-config ()
-    (setq c-default-style "java")
-    (setq-local tab-width 4
-                c-basic-offset 4)
-    (c-set-offset 'arglist-intro '+)
-    (c-set-offset 'arglist-close '0)
-    (c-set-offset 'case-label '+)
-    (lsp))
-  :hook (java-mode . jr/lsp-java-config)
+    (setq-local
+     tab-width 4
+     c-basic-offset 4)
+    (setq c-default-style "java"
+          indent-tabgs-mode nil
+          compile-command "mvn -q compile"))
+  :hook ((java-mode . jr/lsp-java-config)
+         (java-mode . lsp))
   :config
-  (setq lsp-file-watch-ignored
-        '(".idea" ".ensime_cache" ".eunit" "node_modules"
-          ".git" ".hg" ".fslckout" "_FOSSIL_"
-          ".bzr" "_darcs" ".tox" ".svn" ".stack-work"
-          "build")
-        lsp-java-import-order '["" "java" "javax" "#"]))
+  (setq lsp-java-vmargs
+        '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication")))
+
+(use-package dap-java
+  :ensure nil
+  :after (lsp-java))
 
 (use-package java-snippets
   :after yasnippet
   :config
   (java-snippets-initialize))
-    #+end_src
-    #+begin_src emacs-lisp :tangle no
-(use-package jdee
-  :disabled t
-  :defer t
-  :config
-  (progn
-    (setq jdee-server-dir (concat user-emacs-directory "jars")
-          jdee-jdk-registry '(("1.8" . "/usr/lib/jvm/java-8-openjdk")
-                              ("1.8" . "/usr/lib64/jvm/java-8-openjdk"))
-          jdee-jdk '("1.8")
-          jdee-enable-abbrev-mode t
-          jdee-gen-k&r t
-          tempo-interactive nil
-          jdee-gen-cflow-enable nil ;; We'll use yasnippets instead
-          jdee-complete-function 'jdee-complete-minibuf
-          jdee-compiler '("javac");;("javac server")
-          jdee-electric-return-p nil
-          jdee-global-classpath '("." "./lib")
-          jdee-import-sorted-groups t
-          jdee-build-function  'jdee-ant-build
-          jdee-project-file-name "prj.el"
-          jdee-jdk-doc-url "https://docs.oracle.com/javase/8/docs/api/overview-summary.html"
-          jdee-sourcepath "/usr/lib/jvm/java-8-openjdk/jre/lib")
-    (defun jr/compile-and-run ()
-      (interactive)
-      (jdee-compile)
-      (jdee-run 1))
-    (define-key jdee-mode-map [f5] 'jr/compile-and-run)
-
-    (defun jr/company-jdee-backend (command &optional arg &rest ignored)
-      (interactive (list 'interactive))
-      (pcase command
-        (`interactive
-         (company-begin-backend 'jr/company-jdee-backend))
-
-        (`prefix
-         (when (and (eq major-mode 'jdee-mode)
-                    (not (company-in-string-or-comment)))
-           (let ((pair (jdee-parse-java-variable-at-point)))
-             (if (not (s-blank-str? (car pair)))
-                 (s-join "|" pair)
-               nil))))
-        (`candidates
-         (if arg
-             (let ((pair (s-split "|" arg)))
-               (seq-map (lambda (p) (concat (car pair) "." (cdr p))) (jdee-complete-find-completion-for-pair pair)))))))
-    (add-to-list 'company-backends 'jr/company-jdee-backend)))
     #+end_src
 **** Gradle
      #+begin_src emacs-lisp :tangle yes
@@ -1700,58 +1701,6 @@ _~_: modified
   :interpreter ("gradle" . gradle-mode)
   :config
   (add-hook 'java-mode-hook '(lambda() (gradle-mode 1))))
-     #+end_src
-**** Eclim
-     From the [[https://github.com/emacs-eclim/emacs-eclim#user-content-overview][emacs-eclim readme]]:
-
-     Eclim is an Eclipse plugin which exposes Eclipse features through a
-     server interface. When this server is started, the command line
-     utility eclim can be used to issue requests to that server.
-     #+begin_src emacs-lisp :tangle yes
-(use-package eclim
-  :disabled t
-  :config
-  (progn
-    ;; Eclim settings
-    (setq eclim-accepted-file-regexps
-          '("\\.java$" "\\.xml$" "\\.h$")
-          eclim-use-yasnippet t
-          help-at-pt-display-when-idle t
-          help-at-pt-timer-delay 0.5)
-    (help-at-pt-set-timer)
-    (define-key eclim-mode-map (kbd "C-c C-e C-c") 'eclim-problems-correct)
-    (require 'eclimd)
-    (setq eclimd-autostart t
-          eclimd-default-workspace "/data/rep/personal/prog/java/EclimProjects"
-          eclim-print-debug-messages t)
-    (add-hook 'java-mode-hook 'eclim-mode)
-    (define-key java-mode-map (kbd "C-c C-c") 'compile)
-    (use-package company-emacs-eclim
-      :config
-      (company-emacs-eclim-setup))))
-     #+end_src
-**** Meghanada
-     #+begin_src emacs-lisp :tangle no
-(use-package meghanada
-  :init
-  (defun jr/meghanada-java-mode-hook ()
-    (meghanada-mode t)
-    (flycheck-mode +1)
-    (setq c-basic-offset 2)
-    (add-hook 'before-save-hook 'meghanada-code-beautify-before-save))
-  :hook (java-mode . jr/meghanada-java-mode-hook)
-  :config
-  (progn
-    (when (package-installed-p 'ggtags)
-      (define-key meghanada-mode-map (kbd "M-.") #'ggtags-find-tag-dwim)
-      (define-key meghanada-mode-map (kbd "M-,") #'pop-tag-mark))
-    (cond
-     ((eq system-type 'windows-nt)
-      (setq meghanada-java-path (expand-file-name "bin/java.exe" (getenv "JAVA_HOME")))
-      (setq meghanada-maven-path "mvn.cmd"))
-     (t
-      (setq meghanada-java-path "java")
-      (setq meghanada-maven-path "mvn")))))
      #+end_src
 *** Python
     #+begin_src emacs-lisp :tangle yes
@@ -1827,9 +1776,8 @@ _~_: modified
 *** JavaScript
     #+begin_src emacs-lisp :tangle yes
 (use-package js
-  :ensure nil
-  :after (flycheck smartparens)
-  :init
+  :defer 10
+  :after flycheck smartparens
   :config
   (progn
     (when (executable-find "eslint")
