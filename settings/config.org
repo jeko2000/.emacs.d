@@ -905,54 +905,27 @@ _~_: modified
 #+end_src
 * Programming packages
 ** Generic
-*** Dired
-**** Dired-details
-     [[https://www.emacswiki.org/emacs/DiredDetails][Dired-details]] lets you hide or show the file and directory details in
-     a Dired listing, to save space and clutter
-     #+begin_src emacs-lisp :tangle yes
-(require 'dired-details)
-(dired-details-install)
-(setq dired-details-hidden-string "[...] ")
-     #+end_src
-     See [[http://emacsrocks.com/e16.html][Emacs Rocks! Episode 16]] to see the great use of dired-dwim-target
-     #+begin_src emacs-lisp :tangle yes
-(setq dired-dwim-target t)
-     #+end_src
 *** Flyspell
-    First, we bootstrap [[http://aspell.net/][GNU Aspell]]
+    [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Spelling.html][Flyspell]] brings automatic spell-checking to emacs buffers.
     #+begin_src emacs-lisp :tangle yes
-(setq ispell-program-name "hunspell"
-      ispell-local-dictionary "en_US"
-      flyspell-issue-message-flag nil
-      ispell-list-command "--list") ; See https://www.emacswiki.org/emacs/FlySpell#tic5
-    #+end_src
-
-    Next, let's enable spell check for plain text and org-mode files when
-    the aspell executable is present in the exec-path.
-    #+begin_src emacs-lisp :tangle yes
-(when (executable-find "aspell")
-  (add-hook 'text-mode-hook 'flyspell-mode)
-  (add-hook 'org-mode-hook  'flyspell-mode))
-    #+end_src
-
-*** Disable-mouse-mode
-    [[https://github.com/purcell][Steve Purcell]] comes to the rescue to create a minor mode that disables
-    mouse events
-    #+begin_src emacs-lisp :tangle no
-(use-package disable-mouse
-  :delight disable-mouse-global-mode
-  :config (global-disable-mouse-mode))
+(use-package flyspell
+  :bind (("C-c i b" . flyspell-buffer)
+         ("C-c i r" . flyspell-region)
+         ("C-c i d" . ispell-change-dictionary)
+         ("C-c i m" . flyspell-mode))
+  :hook ((text-mode . flyspell-mode)
+         (prog-mode . flyspell-prog-mode))
+  :config
+  (setq flyspell-issue-message-flag nil
+        ispell-local-dictionary "en_US"
+        ispell-program-name "aspell"
+        ispell-extra-args '("--sug-mode=ultra")))
     #+end_src
 *** Ediff
     [[https://www.gnu.org/software/emacs/manual/html_node/ediff/][Ediff]] allows simultaneous browsing through the differences between
     files or buffers. Very handy for comparing commits.
-    #+begin_src emacs-lisp :tangle yes
+    #+begin_src emacs-lisp :tangle yes=b
 (use-package ediff
-  :ensure nil
-  :init
-  (defvar ctl-period-equals-map)
-  (define-prefix-command 'ctl-period-equals-map)
-  (bind-key "C-. =" #'ctl-period-equals-map)
   :bind (("C-. = b" . ediff-buffers)
          ("C-. = B" . ediff-buffers3)
          ("C-. = c" . compare-windows)
@@ -964,7 +937,6 @@ _~_: modified
          ("C-. = P" . ediff-patch-buffer)
          ("C-. = l" . ediff-regions-linewise)
          ("C-. = w" . ediff-regions-wordwise))
-
   :config
   (setq ediff-diff-options "-w"
         ediff-split-window-function 'split-window-horizontally
@@ -974,20 +946,8 @@ _~_: modified
     [[https://www.emacswiki.org/emacs/ShowParenMode][show-paren-mode]] allows to see matching pairs of parentheses and other characters.
     #+begin_src emacs-lisp :tangle yes
 (show-paren-mode 1)
-(setq show-paren-style 'parenthesis)
-    #+end_src
-*** Utilities
-    [[https://github.com/magnars/s.el][Magnar Sveen (magnars)'s String manipulation]] routines for emacs lisp
-    #+begin_src emacs-lisp :tangle yes
-(use-package s)
-    #+end_src
-*** Highlight
-    #+begin_src emacs-lisp :tangle yes
-(use-package highlight-symbol
-  :diminish highlight-symbol-mode
-  :commands highlight-symbol
-  :bind ("C-x H" . highlight-symbol))
-
+(setq show-paren-style 'parenthesis
+      show-paren-delay 0)
     #+end_src
 *** Indentation
     I like to automatically indent when press RET
@@ -997,54 +957,35 @@ _~_: modified
   :defer 2
   :hook ((css-mode        . aggressive-indent-mode)
          (emacs-lisp-mode . aggressive-indent-mode)
-         (js-mode         . aggressive-indent-mode)
-         (lisp-mode       . aggressive-indent-mode))
-  :custom (aggressive-indent-comments-too))
+         (lisp-mode       . aggressive-indent-mode)))
     #+end_src
 *** Company
     [[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
     #+begin_src emacs-lisp :tangle yes
 (use-package company
   :delight t
-  :demand t
   :init
-  (setq
-   company-dabbrev-ignore-case nil
-   company-dabbrev-code-ignore-case nil
-   company-dabbrev-downcase nil
-   company-idle-delay 1.0
-   company-minimum-prefix-length 4)
   :bind (("C-c C-/" . company-complete)
          ("TAB" . company-complete))
   :config
   (progn
     (setq company-show-numbers t
           company-tooltip-align-annotations t
-          company-idle-delay 1.0
           company-minimum-prefix-length 3)
-    (global-company-mode 1)
-    (use-package company-statistics
-      :config
-      (add-hook 'after-init-hook 'company-statistics-mode))
-    (use-package company-box
-      :disabled t
-      :delight
-      :hook (company-mode . company-box-mode)
-      :config
-      (progn
-        (setq company-box-enable-icon t
-              company-box-color-icon t
-              company-box-max-candidates 50
-              company-box-backends-colors
-              '((company-yasnippet :all "lime green"
-                                   :selected
-                                   (:background "lime green" :foreground "black"))
-                (company-elisp  :all "yellow"
-                                :selected
-                                (:background "orange" :foreground "black"))))))
-    (define-key company-active-map [tab] nil)
-    (define-key company-active-map (kbd "TAB") nil)))
+    (global-company-mode 1)))
 
+(use-package company-statistics
+  :after company
+  :hook (company-mode . company-statistics-mode))
+
+(use-package company-restclient
+  :after company restclient)
+
+(use-package company-elisp
+  :ensure nil
+  :after company
+  :config
+  (push 'company-elisp company-backends))
     #+end_src
 *** Code Folding
     The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one to hide and show blocks of text.
@@ -1052,15 +993,16 @@ _~_: modified
 (use-package hideshow
   :ensure nil
   :delight
-  :defer t
+  :hook (prog-mode . hs-minor-mode)
+  :bind (:map prog-mode-map
+              ("C-c h" . hs-toggle-hiding))
   :config
   (progn
     ;; Hide the comments too when you do a 'hs-hide-all'
     (setq hs-hide-comments t)
     ;; Set whether isearch opens folded comments, code, or both
     ;; where x is code, comments, t (both), or nil (neither)
-    (setq hs-isearch-open 't)
-    (add-hook 'prog-mode-hook (lambda () (hs-minor-mode 1)))))
+    (setq hs-isearch-open 't)))
     #+end_src
 *** Snippets
     The all great [[https://github.com/joaotavora/yasnippet][yasnippet]] package provides an extensible template system
@@ -1069,18 +1011,20 @@ _~_: modified
     We also download [[https://github.com/mkcms/ivy-yasnippet][ivy-yasnippet]] by [[https://github.com/mkcms][mkcms]] to allow snippet previews through [[https://github.com/abo-abo/swiper][ivy]].
     #+begin_src emacs-lisp :tangle yes
 (use-package yasnippet
-  :demand t
   :delight yas-minor-mode
   :bind (("C-c y TAB" . yas-expand)
          ("C-c y s"   . yas-insert-snippet)
          ("C-c y n"   . yas-new-snippet)
          ("C-c y v"   . yas-visit-snippet-file))
   :config
-  (progn
-    (yas-global-mode 1)
-    (use-package yasnippet-snippets)
-    (use-package ivy-yasnippet
-      :bind ("C-c y y" . ivy-yasnippet))))
+  (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+(use-package ivy-yasnippet
+  :after yasnippet
+  :bind ("C-c y y" . ivy-yasnippet))
 
     #+end_src
 
@@ -1093,68 +1037,52 @@ _~_: modified
 (use-package ivy
   :delight
   :demand t
-  :bind
-  ("C-x b" . ivy-switch-buffer)
+  :bind (("C-x b" . ivy-switch-buffer)
+         ("C-x B" . ivy-switch-buffer-other-window))
+  :bind (:map ivy-switch-buffer-map
+              ("C-k" . ivy-switch-buffer-kill))
+  :custom
+  (ivy-dynamic-exhibit-delay-ms 200)
+  (ivy-height 10)
+  (ivy-initial-inputs-alist nil t)
+  (ivy-magic-tilde nil)
+  (ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+  (ivy-use-virtual-buffers t)
+  (ivy-wrap t)
   :config
-  (progn
-    (ivy-mode 1)
-    (setq ivy-use-virtual-buffers t
-          ivy-height 10 ; number of result lines to display
-          ivy-count-format "" ; does not count candidates
-          ivy-initial-inputs-alist nil ; no regexp by default
-          ivy-re-builders-alist ; configure regexp engine.
-          '((t   . ivy--regex-ignore-order))) ; allow input not in order
-    (use-package swiper)
-    (use-package counsel
-      :init
-      (setq counsel-grep-swiper-limit 3000000)
-      :bind
-      (("C-h f" . counsel-describe-function)
-       ("C-h l" . counsel-find-library)
-       ("C-h v" . counsel-describe-variable)
-       ("<f2> i" . counsel-info-lookup-symbol)
-       ("<f2> u" . counsel-unicode-char)
-       ("C-c j" . counsel-git-grep)
-       ("C-c k" . counsel-ag)
-       ("C-x C-f" . counsel-find-file)
-       ("C-x C-r" . counsel-recentf)
-       ;;("M-i" . counsel-imenu)
-       ("C-c o" . counsel-linux-app)
-       ("M-x" . counsel-M-x)
-       ("M-y" . counsel-yank-pop)
-       ("C-s" . counsel-grep-or-swiper)))))
-     #+end_src
-**** Ido mode
-     [[https://www.emacswiki.org/emacs/InteractivelyDoThings][Interactively do things]] used to my completion framework at the
-     beginning. I've now switched to [[https://github.com/abo-abo/swiper][Ivy]].
-     #+begin_src emacs-lisp :tangle no
-(use-package ido
-  :disabled t                           ; I am using other completion instead
-  :demand t
-  :defines (ido-cur-item
-            ido-require-match
-            ido-selected
-            ido-final-text
-            ido-show-confirm-message)
-  :bind (("C-x b" . ido-switch-buffer)
-         ("C-x B" . ido-switch-buffer-other-window))
-  :preface
-  (eval-when-compile
-    (defvar ido-require-match)
-    (defvar ido-cur-item)
-    (defvar ido-show-confirm-message)
-    (defvar ido-selected)
-    (defvar ido-final-text))
-  :config
-  (progn
-    (ido-mode 'buffer)
-    (ido-vertical-define-keys 'C-n-and-C-p-only)
-    (add-hook 'ido-minibuffer-setup-hook
-              #'(lambda ()
-                  (bind-key "<return>" #'ido-smart-select-text
-                            ido-file-completion-map)))))
-     #+end_src
+  (ivy-mode 1)
+  (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur))
 
+(use-package ivy-rich
+  :after ivy
+  :config
+  (ivy-rich-mode)
+  (setq ivy-virtual-abbreviate 'full
+        ivy-rich-switch-buffer-align-virtual-buffer t
+        ivy-rich-path-style 'abbrev))
+
+(use-package swiper
+  :after ivy)
+
+(use-package counsel
+  :after ivy
+  :delight
+  :init
+  (setq counsel-grep-swiper-limit 3000000)
+  :bind (("C-h f"   . counsel-describe-function)
+         ("C-*"     . counsel-org-agenda-headlines)
+         ("<f1> f"  . counsel-describe-function)
+         ("<f1> v"  . counsel-describe-variable)
+         ("<f1> l"  . counsel-find-library)
+         ("<f2> i"  . counsel-info-lookup-symbol)
+         ("<f2> u"  . counsel-unicode-char)
+         ("<f2> j"  . counsel-set-variable)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x C-r" . counsel-recentf)
+         ("M-x"     . counsel-M-x)
+         ("M-y"     . counsel-yank-pop)
+         ("C-s"     . counsel-grep-or-swiper)))
+     #+end_src
 *** Version Control
     Version control is of incredibly importance for most projects and
     [[https://magit.vc][magit]] provides a great interface for [[https://git-scm.com/][git]]. [[https://github.com/magit/orgit][Orgit]] provides new [[https://orgmode.org/manual/External-links.html][org-link]]
@@ -1163,18 +1091,14 @@ _~_: modified
     #+begin_src emacs-lisp :tangle yes
 (use-package magit
   :bind ("C-c g" . magit-status)
-  :init
-  (progn
-    (add-hook 'magit-mode-hook 'hl-line-mode)
-    (add-hook 'magit-log-mode-hook 'hl-line-mode))
+  :hook ((magit-mode . hl-line-mode)
+         (magit-log-mode . hl-line-mode))
   :config
-  (progn
-    (define-key magit-mode-map (kbd "C-<return>") nil)
-    (use-package git-gutter
-      :delight
-      :config
-      (global-git-gutter-mode +1))
-    (use-package git-timemachine)))
+  (use-package git-gutter
+    :delight
+    :config
+    (global-git-gutter-mode +1))
+  (use-package git-timemachine))
     #+end_src
 *** REST support
     See [[http://emacsrocks.com/e15.html][Emacs Rocks! Episode 15]] to learn how [[https://github.com/pashky/restclient.el][restclient]] can help out with
@@ -1318,6 +1242,7 @@ _~_: modified
     supported types.
     #+begin_src emacs-lisp :tangle yes
 (use-package projectile
+  :delight '(:eval (concat " " (projectile-project-name)))
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init   (setq projectile-use-git-grep t)
@@ -1335,8 +1260,6 @@ _~_: modified
     (add-to-list 'projectile-other-file-alist '("cljs" "clj"))
     (global-set-key (kbd "M-.") 'projectile-find-tag)
     (global-set-key (kbd "M-,") 'pop-tag-mark)
-    (when (window-system)
-      (setq projectile-mode-line '(:eval (format " Π[%s]" (projectile-project-name)))))
     (use-package counsel-projectile
       :config
       (progn
@@ -1355,7 +1278,7 @@ _~_: modified
   mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     #+end_src
 *** GGTags
-    #+begin_src emacs-lisp :tangle false
+    #+begin_src emacs-lisp :tangle no
 ;; GNU Global Tags
 (use-package ggtags
   :commands ggtags-mode
