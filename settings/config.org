@@ -89,17 +89,6 @@
   (setq x-underline-at-descent-line t))
     #+end_src
     -----
-*** Monokai theme
-    The [[https://github.com/oneKelvinSmith/monokai-emacs][Monokai theme]] is a port by [[https://github.com/oneKelvinSmith][Kelvin Smith (oneKelvinSmith)]] from the
-    original [[https://www.monokai.pro/][TextMate theme Monokai by Wimer Hazenberg]].
-    #+html: <p align="center"><a href="https://monokai.pro" target="_blank"><img src="https://raw.githubusercontent.com/oneKelvinSmith/monokai-emacs/master/assets/monokai_0.png"/></a></p>
-    #+begin_src emacs-lisp :tangle yes
-(use-package monokai-theme
-  :if jr/display-p
-  :config
-  (setq monokai-use-variable-pitch nil))
-    #+end_src
-    -----
 *** E-Ink
     [[https://github.com/maio/eink-emacs][Low distraction, minimalistic color theme]] for Emacs emulating reading
     on E Ink devices by [[https://github.com/maio][Marian Schubert maio]].
