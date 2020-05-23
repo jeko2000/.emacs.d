@@ -1393,19 +1393,40 @@ _~_: modified
     [[https://www.google.com/search?q=clojure&ie=utf-8&oe=utf-8][Clojure]] is a dynamic programming language that compiles to Java
     Unicode. It's one of my main languages right now.
     #+begin_src emacs-lisp :tangle yes
-(use-package clojure-mode 
-  :mode "\\.cljs?\\'"
+(use-package clojure-mode
+  :init
+  (defun jr/clojure-mode-hook ()
+    (aggressive-indent-mode)
+    (smartparens-strict-mode)
+    (yas-minor-mode)
+    (company-mode)
+    (eldoc-mode))
+  :hook ((clojure-mode . jr/clojure-mode-hook))
   :config
-  (setq cider-cljs-lein-repl
-        "(do (require 'figwheel-sidecar.repl-api)
-           (figwheel-sidecar.repl-api/start-figwheel!)
-           (figwheel-sidecar.repl-api/cljs-repl))"
-        org-babel-clojure-backend 'cider
-        cider-inject-dependencies-at-jack-in nil)
-  (require 'ob-clojure))
+  (setq clojure-indent-style 'align-arguments
+        clojure-align-forms-automatically t))
 
-(use-package cider
-  :after clojure-mode)
+(use-package cider  
+  :hook ((clojure-mode . cider-mode))
+  :config
+  (define-key cider-mode-map (kbd "C-c C-j i") #'cider-completion-flush-caches)
+  (setq cider-use-overlays 'both
+        cider-prompt-for-symbol nil
+        cider-prefer-local-resources t
+        cider-eldoc-display-context-dependent-info t
+        cider-overlays-use-font-lock t
+        cider-result-overlay-position 'at-point))
+
+(use-package clj-refactor
+  :after clojure-mode
+  :hook ((clojure-mode . clj-refactor-mode))
+  :config
+  (cljr-add-keybindings-with-prefix "C-c C-m"))
+
+(use-package cider-hydra
+  :after cider hydra
+  :hook ((clojure-mode . cider-hydra-mode)))
+
     #+end_src
 *** Common Lisp
     [[https://common-lisp.net/][Common Lisp]], the programmable programming language.
@@ -1559,7 +1580,9 @@ _~_: modified
 (use-package eldoc
   :ensure nil
   :diminish eldoc-mode
-  :commands eldoc-mode)
+  :commands eldoc-mode
+  :config
+  (global-eldoc-mode))
 
     #+end_src
 *** Markdown
