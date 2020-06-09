@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: java_class
+# key: class
+# --
+package ${1:`(mapconcat 'identity (cdddr (member "src" (split-string default-directory "/" t))) ".")`};
+
+public class ${2:`(file-name-sans-extension (buffer-name))`} {
+    $0
+}
