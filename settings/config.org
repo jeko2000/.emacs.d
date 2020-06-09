@@ -1021,9 +1021,6 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package hideshow
   :ensure nil
   :delight
-  :hook (prog-mode . hs-minor-mode)
-  :bind (:map prog-mode-map
-              ("C-c h" . hs-toggle-hiding))
   :config
   (progn
     ;; Hide the comments too when you do a 'hs-hide-all'
@@ -1286,8 +1283,8 @@ point reaches the beginning or end of the buffer, stop there."
           projectile-track-known-projects-automatically t)
     (add-to-list 'projectile-other-file-alist '("clj" "cljs"))
     (add-to-list 'projectile-other-file-alist '("cljs" "clj"))
-    (global-set-key (kbd "M-.") 'projectile-find-tag)
-    (global-set-key (kbd "M-,") 'pop-tag-mark)
+    (global-set-key (kbd "M-.") 'xref-find-definitions)
+    (global-set-key (kbd "M-,") 'xref-pop-marker-stack)
     (use-package counsel-projectile
       :config
       (progn
@@ -1346,33 +1343,13 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package lsp-mode
   :init
   (defun jr/lsp-mode-hook ()
-    (setq tab-width 4
-          indent-tabs-mode nil
-          company-idle-delay 0.5
+    (setq company-idle-delay 0.5
           company-minimum-prefix-length 1))
   :bind (:map lsp-mode-map
-              ("C-RET" . lsp-execute-code-action)
+              ("C-<return>" . lsp-execute-code-action)
               ("C-x C-c" . compile))
   :hook (lsp-mode . jr/lsp-mode-hook)
   :config
-  (setq lsp-log-io t
-        lsp-print-performance nil
-        lsp-keep-workspace-alive nil
-        lsp-enable-snippet t
-        lsp-auto-guess-root nil
-        lsp-auto-configure t
-        lsp-auto-execute-action t
-        lsp-eldoc-render-all t
-        lsp-enable-completion-at-point t
-        lsp-enable-xref t
-        lsp-enable-indentation t
-        lsp-enable-on-type-formatting t
-        lsp-before-save-edits t
-        lsp-server-trace nil
-        lsp-semantic-highlighting t
-        lsp-enable-text-document-color t
-        lsp-keymap-prefix "C-c C-l"
-        lsp-diagnostics-modeline-scope :project)
   (add-hook 'lsp-managed-mode-hook 'lsp-diagnostics-modeline-mode))
 
 (use-package lsp-ui
@@ -1723,11 +1700,10 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package lsp-java
   :init
   (defun jr/lsp-java-config ()
-    (setq-local
-     tab-width 4
-     c-basic-offset 4)
+    (setq-local tab-width 4
+                c-basic-offset 4)
     (setq c-default-style "java"
-          indent-tabgs-mode nil
+          indent-tags-mode nil
           compile-command "mvn -q compile"))
   :hook ((java-mode . jr/lsp-java-config)
          (java-mode . lsp))
