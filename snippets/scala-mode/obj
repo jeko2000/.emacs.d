@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: obj
+# key: obj
+# --
+package ${1:`(mapconcat 'identity (cdddr (member "src" (split-string default-directory "/" t))) ".")`}
+
+object ${2:`(file-name-sans-extension (buffer-name))`} {
+  $0
+}

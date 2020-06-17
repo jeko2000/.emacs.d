@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: pack
+# key: pack
+# --
+package ${1:`(mapconcat 'identity (cdddr (member "src" (split-string default-directory "/" t))) ".")`}
+
+$0
