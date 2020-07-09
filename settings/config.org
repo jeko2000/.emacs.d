@@ -1253,12 +1253,14 @@ point reaches the beginning or end of the buffer, stop there."
     checking extension for GNU Emacs, intended as replacement for the
     older Flymake extension which is part of GNU Emacs.
     #+begin_src emacs-lisp :tangle yes
-(use-package flycheck)
+(use-package flycheck
+  :config
+  (setq flycheck-check-syntax-automatically '(save idle-change new-line mode-enabled)))
 
 (use-package flycheck-color-mode-line
   :after flycheck
   :commands flycheck-color-mode-line-mode
-  mess  :hook (flycheck-mode . flycheck-color-mode-line-mode))
+  :hook (flycheck-mode . flycheck-color-mode-line-mode))
     #+end_src
 *** GGTags
     #+begin_src emacs-lisp :tangle no
