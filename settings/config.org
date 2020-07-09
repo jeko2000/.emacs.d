@@ -1332,7 +1332,11 @@ point reaches the beginning or end of the buffer, stop there."
   :after lsp-mode
   :config
   (dap-mode t)
-  (dap-ui-mode t))
+  (dap-ui-mode t)
+  (add-hook 'dap-stopped-hook
+            (lambda (arg) (call-interactively #'dap-hydra)))
+  (add-hook 'dap-mode-hook
+            #'dap-auto-configure-mode))
     #+end_src
 
 ** Language Specific
