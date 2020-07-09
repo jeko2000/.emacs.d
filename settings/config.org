@@ -910,7 +910,7 @@ point reaches the beginning or end of the buffer, stop there."
 *** Ediff
     [[https://www.gnu.org/software/emacs/manual/html_node/ediff/][Ediff]] allows simultaneous browsing through the differences between
     files or buffers. Very handy for comparing commits.
-    #+begin_src emacs-lisp :tangle yes=b
+    #+begin_src emacs-lisp :tangle yes
 (use-package ediff
   :bind (("C-. = b" . ediff-buffers)
          ("C-. = B" . ediff-buffers3)
