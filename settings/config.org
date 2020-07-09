@@ -1582,20 +1582,12 @@ point reaches the beginning or end of the buffer, stop there."
     #+begin_src emacs-lisp :tangle no
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
-         ("\\.jsx?\\'" . web-mode)
          ("\\.mustache\\'" . web-mode)
          ("\\.xhtml?\\'" . web-mode)
-         ("\\.xml\\'" . web-mode))
+         ("\\.xml\\'" . web-mode)
+         ("\\.hbs\\'" . web-mode))
   :config
   (progn
-    (use-package prettier-js)
-    (use-package add-node-modules-path
-      :config
-      (progn
-        (defun jr/web-mode-init-prettier-hook ()
-          (add-node-modules-path)
-          (prettier-js-mode))
-        (add-hook 'web-mode-hook 'jr/web-mode-init-prettier-hook)))
     (defun jr/web-mode-hook ()
       (when (boundp 'flycheck-disabled-checkers)
         (add-to-list 'flycheck-disabled-checkers 'javascript-jshint)
@@ -1608,8 +1600,6 @@ point reaches the beginning or end of the buffer, stop there."
           '(("django"    . "\\.html\\'")
             ("jinja2"    . "\\.html\\'")
             ("php"       . "\\.phtml\\'"))
-          web-mode-content-types-alist
-          '(("jsx" . "\\.js[x]?\\'"))
           web-mode-markup-indent-offset 2
           web-mode-css-indent-offset 2
           web-mode-code-indent-offset 2
@@ -1617,7 +1607,6 @@ point reaches the beginning or end of the buffer, stop there."
           web-mode-style-padding 1
           web-mode-script-padding 1
           web-mode-block-padding 0
-          web-mode-enable-auto-closing t
           web-mode-enable-auto-closing t
           web-mode-enable-auto-quoting t
           web-mode-enable-auto-pairing t
