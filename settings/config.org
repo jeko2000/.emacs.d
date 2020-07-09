@@ -1489,6 +1489,8 @@ point reaches the beginning or end of the buffer, stop there."
 (define-key lisp-mode-map (kbd "C-c e r") 'eval-region)
 (define-key lisp-mode-map (kbd "C-c e e") 'eval-and-replace)
 
+(define-key emacs-lisp-mode-map (kbd "C-c C-m") #'pp-macroexpand-last-sexp)
+
 (define-key lisp-interaction-mode-map (kbd "C-c e b") 'jr/noisy-eval-buffer)
 (define-key lisp-interaction-mode-map (kbd "C-c e d") 'toggle-debug-on-error)
 (define-key lisp-interaction-mode-map (kbd "C-c e c") 'emacs-lisp-byte-compile-and-load)
