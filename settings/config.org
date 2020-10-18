@@ -1162,8 +1162,8 @@ point reaches the beginning or end of the buffer, stop there."
     (add-hook 'smartparens-mode-hook #'show-smartparens-mode)
     (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
     ;; The following is necessary per https://github.com/Fuco1/smartparens/issues/963
-    (add-to-list 'sp--special-self-insert-commands 'c-electric-paren)
-    (add-to-list 'sp--special-self-insert-commands 'c-electric-brace)
+    ;; (add-to-list 'sp--special-self-insert-commands 'c-electric-paren)
+    ;; (add-to-list 'sp--special-self-insert-commands 'c-electric-brace)
     (bind-keys
      :map smartparens-mode-map
      ("C-M-a" . sp-beginning-of-sexp)
@@ -1280,13 +1280,15 @@ point reaches the beginning or end of the buffer, stop there."
     #+begin_src emacs-lisp :tangle yes
 (use-package lsp-mode
   :init
+  (setq lsp-keymap-prefix "C-c C-l")
   (defun jr/lsp-mode-hook ()
     (setq company-idle-delay 0.2
           company-minimum-prefix-length 1))
   :bind (:map lsp-mode-map
               ("C-<return>" . lsp-execute-code-action)
               ("C-x C-c" . compile))
-  :hook (lsp-mode . jr/lsp-mode-hook)
+  :hook ((lsp-mode . jr/lsp-mode-hook)
+         (lsp-mode . lsp-enable-which-key-integration))
   :config
   (add-hook 'lsp-managed-mode-hook 'lsp-diagnostics-modeline-mode))
 
@@ -1296,7 +1298,7 @@ point reaches the beginning or end of the buffer, stop there."
   (setq lsp-ui-sideline-enable nil
         lsp-ui-peek-enable nil
         lsp-ui-doc-enable t
-        lsp-ui-doc-delay 2.0))
+        lsp-ui-doc-delay 1.0))
 
 (use-package lsp-treemacs
   :after lsp-mode
@@ -1313,10 +1315,7 @@ point reaches the beginning or end of the buffer, stop there."
   :config
   (dap-mode t)
   (dap-ui-mode t)
-  (add-hook 'dap-stopped-hook
-            (lambda (arg) (call-interactively #'dap-hydra)))
-  (add-hook 'dap-mode-hook
-            #'dap-auto-configure-mode))
+  (dap-auto-configure-mode))
     #+end_src
 
 ** Language Specific
@@ -1633,8 +1632,8 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package lsp-java
   :init
   (defun jr/lsp-java-config ()
-    (setq-local tab-width 4
-                c-basic-offset 4)
+    (setq-local tab-width 2
+                c-basic-offset 2)
     (setq c-default-style "java"
           indent-tags-mode nil
           compile-command "mvn -q compile"))
@@ -1642,7 +1641,8 @@ point reaches the beginning or end of the buffer, stop there."
          (java-mode . lsp))
   :config
   (setq lsp-java-vmargs
-        '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication")))
+        '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication"))
+  (define-key lsp-mode-map (kbd "C-c C-l d d") #'dap-java-debug-test-class))
 
 (use-package dap-java
   :ensure nil
