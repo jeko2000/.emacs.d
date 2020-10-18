@@ -1216,23 +1216,15 @@ point reaches the beginning or end of the buffer, stop there."
   ("C-c p" . projectile-command-map)
   :init   (setq projectile-use-git-grep t)
   :config
-  (progn
-    (setq projectile-cache-file "~/projectile.cache"
-          projectile-completion-system 'ivy
-          projectile-enable-caching t
-          projectile-file-exists-local-cache-expire 120
-          projectile-file-exists-remote-cache-expire 300
-          projectile-known-projects-file "~/projectile-bookmarks.eld"
-          projectile-sort-order 'recentf
-          projectile-track-known-projects-automatically t)
-    (add-to-list 'projectile-other-file-alist '("clj" "cljs"))
-    (add-to-list 'projectile-other-file-alist '("cljs" "clj"))
-    (global-set-key (kbd "M-.") 'xref-find-definitions)
-    (global-set-key (kbd "M-,") 'xref-pop-marker-stack)
-    (use-package counsel-projectile
-      :config
-      (progn
-        (counsel-projectile-mode 1)))))
+  (setq projectile-completion-system 'ivy
+        projectile-enable-caching t
+        projectile-sort-order 'recentf
+        projectile-track-known-projects-automatically t))
+
+(use-package counsel-projectile
+  :after counsel projectile
+  :config
+  (counsel-projectile-mode 1))
     #+end_src
 *** Flycheck
     Per the [[http://www.flycheck.org/en/latest/][flycheck website]], Flycheck is a modern on-the-fly syntax
