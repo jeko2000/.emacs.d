@@ -847,6 +847,27 @@ _~_: modified
   (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
 
 #+end_src
+** PlantUML
+Emacs integration with [[https://plantuml.com/][PlantUML]].
+#+begin_src emacs-lisp :tangle yes
+  (use-package plantuml-mode
+    :mode "\\.plantuml\\'"
+    :config
+    ;; Set execution mode to executable, if possible
+    (cond ((executable-find "plantuml")
+           (setq plantuml-default-exec-mode 'executable
+                 plantuml-executable-path "plantuml"))
+          (t
+           (setq plantuml-default-exec-mode 'server)
+           (warn "Install plantuml executable")))
+    (setq plantuml-indent-level 4)
+    ;; register with org mode
+    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml)))
+
+  (use-package flycheck-plantuml
+    :after flycheck plantuml
+    :hook (plantuml-mode . flyspell-mode))
+#+end_src
 * Programming packages
 ** Generic
 *** Misc
