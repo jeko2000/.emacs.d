@@ -1685,58 +1685,23 @@ point reaches the beginning or end of the buffer, stop there."
   (add-hook 'java-mode-hook '(lambda() (gradle-mode 1))))
      #+end_src
 *** Python
-    #+begin_src emacs-lisp :tangle yes
-(use-package elpy
-  :delight python-mode "π"
-  :disabled t
+#+begin_src emacs-lisp :tangle yes
+(use-package lsp-python-ms
+  :init
+  (setq lsp-python-ms-auto-install-server t)
+  (defun jr/python-mode-hook ()
+    (require 'lsp-python-ms)
+    (lsp))
+  :hook (python-mode . jr/python-mode-hook)
   :config
-  (progn
-    (elpy-enable)
-
-    ;; elpy
-    (add-hook 'elpy-mode-hook 'smartparens-strict-mode)
-    (add-hook 'inferior-python-mode-hook 'smartparens-strict-mode)
-
-    ;;config
-    (defalias 'workon 'pyvenv-workon)
-
-    ;; documentation
-    (add-to-list 'elpy-modules 'elpy-module-autodoc)
-    (setq elpy-autodoc-delay 0.5)
-
-    ;; interpreter
-    (if (executable-find "ipython")
-        (setq python-shell-interpreter "ipython"
-              python-shell-interpreter-args "-i --simple-prompt")
-      (setq python-shell-interpreter "python"
-            python-shell-interpreter-args "-i"))
-
-    ;; Shell Buffer
-    (setq elpy-shell-use-project-root t
-          elpy-shell-echo-input t
-          elpy-shell-echo-input-cont-prompt t
-          elpy-shell-echo-input-lines-head 5
-          elpy-shell-echo-input-lines-tail 5
-          elpy-shell-echo-output 'when-shell-not-visible)
-
-    ;; Syntax checking
-    (setq python-check-command
-          (or (executable-find "flake8")
-              (executable-find "pylint")))
-
-    (when (and (package-installed-p 'flycheck)
-               python-check-command)
-      (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-      (add-hook 'elpy-mode-hook 'flycheck-mode)
-      (define-key elpy-mode-map (kbd "C-c C-n") 'flycheck-next-error)
-      (define-key elpy-mode-map (kbd "C-c C-p") 'flycheck-previous-error))
-
-    (add-hook 'elpy-mode-hook
-              (lambda ()
-                (add-hook 'before-save-hook 'elpy-format-code nil t)))
-    (use-package pydoc-info)))
-    #+end_src
-
+  (add-hook 'inferior-python-mode-hook 'smartparens-strict-mode)
+  (defalias 'workon 'pyvenv-workon)
+  (if (executable-find "ipython")
+      (setq python-shell-interpreter "ipython"
+            python-shell-interpreter-args "-i --simple-prompt")
+    (setq python-shell-interpreter "python"
+          python-shell-interpreter-args "-i")))
+#+end_src
 *** SQL
     #+begin_src emacs-lisp :tangle yes
 (use-package sql
