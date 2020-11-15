@@ -2005,6 +2005,16 @@ Source: EmacsWiki"
     (indent-region (point-min) (point-max) nil)
     (untabify (point-min) (point-max))))
    #+end_src
+** Copy current file
+#+begin_src emacs-lisp :tangle yes
+(defun jr/kill-buffer-file-name ()
+  (interactive)
+  (when-let ((buf (buffer-file-name)))
+    (message "Added %s to kill-ring" buf)
+    (kill-new buf)))
+
+(global-set-key (kbd "C-c e n") #'jr/kill-append-buffer-file-name)
+#+end_src
 * Footer
   #+begin_src emacs-lisp :tangle yes
 (message "Emacs config.el end")
