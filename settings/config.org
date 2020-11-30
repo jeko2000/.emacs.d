@@ -1841,27 +1841,49 @@ point reaches the beginning or end of the buffer, stop there."
                   'comint-next-input)))))
     #+end_src
 *** Scala
-#+begin_src emacs-lisp :tangle yes
+    Configuration for the [[https://www.scala-lang.org/][Scala]] programming language leveraging [[https://www.scala-sbt.org/index.html][sbt]] and [[https://scalameta.org/metals/][metals]].
+    #+begin_src emacs-lisp :tangle yes
 (use-package scala-mode
+  :init
+  (defun jr/scala-mode-hook ()
+    (setq-local create-lockfiles nil)
+    (lsp)
+    (lsp-lens-mode))
   :mode "\\.s\\(cala\\|bt\\)$"
-  :hook ((scala-mode . lsp)
-         (scala-mode . lsp-lens-mode)))
+  :hook (scala-mode . jr/scala-mode-hook))
 
 (use-package lsp-metals
-  :after scala-mode)
+  :after lsp)
 
 (use-package sbt-mode
   :commands sbt-start sbt-command
   :config
   ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
   ;; allows using SPACE when in the minibuffer
-  ;; (substitute-key-definition
-  ;;  'minibuffer-complete-word
-  ;;  'self-insert-command
-  ;;  minibuffer-local-completion-map)
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map)
   ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
   (setq sbt:program-options '("-Dsbt.supershell=false")))
-#+end_src
+    #+end_src
+**** Build metals-emacs
+     Per the [[https://scalameta.org/metals/docs/editors/emacs.html][metals documentation]], we should use [[https://github.com/coursier/coursier][coursier]] to build the
+     metals-emacs binary.
+     #+begin_src bash :results none
+cd ~/bin
+curl -L -o coursier https://git.io/coursier-cli
+chmod +x coursier
+./coursier bootstrap \
+           --java-opt -Xss4m \
+           --java-opt -Xms100m \
+           --java-opt -Dmetals.client=emacs \
+           org.scalameta:metals_2.12:0.9.7 \
+           -r bintray:scalacenter/releases \
+           -r sonatype:snapshots \
+           -o ~/bin/metals-emacs -f
+     #+end_src
+
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
