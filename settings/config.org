@@ -1852,13 +1852,17 @@ point reaches the beginning or end of the buffer, stop there."
     Configuration for the [[https://www.scala-lang.org/][Scala]] programming language leveraging [[https://www.scala-sbt.org/index.html][sbt]] and [[https://scalameta.org/metals/][metals]].
     #+begin_src emacs-lisp :tangle yes
 (use-package scala-mode
-  :init
-  (defun jr/scala-mode-hook ()
-    (setq-local create-lockfiles nil)
-    (lsp)
-    (lsp-lens-mode))
   :mode "\\.s\\(cala\\|bt\\)$"
-  :hook (scala-mode . jr/scala-mode-hook))
+  :init
+  (defvar jr/lsp-mode-hooks/scala-mode nil
+    "Hooks to run when lsp is enabled on a scala major-mode buffers.")
+
+  (defun jr/lsp-mode-run-hooks/scala-mode ()
+    (when (eq major-mode 'scala-mode)
+      (run-hooks 'jr/lsp-mode-hooks/scala-mode)))
+  :hook ((scala-mode . lsp)
+         (lsp-mode . jr/lsp-mode-run-hooks/scala-mode)
+         (before-save . jr/scala-mode-before-save-hook)))
 
 (use-package lsp-metals
   :after lsp)
@@ -1873,7 +1877,26 @@ point reaches the beginning or end of the buffer, stop there."
    'self-insert-command
    minibuffer-local-completion-map)
   ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-  (setq sbt:program-options '("-Dsbt.supershell=false")))
+  (setq sbt:program-options '("-Dsbt.supershell=false"))
+  (when (boundp 'jr/lsp-mode-hooks/scala-mode)
+    (add-hook 'jr/lsp-mode-hooks/scala-mode #'sbt-start))
+
+  (defun jr/sbt-mode-calculate-run-main-command ()
+    "Return the runMain command associated with the current source file."
+    (let* ((package (mapconcat 'identity (cdddr (member "src" (split-string default-directory "/" t))) "."))
+           (object (file-name-sans-extension (buffer-name))))
+      (format "runMain %s.%s" package object)))
+
+  (defun jr/sbt-mode-run-current-buffer ()
+    (interactive)
+    (sbt-command (jr/sbt-mode-calculate-run-main-command)))
+
+  (define-key scala-mode-map (kbd "C-c C-l C-c") #'jr/sbt-mode-run-current-buffer)
+
+  (defun jr/sbt-mode-after-save-hook ()
+    (when (eq major-mode 'scala-mode)
+      (sbt-command (jr/sbt-mode-calculate-run-main-command))))
+  (add-hook 'after-save-hook #'jr/sbt-mode-after-save-hook))
     #+end_src
 **** Build metals-emacs
      Per the [[https://scalameta.org/metals/docs/editors/emacs.html][metals documentation]], we should use [[https://github.com/coursier/coursier][coursier]] to build the
