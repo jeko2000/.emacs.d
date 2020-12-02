@@ -392,6 +392,12 @@ configuration.")
    The [[https://www.emacswiki.org/emacs/zoom-frm.el][zoom-frm]] packages from the [[https://www.emacswiki.org/][EmacsWiki]] provides a way to increase
    font size evenly across the frame.
    #+begin_src emacs-lisp :tangle yes
+;; Bootstramp zoom-frm if it is not yet installed
+(unless (package-installed-p 'zoom-frm)
+  (package-install-file (expand-file-name "site-lisp/frame-fns.el" user-emacs-directory))
+  (package-install-file (expand-file-name "site-lisp/frame-cmds.el" user-emacs-directory))
+  (package-install-file (expand-file-name "site-lisp/zoom-frm.el" user-emacs-directory)))
+
 (use-package zoom-frm
   :if (and jr/display-p
            (package-installed-p 'zoom-frm))
