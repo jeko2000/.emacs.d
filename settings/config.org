@@ -1302,16 +1302,22 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c C-l")
+
+  (defun jr/lsp-mode-before-save-hook ()
+    (when (bound-and-true-p lsp-mode)
+      (lsp-format-buffer)))
+
   (defun jr/lsp-mode-hook ()
-    (setq company-idle-delay 0.2
-          company-minimum-prefix-length 1))
+    (setq-local company-idle-delay 0.2
+                company-minimum-prefix-length 1))
   :bind (:map lsp-mode-map
               ("C-<return>" . lsp-execute-code-action)
               ("C-x C-c" . compile))
   :hook ((lsp-mode . jr/lsp-mode-hook)
          (lsp-mode . lsp-enable-which-key-integration))
   :config
-  (add-hook 'lsp-managed-mode-hook 'lsp-diagnostics-modeline-mode))
+  (add-hook 'lsp-managed-mode-hook #'lsp-diagnostics-modeline-mode)
+  (add-hook 'before-save-hook #'jr/lsp-mode-before-save-hook))
 
 (use-package lsp-ui
   :after lsp-mode
