@@ -1121,13 +1121,6 @@ point reaches the beginning or end of the buffer, stop there."
   :defer 2
   :bind ("C-=" . er/expand-region))
     #+end_src
-*** iy-go-to-char
-    See [[http://emacsrocks.com/e04.html][Emacs Rocks! Episode 4]] to learn about [[https://github.com/doitian/iy-go-to-char][iy-go-to-char]].
-    #+begin_src emacs-lisp :tangle yes
-(use-package iy-go-to-char
-  :bind (("M-m" . iy-go-to-char)
-         ("M-i" . back-to-indentation)))
-    #+end_src
 *** Autofill mode
     I find myself using M-q often to [[https://www.emacswiki.org/emacs/FillParagraph][refill paragraphs]]. [[https://www.emacswiki.org/emacs/AutoFillMode][AutoFillMode]] mostly
     automates this for me.
