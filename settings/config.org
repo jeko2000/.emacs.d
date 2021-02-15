@@ -2067,6 +2067,7 @@ Source: EmacsWiki"
     (kill-new buf)))
 
 (global-set-key (kbd "C-c e n") #'jr/kill-append-buffer-file-name)
+#+end_src
 ** Indent whole buffer if no region is selected
 #+begin_src emacs-lisp :tangle yes
 (defun jr/indent-region-or-buffer ()
@@ -2082,6 +2083,9 @@ Source: EmacsWiki"
 
 (global-set-key (kbd "C-M-\\") #'jr/indent-region-or-buffer)
 #+end_src
+** Global key for sorting lines
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "C-c e S") #'sort-lines)
 #+end_src
 * Footer
   #+begin_src emacs-lisp :tangle yes
