@@ -2067,6 +2067,21 @@ Source: EmacsWiki"
     (kill-new buf)))
 
 (global-set-key (kbd "C-c e n") #'jr/kill-append-buffer-file-name)
+** Indent whole buffer if no region is selected
+#+begin_src emacs-lisp :tangle yes
+(defun jr/indent-region-or-buffer ()
+  (interactive)
+  (save-excursion 
+    (cond ((region-active-p)
+           (indent-region (region-beginning) (region-end))
+           (message "Indented region"))
+          (t
+           (indent-region (point-min) (point-max))
+           (message "Indented buffer")))))
+
+
+(global-set-key (kbd "C-M-\\") #'jr/indent-region-or-buffer)
+#+end_src
 #+end_src
 * Footer
   #+begin_src emacs-lisp :tangle yes
