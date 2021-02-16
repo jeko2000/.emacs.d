@@ -2,21 +2,9 @@
 #+AUTHOR: Johnny Ruiz
 #+EMAIL: jeko2000@yandex.com
 #+LANGUAGE: en
-
 * Header
   #+begin_src emacs-lisp :tangle yes
 (message "Emacs config.el started at %s" (current-time-string))
-  #+end_src
-  #+begin_src emacs-lisp :tangle yes
-;; We set a few variables we use for dispatching
-(defconst jr/display-p (display-graphic-p)
-  "Value is t when the current display is a graphical display.")
-
-(defconst jr/macos-p (eq system-type 'darwin)
-  "Value is t when current operating system is Darwin/macOS.")
-
-(defconst jr/gnu-linux-p (eq system-type 'gnu/linux)
-  "Value is t when current operating system is GNU/Linux.")
   #+end_src
 * Look and Feel
 ** Basic GUI
@@ -66,7 +54,7 @@
     #+html: <p align="center"><a href="https://www.nordtheme.com/ports/emacs" target="_blank"><img src="https://raw.githubusercontent.com/arcticicestudio/nord-docs/develop/assets/images/ports/emacs/overview-go.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package nord-theme
-  :if jr/display-p)
+  :if (display-graphic-p))
     #+end_src
     -----
 *** Zenburn
@@ -74,7 +62,7 @@
     #+html: <p align="center"><a href="http://kippura.org/zenburnpage/" target="_blank"><img src="http://kippura.org/i/zenburn.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package zenburn-theme
-  :if jr/display-p)
+  :if (display-graphic-p))
     #+end_src
     -----
 *** Solarized theme
@@ -83,7 +71,7 @@
     #+html: <p align="center"><a href="http://ethanschoonover.com/solarized" target="_blank"><img src="https://raw.githubusercontent.com/altercation/solarized/master/img/solarized-vim.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package solarized-theme
-  :if jr/display-p
+  :if (display-graphic-p)
   :config
   (setq solarized-distinct-fringe-background t)
   (setq x-underline-at-descent-line t))
@@ -95,7 +83,7 @@
     #+html: <p align="center"><a href="https://github.com/maio/eink-emacs" target="_blank"><img src="https://raw.githubusercontent.com/maio/eink-emacs/master/images/example.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package eink-theme
-  :if jr/display-p)
+  :if (display-graphic-p))
     #+end_src
     -----
 *** Material theme
@@ -104,7 +92,7 @@
     #+html: <p align="center"><a href="http://www.google.com/design/spec/style/color.html#color-color-palette" target="_blank"><img src="https://github.com/cpaulik/emacs-material-theme/blob/master/material-theme.png?raw=true"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package material-theme
-  :if jr/display-p)
+  :if (display-graphic-p))
     #+end_src
     -----
 *** Tango theme
@@ -112,14 +100,14 @@
     #+html: <p align="center"><a href="https://github.com/juba" target="_blank"><img src="https://raw.githubusercontent.com/juba/color-theme-tangotango/master/screenshots/tangotango_elisp.png"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package tangotango-theme
-  :if jr/display-p)
+  :if (display-graphic-p))
     #+end_src
     -----
 *** Waher
     #+html: <p align="center"><a href="https://github.com/emacsfodder/emacs-waher-theme" target="_blank"><img src="https://camo.githubusercontent.com/b3d3d57f542d19104c0c20495bdf7864292920ec/68747470733a2f2f7261772e6769746875622e636f6d2f6a61736f6e6d32332f656d6163732d77616865722d7468656d652f6d61737465722f77616865722d7468656d652e706e67"/></a></p>
     #+begin_src emacs-lisp :tangle yes
 (use-package waher-theme
-  :if jr/display-p)
+  :if (display-graphic-p))
     #+end_src
 *** Theme of choice
     #+begin_src emacs-lisp :tangle yes
@@ -127,7 +115,7 @@
   "Default theme to be loaded as part of the initial
 configuration.")
 
-(when (and jr/display-p
+(when (and (display-graphic-p)
            (member jr/default-theme (custom-available-themes)))
   (switch-theme jr/default-theme))
     #+end_src
@@ -265,7 +253,7 @@ configuration.")
    instance only inherits the default environment variables.
    #+begin_src emacs-lisp :tangle yes
 (use-package exec-path-from-shell
-  :when jr/macos-p
+  :when (eq system-type 'darwin)
   :demand t
   :config
   (setq exec-path-from-shell-variables '("PATH" "MANPATH" "JAVA_HOME"))
@@ -399,7 +387,7 @@ configuration.")
   (package-install-file (expand-file-name "site-lisp/zoom-frm.el" user-emacs-directory)))
 
 (use-package zoom-frm
-  :if (and jr/display-p
+  :if (and (display-graphic-p)
            (package-installed-p 'zoom-frm))
   :bind ("C-M-=" . zoom-in/out))
    #+end_src
