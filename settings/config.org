@@ -959,17 +959,6 @@ point reaches the beginning or end of the buffer, stop there."
     files or buffers. Very handy for comparing commits.
     #+begin_src emacs-lisp :tangle yes
 (use-package ediff
-  :bind (("C-. = b" . ediff-buffers)
-         ("C-. = B" . ediff-buffers3)
-         ("C-. = c" . compare-windows)
-         ("C-. = =" . ediff-files)
-         ("C-. = f" . ediff-files)
-         ("C-. = F" . ediff-files3)
-         ("C-. = r" . ediff-revision)
-         ("C-. = p" . ediff-patch-file)
-         ("C-. = P" . ediff-patch-buffer)
-         ("C-. = l" . ediff-regions-linewise)
-         ("C-. = w" . ediff-regions-wordwise))
   :config
   (setq ediff-diff-options "-w"
         ediff-split-window-function 'split-window-horizontally
