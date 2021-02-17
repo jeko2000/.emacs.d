@@ -865,6 +865,10 @@ Emacs integration with [[https://plantuml.com/][PlantUML]].
 #+end_src
 * Programming packages
 ** Generic
+*** Display line numbers mode
+#+begin_src emacs-lisp :tangle yes
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+#+end_src
 *** Company
     [[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
     #+begin_src emacs-lisp :tangle yes
@@ -1128,30 +1132,6 @@ point reaches the beginning or end of the buffer, stop there."
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (global-set-key (kbd "C-c q") 'auto-fill-mode)
 (setq comment-auto-fill-only-comments t)
-    #+end_src
-*** Nlinum
-    Showing Line numbers in a buffer can be fairly useful when working
-    with code. [[http://elpa.gnu.org/packages/nlinum.html][NLinum]] mode replaces the in-built linum-mode.
-    #+begin_src emacs-lisp :tangle no
-(use-package nlinum
-  :init
-  (defun my-nlinum-mode-hook ()
-    (when nlinum-mode
-      (setq-local nlinum-format
-                  (concat "%" (number-to-string
-                               ;; Guesstimate number of buffer lines.
-                               (ceiling (log (max 1 (/ (buffer-size) 80)) 10)))
-                          "d"))))
-  :config
-  (progn
-    ;; Preset `nlinum-format' for minimum width. (from https://www.emacswiki.org/emacs/LineNumbers)  
-    (add-hook 'prog-mode-hook 'nlinum-mode)
-    (add-hook 'nlinum-mode-hook #'my-nlinum-mode-hook)))
-
-    #+end_src
-
-    #+begin_src emacs-lisp :tangle yes
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
     #+end_src
 *** Whitespace-cleanup-mode
     [[https://github.com/purcell/whitespace-cleanup-mode][whitespace-cleanup-mode]] is a better solution than just having
