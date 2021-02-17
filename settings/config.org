@@ -1841,6 +1841,14 @@ chmod +x coursier
            -o ~/bin/metals-emacs -f
      #+end_src
 
+*** Typescript
+#+begin_src emacs-lisp :tangle yes
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp-deferred)
+  :config
+  (setq typescript-indent-level 2))
+#+end_src
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
