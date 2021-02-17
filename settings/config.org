@@ -20,15 +20,29 @@
    #+end_src
 ** Basic GUI
    Remove GUI elements geared to mouse usage.
-   This will maximize the screen space for our buffers.
    #+begin_src emacs-lisp :tangle yes
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (tooltip-mode -1)
+
 (setq visible-cursor nil
       inhibit-startup-message t
       initial-scratch-message "")
+
+;; Column numbers
+(column-number-mode)
+
+;; Global font lock (syntax highlighting)
+(global-font-lock-mode t)
+
+;; Transient mode
+(transient-mark-mode 1)
+(setq
+ ;; Determine if shift+arrow selection is allowed
+ shift-select-mode nil
+ ;; Determine if C-u C-SPC C-SPC should pop the mark again
+ set-mark-command-repeat-pop t)
    #+end_src
 ** Themes
    The manual defines [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Custom-Themes.html][Custom Themes]] as a collections of settings that can
@@ -142,17 +156,28 @@ configuration.")
 
 (global-prettify-symbols-mode 1)
    #+end_src
-* Application-wide
-  Configure application-wide settings.
-  #+begin_src emacs-lisp :tangle yes
+** UTF-8 Encoding
+#+begin_src emacs-lisp :tangle yes
 ;; Default to UTF-8
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
+#+end_src
 
-;; Auto-save/backup settings
+** Aliases
+#+begin_src emacs-lisp :tangle yes
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src
+** Disabled commands
+#+begin_src emacs-lisp :tangle yes
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+#+end_src
+** Auto save mode
+#+begin_src emacs-lisp :tangle yes
 (setq auto-save-default t
       auto-save-timeout 2
       auto-save-interval 64
@@ -167,94 +192,38 @@ configuration.")
       delete-by-moving-to-trash t
       kept-old-versions 12
       kept-new-versions 12)
-
-(let ((backups (expand-file-name "backups" user-emacs-directory)))
-  (setq backup-directory-alist `((".*" . ,backups))
-        auto-save-file-name-transforms `((".*" ,backups t))))
-
-
-;; Garbage collection
-(setq gc-cons-threshold (* 100 1024 1024)
-      read-process-output-max (* 1024 1024)
-      gc-cons-percentage 0.5)
-
-;; Message log limit
-(setq message-log-max 16384)
-
-;; Columns
-(setq column-number-mode t
-      fill-column 78)
-
-;; Clipboard
-(setq select-enable-clipboard t)
-
-;; Aliases
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; Disabled functions
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-(put 'dired-find-alternative-file 'disabled nil)
-
-;; Mark/region
-(transient-mark-mode +1)
-(setq shift-select-mode nil
-      set-mark-command-repeat-pop t)
-
-;; Minibuffer/Mode line
-(setq echo-keystrokes 0.5
-      enable-recursive-minibuffers t)
-
-;; Frames
-(global-font-lock-mode t)
-(setq visible-bell t)
-
-;; Printing
-(setq eval-expression-print-level nil)
-
-;; Navigation/editing
+#+end_src
+** Basic editing
+#+begin_src emacs-lisp :tangle yes
 (setq-default
  indent-tabs-mode nil
  indicate-empty-lines t
  truncate-lines t
  sentence-end-double-space nil)
-
-;; Buffers
+#+end_src
+** Basic buffer configuration
+#+begin_src emacs-lisp :tangle yes
 (setq uniquify-buffer-name-style 'forward)
+(setq echo-keystrokes 0.5
+      enable-recursive-minibuffers t)
+#+end_src
+** Auto compression mode
+#+begin_src emacs-lisp :tangle yes
 (auto-compression-mode t)
-  #+end_src
+#+end_src
+** Recursion variables
+   From [[info:eintr#Loops%20&%20Recursion][info:eintr#Loops & Recursion]]
 
-  From [[info:eintr#Loops%20&%20Recursion][info:eintr#Loops & Recursion]]
-
-  #+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 (setq max-specpdl-size 20000
       max-lisp-eval-depth 30000)
-  #+end_src
-
-  Let's update auth-sources for our configuration. In particular, let's
-  test if a [[https://github.com/syncthing/syncthing][Syncthing]] folder exists in the file system and if so, add 
-  #+begin_src emacs-lisp :tangle yes
-(setq auth-sources '( "~/.authinfo.gpg"
-                      "~/.authinfo"
-                      "~/.netrc"))
-
-(let ((syncthing-auth-source "~/Sync/all/.authinfo.gpg"))
-  (when (file-exists-p syncthing-auth-source)
-    (add-to-list 'auth-sources syncthing-auth-source)))
-  #+end_src
-
-  As pointed out in [[http://puntoblogspot.blogspot.com/2018/10/kill-ring-max-is-thing.html][here]], we can increase the value of kill-ring-max to
-  allow for a larger kill-ring
-  #+begin_src emacs-lisp :tangle yes
-(setq kill-ring-max 180)
-  #+end_src
-
-  Let's make it a bit harder to quit out of emacs
-  #+begin_src emacs-lisp :tangle yes
+   #+end_src
+** Quit emacs
+   Let's make it a bit harder to quit out of emacs
+   #+begin_src emacs-lisp :tangle yes
 (global-set-key (kbd "C-x C-c") nil)
 (global-set-key (kbd "C-x r q") 'save-buffers-kill-terminal)
-  #+end_src
+   #+end_src
 * Non-programming packages
 ** exec-path-from-shell
    [[https://github.com/purcell/exec-path-from-shell][exec-path-from-shell]] ensures environment variables in Emacs match
