@@ -865,6 +865,53 @@ Emacs integration with [[https://plantuml.com/][PlantUML]].
 #+end_src
 * Programming packages
 ** Generic
+*** Company
+    [[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
+    #+begin_src emacs-lisp :tangle yes
+(use-package company
+  :defer 2
+  :bind (("TAB" . company-complete)
+         (:map company-active-map
+               ("C-n" . company-select-next)
+               ("C-p" . company-select-previous)))
+  :config
+  (global-company-mode t)
+  (setq company-idle-delay .3
+        company-minimum-prefix-length 2
+        company-show-numbers t
+        company-tooltip-align-annotations t))
+
+(use-package company-dabbrev
+  :ensure nil
+  :config
+  (setq company-dabbrev-downcase nil
+        company-dabbrev-ignore-case nil
+        company-dabbrev-minimum-length 3))
+
+(use-package company-dabbrev-code
+  :ensure nil
+  :config
+  (setq company-dabbrev-code-everywhere t
+        company-dabbrev-code-ignore-case nil))
+
+(use-package company-box
+  ;; https://github.com/sebastiencs/company-box
+  ;; Per docs, this package requires emacs 26
+  :if (>= emacs-major-version 26)
+  :after company
+  :hook (company-mode . company-box-mode)
+  :config
+  (setq company-box-enable-icon t
+        company-box-doc-enable t
+        company-box-doc-delay 0.3))
+
+(use-package company-statistics
+  :after company
+  :hook (company-mode . company-statistics-mode))
+
+(use-package company-restclient
+  :after company restclient)
+    #+end_src
 *** Misc
     #+begin_src emacs-lisp :tangle yes
 ;; See https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
@@ -946,34 +993,6 @@ point reaches the beginning or end of the buffer, stop there."
   :hook ((css-mode        . aggressive-indent-mode)
          (emacs-lisp-mode . aggressive-indent-mode)
          (lisp-mode       . aggressive-indent-mode)))
-    #+end_src
-*** Company
-    [[http://company-mode.github.io/][Complete anything]] in emacs with company-mode.
-    #+begin_src emacs-lisp :tangle yes
-(use-package company
-  :delight t
-  :init
-  :bind (("C-c C-/" . company-complete)
-         ("TAB" . company-complete))
-  :config
-  (progn
-    (setq company-show-numbers t
-          company-tooltip-align-annotations t
-          company-minimum-prefix-length 3)
-    (global-company-mode 1)))
-
-(use-package company-statistics
-  :after company
-  :hook (company-mode . company-statistics-mode))
-
-(use-package company-restclient
-  :after company restclient)
-
-(use-package company-elisp
-  :ensure nil
-  :after company
-  :config
-  (push 'company-elisp company-backends))
     #+end_src
 *** Code Folding
     The [[https://www.emacswiki.org/emacs/HideShow][hideshow]] minor mode allows one to hide and show blocks of text.
