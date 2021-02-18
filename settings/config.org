@@ -1994,7 +1994,7 @@ Source: EmacsWiki"
    #+end_src
 ** Copy current file
 #+begin_src emacs-lisp :tangle yes
-(defun jr/kill-buffer-file-name ()
+(defun jr/kill-append-buffer-file-name ()
   (interactive)
   (when-let ((buf (buffer-file-name)))
     (message "Added %s to kill-ring" buf)
