@@ -1651,16 +1651,14 @@ point reaches the beginning or end of the buffer, stop there."
      #+end_src
 *** Python
 #+begin_src emacs-lisp :tangle yes
-(use-package lsp-python-ms
-  :init
-  (setq lsp-python-ms-auto-install-server t)
-  (defun jr/python-mode-hook ()
-    (require 'lsp-python-ms)
-    (lsp))
-  :hook (python-mode . jr/python-mode-hook)
+(use-package python
+  :ensure nil
+  :hook (inferior-python-mode . smartparens-strict-mode)
   :config
-  (add-hook 'inferior-python-mode-hook 'smartparens-strict-mode)
-  (defalias 'workon 'pyvenv-workon)
+  (when-let ((interpreter (executable-find "python3")))
+    (setq python-shell-interpreter interpreter))
+  (when (executable-find "pyls")
+    (add-hook 'python-mode-hook #'lsp-deferred))
   (if (executable-find "ipython")
       (setq python-shell-interpreter "ipython"
             python-shell-interpreter-args "-i --simple-prompt")
