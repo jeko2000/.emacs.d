@@ -1847,6 +1847,14 @@ chmod +x coursier
   :config
   (setq typescript-indent-level 2))
 #+end_src
+*** JSON mode
+#+begin_src emacs-lisp :tangle yes
+(use-package json-mode
+  :mode "\\.json\\'"
+  :custom
+  (json-reformat:indent-width 2)
+  (js-indent-level 2))
+#+end_src
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
