@@ -1846,8 +1846,13 @@ chmod +x coursier
 *** Typescript
 #+begin_src emacs-lisp :tangle yes
 (use-package typescript-mode
+  :init
+  (defun jr/lsp-typescript-mode ()
+    (lsp-deferred)
+    (require 'dap-node)
+    (dap-node-setup))
   :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp-deferred)
+  :hook (typescript-mode . jr/lsp-typescript-mode)
   :config
   (setq typescript-indent-level 2))
 #+end_src
