@@ -843,6 +843,10 @@ Emacs integration with [[https://plantuml.com/][PlantUML]].
     :after flycheck plantuml
     :hook (plantuml-mode . flyspell-mode))
 #+end_src
+** doom modeline
+#+begin_src emacs-lisp :tangle yes
+(use-package doom-modeline)
+#+end_src
 * Programming packages
 ** Generic
 *** Display line numbers mode
