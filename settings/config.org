@@ -1367,65 +1367,39 @@ point reaches the beginning or end of the buffer, stop there."
 *** Common Lisp
     [[https://common-lisp.net/][Common Lisp]], the programmable programming language.
     The following sets up [[https://www.emacswiki.org/emacs/SlimeMode][slime]] to use [[http://www.sbcl.org/][SBCL]] so ensure you have SBCL
-    installed first.
-    #+begin_src emacs-lisp :tangle no
-(use-package slime
-  :disabled t
-  :init
-  (progn
-    (cond
-     ((file-exists-p "/usr/bin/sbcl")
-      (setq inferior-lisp-program "/usr/bin/sbcl"))
-     ((file-exists-p "/opt/local/bin/sbcl")
-      (setq inferior-lisp-program "/opt/local/bin/sbcl")))
-    (when (file-exists-p "/home/jeko/build/slime")
-      (add-to-list 'load-path "/home/jeko/build/slime"))
-    (setq inferior-lisp-program "sbcl")
-    (require 'slime-autoloads)
-    (add-to-list 'slime-contribs 'slime-fancy)
-    (when (file-exists-p "~/quicklisp/slime-helper.el")
-      (load (expand-file-name "~/quicklisp/slime-helper.el")))
-    (add-to-list 'slime-contribs 'slime-repl))
-  :config
-  (progn
-    (when (file-exists-p "/home/jeko/build/sbcl.core-for-slime")
-      (setq slime-lisp-implementations
-            '((sbcl ("sbcl" "--core" "/home/jeko/build/sbcl.core-for-slime")))))    
-    (setq slime-net-coding-system 'utf-8-unix)
-    (add-hook 'slime-mode-hook
-              (lambda ()
-                (cond ((boundp 'slime-mode-map)
-                       (define-key slime-mode-map (kbd "C-c x") nil)
-                       (message "slime keybinding on C-c x has been sanitized"))
-                      ('t (message "slime keybindings not sanitized")))))
-    (use-package slime-company
-      :config
-      (add-to-list 'slime-contribs 'slime-company))
-
-    (add-to-list 'company-backends '(company-slime :with company-dabbrev))
-    (use-package common-lisp-snippets
-      :defer t)))
-    #+end_src
+    installed first:
     #+begin_src emacs-lisp :tangle yes
-;; sly
-(use-package sly
-  :defer 10
-  :config
-  (when (file-exists-p "/home/jeko/build/sly")
-    (add-to-list 'load-path "/home/jeko/build/sly")
-    (require 'sly-autoloads))
-  (cond ((executable-find "sbcl")
-         (setq inferior-lisp-program "sbcl"))
-        ((executable-find "abcl")
-         (setq inferior-lisp-program "abcl")))
-  (defun jr/sly-hook ()
-    (sly-mode +1)
-    (sly-autodoc-mode +1))
-  (add-hook 'lisp-mode-hook 'jr/sly-hook)
-  (setq sly-complete-symbol-function 'sly-flex-completions))
+(use-package slime-company
+  :defer t)
+
+(use-package slime
+  :bind (("C-c C-d C-s" . slime-describe-symbol)
+         ("C-c C-d C-f" . slime-describe-function))
+  :init
+  (setq slime-lisp-implementations '((sbcl ("sbcl")))
+        slime-default-lisp 'sbcl)
+  (let ((hyperspec-root "/opt/homebrew/share/doc/hyperspec/HyperSpec/"))
+    (when (file-exists-p hyperspec-root)
+      (setq common-lisp-hyperspec-root hyperspec-root)
+      (setq common-lisp-hyperspec-symbol-table
+            (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
+      (setq common-lisp-hyperspec-issuex-table
+            (concat common-lisp-hyperspec-root "Data/Map_IssX.txt"))))
+  (slime-setup '(slime-fancy slime-company slime-cl-indent))
+  (when (file-exists-p "~/quicklisp/slime-helper.el")
+    (load (expand-file-name "~/quicklisp/slime-helper.el"))))
 
 (use-package common-lisp-snippets
-  :after sly)
+  :defer t)
+
+;; Source https://dnaeon.github.io/starting-with-common-lisp-in-2020/
+(defun slime-description-fontify ()
+  (with-current-buffer "*slime-description*"
+    (slime-company-doc-mode)))
+
+(defadvice slime-show-description (after slime-description-fontify activate)
+  "Fontify sections of SLIME Description."
+  (slime-description-fontify))
     #+end_src
 *** Scheme
     [[https://en.wikipedia.org/wiki/Scheme_%2528programming_language%2529][Scheme]] is a dialect of Lisp developed by Gerald Sussman and Guy
