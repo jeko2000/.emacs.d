@@ -1531,7 +1531,7 @@ point reaches the beginning or end of the buffer, stop there."
     natively understands embedded CSS and JavaScript code blocks.
 
     We also install [[https://github.com/emacsmirror/rainbow-mode][rainbow-mode]] to colorize color names in web and CSS buffers.
-    #+begin_src emacs-lisp :tangle no
+    #+begin_src emacs-lisp :tangle yes
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
          ("\\.mustache\\'" . web-mode)
@@ -1540,30 +1540,6 @@ point reaches the beginning or end of the buffer, stop there."
          ("\\.hbs\\'" . web-mode))
   :config
   (progn
-    (defun jr/web-mode-hook ()
-      (when (boundp 'flycheck-disabled-checkers)
-        (add-to-list 'flycheck-disabled-checkers 'javascript-jshint)
-        (add-to-list 'flycheck-disabled-checkers 'json-jsonlist)
-        (flycheck-add-mode 'javascript-eslint 'web-mode)
-        (smartparens-global-strict-mode +1)
-        (flycheck-mode +1)))
-    (add-hook 'web-mode-hook #'jr/web-mode-hook)
-    (setq web-mode-engines-alist
-          '(("django"    . "\\.html\\'")
-            ("jinja2"    . "\\.html\\'")
-            ("php"       . "\\.phtml\\'"))
-          web-mode-markup-indent-offset 2
-          web-mode-css-indent-offset 2
-          web-mode-code-indent-offset 2
-          web-mode-indent-style 2
-          web-mode-style-padding 1
-          web-mode-script-padding 1
-          web-mode-block-padding 0
-          web-mode-enable-auto-closing t
-          web-mode-enable-auto-quoting t
-          web-mode-enable-auto-pairing t
-          web-mode-enable-css-colorization t
-          web-mode-enable-engine-detection t)
     (use-package rainbow-mode
       :hook (web-mode css-mode)
       :defer t
@@ -1571,7 +1547,6 @@ point reaches the beginning or end of the buffer, stop there."
       (progn
         (add-hook 'web-mode-hook #'rainbow-mode)
         (add-hook 'css-mode-hook #'rainbow-mode)))
-    (use-package emmet-mode)
     (use-package company-web
       :config
       (define-key web-mode-map (kbd "C-'") 'company-web-html))))
@@ -1584,20 +1559,77 @@ point reaches the beginning or end of the buffer, stop there."
     Oh, and remember that [[https://github.com/rg3/youtube-dl][youtube-dl]] is a great way to download/watch
     YouTube videos!
     #+begin_src emacs-lisp :tangle yes
-(use-package simple-httpd
-  :defer t
+(use-package simple-httpd)
+(use-package impatient-mode
+  :init (defun jr/impatient-mode ()
+          (interactive)
+          (unless (httpd-running-p)
+            (httpd-start)
+            (browse-url "http://localhost:8080/imp/"))
+          (impatient-mode +1)
+          (message "Impatient mode enabled in the following buffers: %s" (princ (imp--buffer-list))))
+  :bind ("C-c i" . jr/impatient-mode)
+  :after simple-httpd
   :config
-  (progn
-    (setq httpd-root "/var/www/html")
-    (use-package impatient-mode
-      :hook ((web-mode . httpd-start)
-             (web-mode . impatient-mode)
-             (css-mode . httpd-start)))))
+  (setq impatient-mode-delay 0.1))
     #+end_src
+
+    Emmet mode
+    #+begin_src emacs-lisp :tangle yes
+(use-package emmet-mode
+  :init
+  (defun duplicate-line (arg)
+    "Duplicate current line, leaving point in lower line."
+    (interactive "*p")
+
+    ;; save the point for undo
+    (setq buffer-undo-list (cons (point) buffer-undo-list))
+
+    ;; local variables for start and end of line
+    (let ((bol (save-excursion (beginning-of-line) (point)))
+          eol)
+      (save-excursion
+
+        ;; don't use forward-line for this, because you would have
+        ;; to check whether you are at the end of the buffer
+        (end-of-line)
+        (setq eol (point))
+
+        ;; store the line and disable the recording of undo information
+        (let ((line (buffer-substring bol eol))
+              (buffer-undo-list t)
+              (count arg))
+          ;; insert the line arg times
+          (while (> count 0)
+            (newline)         ;; because there is no newline in 'line'
+            (insert line)
+            (setq count (1- count)))
+          )
+
+        ;; create the undo information
+        (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list)))
+      ) ; end-of-let
+
+    ;; put the point in the lowest line and return
+    (next-line arg))
+  :bind (:map emmet-mode-keymap
+              ("<tab>" . emmet-expand-line)
+              ("C-t" . duplicate-line))
+  :hook
+  ((sgml-mode . emmet-mode)
+   (web-mode . emmet-mode)
+   (css-mode . emmet-mode))
+  :config
+  (add-hook 'emmet-mode-hook (lambda () (smartparens-strict-mode -1)))
+  (setq emmet-move-cursor-between-quotes t))
+    #+end_src
+    
 *** Java
     #+begin_src emacs-lisp :tangle yes
 (use-package lsp-java
   :init
+  ;;(setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/bin/java")
+  (setq lsp-java-java-path "/Users/jruiz/Library/Caches/Coursier/jvm/adopt@1.11.0-9/Contents/Home/bin/java")
   (defun jr/lsp-java-config ()
     (setq-local tab-width 2
                 c-basic-offset 2)
@@ -1673,8 +1705,10 @@ point reaches the beginning or end of the buffer, stop there."
     (lsp)
     (dap-mode)
     (dap-node-setup))
+  :hook
+  (js-mode . jr/js-setup-lsp)
   :config
-  (let ((indent-level 4))
+  (let ((indent-level 2))
     (setq js-chain-indent t
           js-indent-level indent-level
           js-jsx-attribute-offset indent-level
