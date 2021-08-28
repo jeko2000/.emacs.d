@@ -1138,7 +1138,7 @@ point reaches the beginning or end of the buffer, stop there."
     (sp-pair "[" "]" :wrap "s-[")
     (sp-pair "{" "}" :wrap "s-{")
     (sp-with-modes
-        '(java-mode json-mode typescript-mode)
+        '(java-mode json-mode typescript-mode js-mode)
       (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
       (sp-local-pair "[" nil :post-handlers '(:add ("||\n[i]" "RET")))
       (sp-local-pair "(" nil :post-handlers '(:add ("||\n[i]" "RET"))))
