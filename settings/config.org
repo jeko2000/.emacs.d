@@ -1535,6 +1535,10 @@ point reaches the beginning or end of the buffer, stop there."
     We also install [[https://github.com/emacsmirror/rainbow-mode][rainbow-mode]] to colorize color names in web and CSS buffers.
     #+begin_src emacs-lisp :tangle yes
 (use-package web-mode
+  :custom
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
   :mode (("\\.html?\\'" . web-mode)
          ("\\.mustache\\'" . web-mode)
          ("\\.xhtml?\\'" . web-mode)
