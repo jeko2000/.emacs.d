@@ -460,88 +460,60 @@ configuration.")
    #+end_src
 ** erc
    #+begin_src emacs-lisp :tangle yes
-;; This causes ERC to connect to the Freenode network upon hitting
-;; C-c e f.  Replace MYNICK with your IRC nick.
 (use-package erc
   :delight erc-mode "ε"
   :preface
   (defun jr/connect-to-irc ()
     (interactive)
-    (erc :server "irc.freenode.net"
+    (erc :server "irc.libera.chat"
          :port 6667
-         :nick "jruiz"))
+         :nick "jeko"
+         :full-name "Johnny Ruiz (jruiz, jeko, jeko2000)"))
   :bind ("C-c e f" . 'jr/connect-to-irc)
-  :defer 5
   :config
   (define-key erc-mode-map (kbd "RET") nil)
   (define-key erc-mode-map (kbd "C-c RET") 'erc-send-current-line)
   (define-key erc-mode-map (kbd "C-c C-RET") 'erc-send-current-line)
   (add-to-list 'erc-modules 'autoaway)
-  (add-to-list 'erc-modules 'autojoin)
-  (add-to-list 'erc-modules 'fill)
   (add-to-list 'erc-modules 'log)
-  (add-to-list 'erc-modules 'match)
   (add-to-list 'erc-modules 'notifications)
   (add-to-list 'erc-modules 'spelling)
-  (add-to-list 'erc-modules 'track)
   (erc-update-modules)
-  
-  ;; Top level settings
+
   (setq erc-nick-uniquifier "_"
         erc-send-whitespace-lines nil
-        erc-user-full-name "Johnny Ruiz (jeko2000)"
         erc-rename-buffers t
         erc-interpret-mirc-color t
         erc-save-buffer-on-part t
-        erc-kill-buffer-on-part t
-        erc-kill-queries-on-quit t
         erc-query-display 'buffer
+        erc-prompt-for-password nil
         erc-kill-server-buffer-on-quit t
         erc-hide-list '("JOIN" "PART" "QUIT")
         erc-lurker-hide-list '("JOIN" "PART" "QUIT")
-        erc-timestamp-only-if-changed-flag nil
-        erc-timestamp-format "%H:%M "
-        erc-insert-timestamp-function 'erc-insert-timestamp-left)
+        erc-timestamp-only-if-changed-flag nil)
 
-  ;; Module specific settings
-  (setq erc-auto-set-away nil;;t
-        erc-auto-discard-away t
-        erc-autoaway-idle-seconds 1800
+  (setq erc-autoaway-idle-seconds 1800
         erc-autoaway-idle-method 'user
         erc-autojoin-delay 2
         erc-autojoin-timing 'ident
         erc-autojoin-channels-alist
-        '(("freenode.net"
+        '(("libera.chat"
            "#emacs"
-           "#erc"
-           "#org-mode"
-           "#gnus"
+           "#emacs-beginners"
+           "#vertx"
            ;; lisp
+           "#commonlisp"
            "#lisp"
            "#lisp-es"
-           "#sbcl"
            "#lispcafe"
-           ;; others
-           "#vertx"
-           ))
-        erc-fill-prefix "          "
-        erc-fill-column 78
-        erc-fill-function 'erc-fill-static
-        erc-fill-static-center 22
-        erc-log-channels-directory "~/.erc/log"
+           "#lispweb"))
         erc-keywords '("fix" "resolve" "release" "jruiz" "jeko")
         erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
                                   "324" "329" "332" "333" "353" "477"))
+  ;; logging
+  (setq erc-log-channels-directory "~/.erc/logs/")
   (unless (file-exists-p erc-log-channels-directory)
-    (mkdir erc-log-channels-directory t))
-  (let ((notifier (concat (getenv "HOME") "/bin/erc-notifier")))
-    (when (file-exists-p notifier)
-      (setq jr/erc-notifier notifier)
-      (defun jr/erc-notify-on-private-msg (proc parsed)
-        (let ((nick (car (erc-parse-user (erc-response.sender parsed))))
-              (msg (erc-response.contents parsed)))
-          (start-process "erc-notifier" nil jr/erc-notifier nick msg)))
-      (add-hook 'erc-server-PRIVMSG-functions 'jr/erc-notify-on-private-msg))))
+    (mkdir erc-log-channels-directory t)))
    #+end_src
 ** elfeed
    [[https://github.com/skeeto][Skeeto]]'s excellent [[https://github.com/skeeto/elfeed][elfeed]] package provides an excellent RSS and Atom
