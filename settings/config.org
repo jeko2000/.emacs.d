@@ -1643,17 +1643,16 @@ point reaches the beginning or end of the buffer, stop there."
 #+begin_src emacs-lisp :tangle yes
 (use-package python
   :ensure nil
-  :hook (inferior-python-mode . smartparens-strict-mode)
   :config
   (when-let ((interpreter (executable-find "python3")))
-    (setq python-shell-interpreter interpreter))
-  (when (executable-find "pyls")
-    (add-hook 'python-mode-hook #'lsp-deferred))
-  (if (executable-find "ipython")
-      (setq python-shell-interpreter "ipython"
-            python-shell-interpreter-args "-i --simple-prompt")
-    (setq python-shell-interpreter "python"
-          python-shell-interpreter-args "-i")))
+    (setq python-shell-interpreter interpreter)))
+
+(use-package lsp-pyright
+  :init
+  (defun jr/python-mode-hook ()
+    (require 'lsp-pyright)
+    (lsp))
+  :hook (python-mode . jr/python-mode-hook))
 #+end_src
 *** SQL
     #+begin_src emacs-lisp :tangle yes
