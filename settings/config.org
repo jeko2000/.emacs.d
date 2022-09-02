@@ -1642,17 +1642,13 @@ point reaches the beginning or end of the buffer, stop there."
 *** Python
 #+begin_src emacs-lisp :tangle yes
 (use-package python
-  :ensure nil
-  :config
-  (when-let ((interpreter (executable-find "python3")))
-    (setq python-shell-interpreter interpreter)))
+  :ensure nil)
 
-(use-package lsp-pyright
-  :init
-  (defun jr/python-mode-hook ()
-    (require 'lsp-pyright)
-    (lsp))
-  :hook (python-mode . jr/python-mode-hook))
+(use-package lsp-pyright)
+
+(use-package pyvenv
+  :config
+  (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python))
 #+end_src
 *** SQL
     #+begin_src emacs-lisp :tangle yes
