@@ -1606,24 +1606,19 @@ point reaches the beginning or end of the buffer, stop there."
     #+begin_src emacs-lisp :tangle yes
 (use-package lsp-java
   :init
-  ;;(setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/bin/java")
-  (setq lsp-java-java-path "/Users/jruiz/Library/Caches/Coursier/jvm/adopt@1.11.0-9/Contents/Home/bin/java")
   (defun jr/lsp-java-config ()
-    (setq-local tab-width 2
-                c-basic-offset 2)
+    (setq-local tab-width 4
+                c-basic-offset 4)
     (setq c-default-style "java"
           indent-tags-mode nil
           compile-command "mvn -q compile"))
-  :hook ((java-mode . jr/lsp-java-config)
-         (java-mode . lsp))
-  :config
-  (setq lsp-java-vmargs
-        '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication"))
-  (define-key lsp-mode-map (kbd "C-c C-l d d") #'dap-java-debug-test-class))
+  :hook ((java-home . jr/lsp-java-config)))
 
 (use-package dap-java
   :ensure nil
-  :after (lsp-java))
+  :after (lsp-java)
+  :config
+  (define-key lsp-mode-map (kbd "C-c C-l d d") #'dap-java-debug-test-class))
 
 (use-package java-snippets
   :after yasnippet
