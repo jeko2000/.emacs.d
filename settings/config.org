@@ -539,17 +539,6 @@ configuration.")
 (use-package po-mode
   :mode ("\\.pot?\\'" . po-mode))
    #+end_src
-** gnuplot
-   [[http://www.gnuplot.info/][Gnuplot]] is a portable command-line driven graphing utility supported
-   by org mode through Bruce Rave's [[https://github.com/bruceravel/gnuplot-mode][gnuplot-mode]]
-   #+begin_src emacs-lisp :tangle yes
-(use-package gnuplot
-  :if (executable-find "gnuplot")
-  :mode (("\\.gpi\\'" . gnuplot-mode)
-         ("\\.plt\\'" . gnuplot-mode)
-         ("\\.gp\\'" . gnuplot-mode)
-         ("\\.gnuplot\\'" . gnuplot-mode)))
-   #+end_src
 ** ag
    The [[https://github.com/ggreer/the_silver_searcher][silver searcher]] is an incredibly useful code-searching tool.
    Though it is similar to ack or grep, it is much, much faster. In order
