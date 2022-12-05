@@ -311,19 +311,6 @@ configuration.")
   (put 'temporary-file-directory 'standard-value '("/tmp")))
    #+end_src
 
-** PDF-Tools
-   [[https://github.com/politza/pdf-tools][Alternative to DocView for PDF files]]. Requires initial setup though.
-   #+begin_src emacs-lisp :tangle yes
-(use-package pdf-tools
-  :magic ("%PDF" . pdf-view-mode)
-  :init
-  (when (condition-case nil
-            (progn (pdf-info-check-epdfinfo) t)
-          (error nil))
-    (add-to-list 'auto-mode-alist '("\\.[pP][dD][fF]\\'" . pdf-view-mode)))
-  :config
-  (pdf-tools-install :no-query nil t))
-   #+end_src
 ** Undo Tree
    [[https://www.emacswiki.org/emacs/UndoTree][Undo Tree]] tries to improve on emacs undo system by helping you
    visualize actions.
