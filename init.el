@@ -71,4 +71,7 @@ Returns the tangled file as a string."
     (load-file
      (jr/org-babel-tangle-file-if-needed org-config))))
 
+;; Set custom.el as the custom file instead of using this init.el.
+(setq custom-file (expand-file-name "custom.el"))
+
 (message "Emacs ready at %s" (current-time-string))
