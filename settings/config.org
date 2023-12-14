@@ -1143,57 +1143,6 @@ point reaches the beginning or end of the buffer, stop there."
                   )))))
     #+end_src
 
-*** LSP
-    #+begin_src emacs-lisp :tangle yes
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :init
-  (setq lsp-keymap-prefix "C-c C-l")
-  (defun jr/lsp-breadcrum-setup ()
-    (setq lsp-headerline-breadcrumb-segments '(project path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
-  
-  :hook ((lsp-mode . lsp-enable-which-key-integration)
-         (lsp-mode . jr/lsp-breadcrum-setup))
-  :bind (:map lsp-mode-map
-              ("C-<return>" . lsp-execute-code-action))
-  :config
-  ;; Performance tuning
-  (setq read-process-output-max (* 1024 1024)
-        gc-cons-threshold (* 100 1024 1024)
-        lsp-completion-provider :capf
-        lsp-idle-delay 0.500
-        lsp-log-io nil)
-  (setq-local company-minimum-prefix-length 1
-              company-idle-delay 0.0))
-
-(use-package lsp-ui
-  :after lsp-mode
-  :config
-  (setq lsp-ui-sideline-enable nil
-        lsp-ui-peek-enable nil
-        lsp-ui-doc-position 'bottom
-        lsp-ui-doc-enable t
-        lsp-ui-doc-delay 1.0))
-
-(use-package lsp-treemacs
-  :after lsp-mode
-  :hook (lsp-mode . lsp-treemacs-sync-mode)
-  :config
-  (setq lsp-treemacs-error-list-severity 3))
-
-(use-package lsp-ivy
-  :after ivy lsp-mode
-  :commands lsp-ivy-workspace-symbol)
-
-(use-package dap-mode
-  :after lsp-mode
-  :config
-  (dap-mode t)
-  (dap-ui-mode t)
-  (dap-auto-configure-mode))
-    #+end_src
-
 ** Language Specific
 *** Eshell
     [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] is a shell-like command interpreter implemented in Emacs Lisp and written
@@ -1516,22 +1465,6 @@ point reaches the beginning or end of the buffer, stop there."
     
 *** Java
     #+begin_src emacs-lisp :tangle yes
-(use-package lsp-java
-  :init
-  (defun jr/lsp-java-config ()
-    (setq-local tab-width 4
-                c-basic-offset 4)
-    (setq c-default-style "java"
-          indent-tags-mode nil
-          compile-command "mvn -q compile"))
-  :hook ((java-home . jr/lsp-java-config)))
-
-(use-package dap-java
-  :ensure nil
-  :after (lsp-java)
-  :config
-  (define-key lsp-mode-map (kbd "C-c C-l d d") #'dap-java-debug-test-class))
-
 (use-package java-snippets
   :after yasnippet
   :config
@@ -1548,11 +1481,6 @@ point reaches the beginning or end of the buffer, stop there."
      #+end_src
 *** Python
 #+begin_src emacs-lisp :tangle yes
-(use-package python
-  :ensure nil)
-
-(use-package lsp-pyright)
-
 (use-package pyvenv
   :config
   (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python))
@@ -1623,15 +1551,6 @@ point reaches the beginning or end of the buffer, stop there."
 *** JavaScript
     #+begin_src emacs-lisp :tangle yes
 (use-package js
-  :init
-  (defun jr/js-setup-lsp ()
-    (interactive)
-    (require 'dap-node)
-    (lsp)
-    (dap-mode)
-    (dap-node-setup))
-  :hook
-  (js-mode . jr/js-setup-lsp)
   :config
   (let ((indent-level 2))
     (setq js-chain-indent t
@@ -1748,9 +1667,6 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package scala-mode
   :mode "\\.s\\(cala\\|bt\\)$")
 
-(use-package lsp-metals
-  :after lsp)
-
 (use-package sbt-mode
   :commands sbt-start sbt-command
   :config
@@ -1781,13 +1697,7 @@ chmod +x coursier
 *** Typescript
 #+begin_src emacs-lisp :tangle yes
 (use-package typescript-mode
-  :init
-  (defun jr/lsp-typescript-mode ()
-    (lsp-deferred)
-    (require 'dap-node)
-    (dap-node-setup))
   :mode "\\.ts\\'"
-  :hook (typescript-mode . jr/lsp-typescript-mode)
   :config
   (setq typescript-indent-level 2))
 #+end_src
