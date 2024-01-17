@@ -1143,6 +1143,15 @@ point reaches the beginning or end of the buffer, stop there."
                   )))))
     #+end_src
 
+*** Eglot
+#+begin_src emacs-lisp :tangle yes
+(use-package eglot
+  :config
+  (setq eglot-autoshutdown t)
+  (define-key eglot-mode-map (kbd "C-c o r") 'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-c o i") 'eglot-code-action-organize-imports)
+  (define-key eglot-mode-map (kbd "C-S-o") 'eglot-code-action-organize-imports))
+#+end_src
 ** Language Specific
 *** Eshell
     [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] is a shell-like command interpreter implemented in Emacs Lisp and written
@@ -1469,6 +1478,19 @@ point reaches the beginning or end of the buffer, stop there."
   :after yasnippet
   :config
   (java-snippets-initialize))
+
+(use-package eglot
+  :config
+  (let ((lombok-path (expand-file-name "~/prog/java/lib/lombok.jar")))
+    (when (file-exists-p lombok-path)
+      (let ((jvm-args (concat " " lombok-path
+                              " --jvm-arg=-Xbootclasspath/a:" lombok-path)))
+        (add-to-list 'eglot-server-programs
+                     `(java-mode . ("jdtls"
+                                    ,(concat "--jvm-arg=-javaagent:" lombok-path))))))))
+
+
+
     #+end_src
 **** Gradle
      #+begin_src emacs-lisp :tangle yes
