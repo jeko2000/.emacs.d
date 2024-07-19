@@ -1735,6 +1735,10 @@ chmod +x coursier
 #+begin_src emacs-lisp :tangle yes
 (use-package yaml-mode)
 #+end_src
+*** Vue.js
+#+begin_src emacs-lisp :tangle yes
+(use-package vue-mode)
+#+end_src
 * Gnus
   [[https://www.emacswiki.org/emacs/GnusTutorial][Gnus]] is my preferred e-mail reader.
   It takes a while to get it used to it all (similar to emacs
